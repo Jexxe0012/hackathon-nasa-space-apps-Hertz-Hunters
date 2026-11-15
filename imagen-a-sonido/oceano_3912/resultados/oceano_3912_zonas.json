@@ -1,0 +1,2500 @@
+{
+ "fuente": "NASA SVS 3912 · ECCO2 (simulación), mapa global 2048x1024, 48 frames (1 por semana)",
+ "aviso_es": "Es UNA simulación de un año (mar 2007 – feb 2008): muestra el ciclo de las estaciones, no una tendencia de calentamiento.",
+ "aviso_en": "This is ONE simulated year (Mar 2007 – Feb 2008): it shows the seasonal cycle, not a warming trend.",
+ "metodo": "tono del color -> °C contra la barra 0–32 °C; mediana de los pixeles de línea por zona; sin suavizar",
+ "km_por_pixel": 19.6,
+ "control_barra_error_max_c": 0.464,
+ "sensibilidad_grados_de_tono_por_c": {
+  "22-24 C": 4.0,
+  "24-26 C": 6.3,
+  "26-28 C": 8.3,
+  "28-30 C": 9.9,
+  "30-32 C": 7.8
+ },
+ "umbral_huracanes_c": 26.5,
+ "zonas": {
+  "oeste_acajutla": {
+   "nombre_es": "Oeste: frente a Acajutla",
+   "nombre_en": "West: off Acajutla",
+   "tipo": "costa_el_salvador",
+   "lon": [
+    -90.15,
+    -89.45
+   ],
+   "lat_costa_aprox": 13.49,
+   "km_mar_adentro": [
+    20,
+    176
+   ],
+   "pixeles_zona": 32
+  },
+  "centro_la_libertad": {
+   "nombre_es": "Centro: frente a La Libertad / Surf City",
+   "nombre_en": "Center: off La Libertad / Surf City",
+   "tipo": "costa_el_salvador",
+   "lon": [
+    -89.45,
+    -88.6
+   ],
+   "lat_costa_aprox": 13.58,
+   "km_mar_adentro": [
+    20,
+    176
+   ],
+   "pixeles_zona": 26
+  },
+  "este_el_cuco_fonseca": {
+   "nombre_es": "Este: frente a El Cuco / Golfo de Fonseca",
+   "nombre_en": "East: off El Cuco / Gulf of Fonseca",
+   "tipo": "costa_el_salvador",
+   "lon": [
+    -88.6,
+    -87.7
+   ],
+   "lat_costa_aprox": 13.36,
+   "km_mar_adentro": [
+    20,
+    176
+   ],
+   "pixeles_zona": 41
+  },
+  "lengua_fria_ecuatorial": {
+   "nombre_es": "Lengua fría del Pacífico ecuatorial",
+   "nombre_en": "Equatorial Pacific cold tongue",
+   "tipo": "comparacion",
+   "lon": [
+    -110.0,
+    -95.0
+   ],
+   "lat": [
+    -2.0,
+    2.0
+   ],
+   "pixeles_zona": 1955
+  },
+  "caribe": {
+   "nombre_es": "Mar Caribe (centro)",
+   "nombre_en": "Caribbean Sea (central)",
+   "tipo": "comparacion",
+   "lon": [
+    -80.0,
+    -72.0
+   ],
+   "lat": [
+    13.0,
+    17.0
+   ],
+   "pixeles_zona": 1058
+  }
+ },
+ "pixeles_fuera_de_la_barra": {
+  "oeste_acajutla": 0,
+  "centro_la_libertad": 0,
+  "este_el_cuco_fonseca": 0,
+  "lengua_fria_ecuatorial": 0,
+  "caribe": 0
+ },
+ "registros": [
+  {
+   "semana": 1,
+   "fecha": "2007-03-25",
+   "fecha_hora_utc": "2007-03-25T12:00Z",
+   "zona": "oeste_acajutla",
+   "temperatura_c": 27.83,
+   "pixeles_leidos": 11,
+   "rango_intercuartil_c": 0.15,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 1,
+   "fecha": "2007-03-25",
+   "fecha_hora_utc": "2007-03-25T12:00Z",
+   "zona": "centro_la_libertad",
+   "temperatura_c": 27.78,
+   "pixeles_leidos": 15,
+   "rango_intercuartil_c": 0.18,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 1,
+   "fecha": "2007-03-25",
+   "fecha_hora_utc": "2007-03-25T12:00Z",
+   "zona": "este_el_cuco_fonseca",
+   "temperatura_c": 27.61,
+   "pixeles_leidos": 17,
+   "rango_intercuartil_c": 0.19,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 1,
+   "fecha": "2007-03-25",
+   "fecha_hora_utc": "2007-03-25T12:00Z",
+   "zona": "lengua_fria_ecuatorial",
+   "temperatura_c": 26.04,
+   "pixeles_leidos": 1518,
+   "rango_intercuartil_c": 0.67,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 1,
+   "fecha": "2007-03-25",
+   "fecha_hora_utc": "2007-03-25T12:00Z",
+   "zona": "caribe",
+   "temperatura_c": 27.37,
+   "pixeles_leidos": 765,
+   "rango_intercuartil_c": 0.15,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 2,
+   "fecha": "2007-04-01",
+   "fecha_hora_utc": "2007-04-01T17:22Z",
+   "zona": "oeste_acajutla",
+   "temperatura_c": 27.99,
+   "pixeles_leidos": 22,
+   "rango_intercuartil_c": 0.07,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 2,
+   "fecha": "2007-04-01",
+   "fecha_hora_utc": "2007-04-01T17:22Z",
+   "zona": "centro_la_libertad",
+   "temperatura_c": 28.06,
+   "pixeles_leidos": 18,
+   "rango_intercuartil_c": 0.12,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 2,
+   "fecha": "2007-04-01",
+   "fecha_hora_utc": "2007-04-01T17:22Z",
+   "zona": "este_el_cuco_fonseca",
+   "temperatura_c": 27.93,
+   "pixeles_leidos": 24,
+   "rango_intercuartil_c": 0.23,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 2,
+   "fecha": "2007-04-01",
+   "fecha_hora_utc": "2007-04-01T17:22Z",
+   "zona": "lengua_fria_ecuatorial",
+   "temperatura_c": 25.33,
+   "pixeles_leidos": 1538,
+   "rango_intercuartil_c": 0.72,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 2,
+   "fecha": "2007-04-01",
+   "fecha_hora_utc": "2007-04-01T17:22Z",
+   "zona": "caribe",
+   "temperatura_c": 27.47,
+   "pixeles_leidos": 796,
+   "rango_intercuartil_c": 0.17,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 3,
+   "fecha": "2007-04-08",
+   "fecha_hora_utc": "2007-04-08T22:45Z",
+   "zona": "oeste_acajutla",
+   "temperatura_c": 28.37,
+   "pixeles_leidos": 21,
+   "rango_intercuartil_c": 0.16,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 3,
+   "fecha": "2007-04-08",
+   "fecha_hora_utc": "2007-04-08T22:45Z",
+   "zona": "centro_la_libertad",
+   "temperatura_c": 28.38,
+   "pixeles_leidos": 16,
+   "rango_intercuartil_c": 0.11,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 3,
+   "fecha": "2007-04-08",
+   "fecha_hora_utc": "2007-04-08T22:45Z",
+   "zona": "este_el_cuco_fonseca",
+   "temperatura_c": 28.34,
+   "pixeles_leidos": 26,
+   "rango_intercuartil_c": 0.2,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 3,
+   "fecha": "2007-04-08",
+   "fecha_hora_utc": "2007-04-08T22:45Z",
+   "zona": "lengua_fria_ecuatorial",
+   "temperatura_c": 25.59,
+   "pixeles_leidos": 1474,
+   "rango_intercuartil_c": 0.91,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 3,
+   "fecha": "2007-04-08",
+   "fecha_hora_utc": "2007-04-08T22:45Z",
+   "zona": "caribe",
+   "temperatura_c": 27.52,
+   "pixeles_leidos": 781,
+   "rango_intercuartil_c": 0.14,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 4,
+   "fecha": "2007-04-16",
+   "fecha_hora_utc": "2007-04-16T04:07Z",
+   "zona": "oeste_acajutla",
+   "temperatura_c": 28.53,
+   "pixeles_leidos": 25,
+   "rango_intercuartil_c": 0.38,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 4,
+   "fecha": "2007-04-16",
+   "fecha_hora_utc": "2007-04-16T04:07Z",
+   "zona": "centro_la_libertad",
+   "temperatura_c": 28.5,
+   "pixeles_leidos": 21,
+   "rango_intercuartil_c": 0.32,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 4,
+   "fecha": "2007-04-16",
+   "fecha_hora_utc": "2007-04-16T04:07Z",
+   "zona": "este_el_cuco_fonseca",
+   "temperatura_c": 28.43,
+   "pixeles_leidos": 27,
+   "rango_intercuartil_c": 0.22,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 4,
+   "fecha": "2007-04-16",
+   "fecha_hora_utc": "2007-04-16T04:07Z",
+   "zona": "lengua_fria_ecuatorial",
+   "temperatura_c": 25.8,
+   "pixeles_leidos": 1430,
+   "rango_intercuartil_c": 0.77,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 4,
+   "fecha": "2007-04-16",
+   "fecha_hora_utc": "2007-04-16T04:07Z",
+   "zona": "caribe",
+   "temperatura_c": 27.52,
+   "pixeles_leidos": 783,
+   "rango_intercuartil_c": 0.16,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 5,
+   "fecha": "2007-04-23",
+   "fecha_hora_utc": "2007-04-23T09:30Z",
+   "zona": "oeste_acajutla",
+   "temperatura_c": 28.91,
+   "pixeles_leidos": 32,
+   "rango_intercuartil_c": 0.34,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 5,
+   "fecha": "2007-04-23",
+   "fecha_hora_utc": "2007-04-23T09:30Z",
+   "zona": "centro_la_libertad",
+   "temperatura_c": 28.73,
+   "pixeles_leidos": 23,
+   "rango_intercuartil_c": 0.44,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 5,
+   "fecha": "2007-04-23",
+   "fecha_hora_utc": "2007-04-23T09:30Z",
+   "zona": "este_el_cuco_fonseca",
+   "temperatura_c": 28.18,
+   "pixeles_leidos": 26,
+   "rango_intercuartil_c": 0.26,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 5,
+   "fecha": "2007-04-23",
+   "fecha_hora_utc": "2007-04-23T09:30Z",
+   "zona": "lengua_fria_ecuatorial",
+   "temperatura_c": 26.28,
+   "pixeles_leidos": 1305,
+   "rango_intercuartil_c": 0.88,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 5,
+   "fecha": "2007-04-23",
+   "fecha_hora_utc": "2007-04-23T09:30Z",
+   "zona": "caribe",
+   "temperatura_c": 28.04,
+   "pixeles_leidos": 818,
+   "rango_intercuartil_c": 0.13,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 6,
+   "fecha": "2007-04-30",
+   "fecha_hora_utc": "2007-04-30T14:52Z",
+   "zona": "oeste_acajutla",
+   "temperatura_c": 29.1,
+   "pixeles_leidos": 29,
+   "rango_intercuartil_c": 0.25,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 6,
+   "fecha": "2007-04-30",
+   "fecha_hora_utc": "2007-04-30T14:52Z",
+   "zona": "centro_la_libertad",
+   "temperatura_c": 28.88,
+   "pixeles_leidos": 22,
+   "rango_intercuartil_c": 0.49,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 6,
+   "fecha": "2007-04-30",
+   "fecha_hora_utc": "2007-04-30T14:52Z",
+   "zona": "este_el_cuco_fonseca",
+   "temperatura_c": 28.34,
+   "pixeles_leidos": 16,
+   "rango_intercuartil_c": 0.29,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 6,
+   "fecha": "2007-04-30",
+   "fecha_hora_utc": "2007-04-30T14:52Z",
+   "zona": "lengua_fria_ecuatorial",
+   "temperatura_c": 25.96,
+   "pixeles_leidos": 1318,
+   "rango_intercuartil_c": 0.99,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 6,
+   "fecha": "2007-04-30",
+   "fecha_hora_utc": "2007-04-30T14:52Z",
+   "zona": "caribe",
+   "temperatura_c": 27.9,
+   "pixeles_leidos": 864,
+   "rango_intercuartil_c": 0.14,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 7,
+   "fecha": "2007-05-07",
+   "fecha_hora_utc": "2007-05-07T20:15Z",
+   "zona": "oeste_acajutla",
+   "temperatura_c": 29.22,
+   "pixeles_leidos": 27,
+   "rango_intercuartil_c": 0.54,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 7,
+   "fecha": "2007-05-07",
+   "fecha_hora_utc": "2007-05-07T20:15Z",
+   "zona": "centro_la_libertad",
+   "temperatura_c": 28.89,
+   "pixeles_leidos": 21,
+   "rango_intercuartil_c": 0.38,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 7,
+   "fecha": "2007-05-07",
+   "fecha_hora_utc": "2007-05-07T20:15Z",
+   "zona": "este_el_cuco_fonseca",
+   "temperatura_c": 28.83,
+   "pixeles_leidos": 17,
+   "rango_intercuartil_c": 0.2,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 7,
+   "fecha": "2007-05-07",
+   "fecha_hora_utc": "2007-05-07T20:15Z",
+   "zona": "lengua_fria_ecuatorial",
+   "temperatura_c": 25.47,
+   "pixeles_leidos": 1377,
+   "rango_intercuartil_c": 0.87,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 7,
+   "fecha": "2007-05-07",
+   "fecha_hora_utc": "2007-05-07T20:15Z",
+   "zona": "caribe",
+   "temperatura_c": 27.96,
+   "pixeles_leidos": 868,
+   "rango_intercuartil_c": 0.18,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 8,
+   "fecha": "2007-05-15",
+   "fecha_hora_utc": "2007-05-15T01:37Z",
+   "zona": "oeste_acajutla",
+   "temperatura_c": 29.18,
+   "pixeles_leidos": 26,
+   "rango_intercuartil_c": 0.23,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 8,
+   "fecha": "2007-05-15",
+   "fecha_hora_utc": "2007-05-15T01:37Z",
+   "zona": "centro_la_libertad",
+   "temperatura_c": 29.0,
+   "pixeles_leidos": 17,
+   "rango_intercuartil_c": 0.16,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 8,
+   "fecha": "2007-05-15",
+   "fecha_hora_utc": "2007-05-15T01:37Z",
+   "zona": "este_el_cuco_fonseca",
+   "temperatura_c": 29.22,
+   "pixeles_leidos": 14,
+   "rango_intercuartil_c": 0.27,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 8,
+   "fecha": "2007-05-15",
+   "fecha_hora_utc": "2007-05-15T01:37Z",
+   "zona": "lengua_fria_ecuatorial",
+   "temperatura_c": 24.62,
+   "pixeles_leidos": 1308,
+   "rango_intercuartil_c": 1.23,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 8,
+   "fecha": "2007-05-15",
+   "fecha_hora_utc": "2007-05-15T01:37Z",
+   "zona": "caribe",
+   "temperatura_c": 28.14,
+   "pixeles_leidos": 871,
+   "rango_intercuartil_c": 0.14,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 9,
+   "fecha": "2007-05-22",
+   "fecha_hora_utc": "2007-05-22T07:00Z",
+   "zona": "oeste_acajutla",
+   "temperatura_c": 29.06,
+   "pixeles_leidos": 26,
+   "rango_intercuartil_c": 0.22,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 9,
+   "fecha": "2007-05-22",
+   "fecha_hora_utc": "2007-05-22T07:00Z",
+   "zona": "centro_la_libertad",
+   "temperatura_c": null,
+   "pixeles_leidos": 6,
+   "rango_intercuartil_c": null,
+   "se_lee_bien": false
+  },
+  {
+   "semana": 9,
+   "fecha": "2007-05-22",
+   "fecha_hora_utc": "2007-05-22T07:00Z",
+   "zona": "este_el_cuco_fonseca",
+   "temperatura_c": 28.93,
+   "pixeles_leidos": 19,
+   "rango_intercuartil_c": 0.46,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 9,
+   "fecha": "2007-05-22",
+   "fecha_hora_utc": "2007-05-22T07:00Z",
+   "zona": "lengua_fria_ecuatorial",
+   "temperatura_c": 24.69,
+   "pixeles_leidos": 1308,
+   "rango_intercuartil_c": 2.16,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 9,
+   "fecha": "2007-05-22",
+   "fecha_hora_utc": "2007-05-22T07:00Z",
+   "zona": "caribe",
+   "temperatura_c": 28.27,
+   "pixeles_leidos": 851,
+   "rango_intercuartil_c": 0.19,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 10,
+   "fecha": "2007-05-29",
+   "fecha_hora_utc": "2007-05-29T12:23Z",
+   "zona": "oeste_acajutla",
+   "temperatura_c": 28.97,
+   "pixeles_leidos": 12,
+   "rango_intercuartil_c": 0.45,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 10,
+   "fecha": "2007-05-29",
+   "fecha_hora_utc": "2007-05-29T12:23Z",
+   "zona": "centro_la_libertad",
+   "temperatura_c": 28.87,
+   "pixeles_leidos": 10,
+   "rango_intercuartil_c": 0.39,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 10,
+   "fecha": "2007-05-29",
+   "fecha_hora_utc": "2007-05-29T12:23Z",
+   "zona": "este_el_cuco_fonseca",
+   "temperatura_c": 28.93,
+   "pixeles_leidos": 24,
+   "rango_intercuartil_c": 0.32,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 10,
+   "fecha": "2007-05-29",
+   "fecha_hora_utc": "2007-05-29T12:23Z",
+   "zona": "lengua_fria_ecuatorial",
+   "temperatura_c": 23.8,
+   "pixeles_leidos": 1337,
+   "rango_intercuartil_c": 3.11,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 10,
+   "fecha": "2007-05-29",
+   "fecha_hora_utc": "2007-05-29T12:23Z",
+   "zona": "caribe",
+   "temperatura_c": 28.4,
+   "pixeles_leidos": 824,
+   "rango_intercuartil_c": 0.13,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 11,
+   "fecha": "2007-06-05",
+   "fecha_hora_utc": "2007-06-05T17:45Z",
+   "zona": "oeste_acajutla",
+   "temperatura_c": 28.05,
+   "pixeles_leidos": 8,
+   "rango_intercuartil_c": 0.42,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 11,
+   "fecha": "2007-06-05",
+   "fecha_hora_utc": "2007-06-05T17:45Z",
+   "zona": "centro_la_libertad",
+   "temperatura_c": 28.25,
+   "pixeles_leidos": 10,
+   "rango_intercuartil_c": 0.5,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 11,
+   "fecha": "2007-06-05",
+   "fecha_hora_utc": "2007-06-05T17:45Z",
+   "zona": "este_el_cuco_fonseca",
+   "temperatura_c": 28.38,
+   "pixeles_leidos": 23,
+   "rango_intercuartil_c": 0.39,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 11,
+   "fecha": "2007-06-05",
+   "fecha_hora_utc": "2007-06-05T17:45Z",
+   "zona": "lengua_fria_ecuatorial",
+   "temperatura_c": 22.16,
+   "pixeles_leidos": 1336,
+   "rango_intercuartil_c": 3.16,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 11,
+   "fecha": "2007-06-05",
+   "fecha_hora_utc": "2007-06-05T17:45Z",
+   "zona": "caribe",
+   "temperatura_c": 28.54,
+   "pixeles_leidos": 855,
+   "rango_intercuartil_c": 0.07,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 12,
+   "fecha": "2007-06-12",
+   "fecha_hora_utc": "2007-06-12T23:08Z",
+   "zona": "oeste_acajutla",
+   "temperatura_c": 28.58,
+   "pixeles_leidos": 14,
+   "rango_intercuartil_c": 0.21,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 12,
+   "fecha": "2007-06-12",
+   "fecha_hora_utc": "2007-06-12T23:08Z",
+   "zona": "centro_la_libertad",
+   "temperatura_c": 28.55,
+   "pixeles_leidos": 8,
+   "rango_intercuartil_c": 0.42,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 12,
+   "fecha": "2007-06-12",
+   "fecha_hora_utc": "2007-06-12T23:08Z",
+   "zona": "este_el_cuco_fonseca",
+   "temperatura_c": 28.29,
+   "pixeles_leidos": 19,
+   "rango_intercuartil_c": 0.35,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 12,
+   "fecha": "2007-06-12",
+   "fecha_hora_utc": "2007-06-12T23:08Z",
+   "zona": "lengua_fria_ecuatorial",
+   "temperatura_c": 23.68,
+   "pixeles_leidos": 1366,
+   "rango_intercuartil_c": 3.6,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 12,
+   "fecha": "2007-06-12",
+   "fecha_hora_utc": "2007-06-12T23:08Z",
+   "zona": "caribe",
+   "temperatura_c": 28.45,
+   "pixeles_leidos": 891,
+   "rango_intercuartil_c": 0.09,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 13,
+   "fecha": "2007-06-20",
+   "fecha_hora_utc": "2007-06-20T04:30Z",
+   "zona": "oeste_acajutla",
+   "temperatura_c": null,
+   "pixeles_leidos": 7,
+   "rango_intercuartil_c": null,
+   "se_lee_bien": false
+  },
+  {
+   "semana": 13,
+   "fecha": "2007-06-20",
+   "fecha_hora_utc": "2007-06-20T04:30Z",
+   "zona": "centro_la_libertad",
+   "temperatura_c": null,
+   "pixeles_leidos": 4,
+   "rango_intercuartil_c": null,
+   "se_lee_bien": false
+  },
+  {
+   "semana": 13,
+   "fecha": "2007-06-20",
+   "fecha_hora_utc": "2007-06-20T04:30Z",
+   "zona": "este_el_cuco_fonseca",
+   "temperatura_c": 28.39,
+   "pixeles_leidos": 10,
+   "rango_intercuartil_c": 0.34,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 13,
+   "fecha": "2007-06-20",
+   "fecha_hora_utc": "2007-06-20T04:30Z",
+   "zona": "lengua_fria_ecuatorial",
+   "temperatura_c": 24.65,
+   "pixeles_leidos": 1380,
+   "rango_intercuartil_c": 3.6,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 13,
+   "fecha": "2007-06-20",
+   "fecha_hora_utc": "2007-06-20T04:30Z",
+   "zona": "caribe",
+   "temperatura_c": 28.47,
+   "pixeles_leidos": 907,
+   "rango_intercuartil_c": 0.11,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 14,
+   "fecha": "2007-06-27",
+   "fecha_hora_utc": "2007-06-27T09:53Z",
+   "zona": "oeste_acajutla",
+   "temperatura_c": 28.65,
+   "pixeles_leidos": 9,
+   "rango_intercuartil_c": 0.12,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 14,
+   "fecha": "2007-06-27",
+   "fecha_hora_utc": "2007-06-27T09:53Z",
+   "zona": "centro_la_libertad",
+   "temperatura_c": null,
+   "pixeles_leidos": 2,
+   "rango_intercuartil_c": null,
+   "se_lee_bien": false
+  },
+  {
+   "semana": 14,
+   "fecha": "2007-06-27",
+   "fecha_hora_utc": "2007-06-27T09:53Z",
+   "zona": "este_el_cuco_fonseca",
+   "temperatura_c": 28.32,
+   "pixeles_leidos": 11,
+   "rango_intercuartil_c": 0.17,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 14,
+   "fecha": "2007-06-27",
+   "fecha_hora_utc": "2007-06-27T09:53Z",
+   "zona": "lengua_fria_ecuatorial",
+   "temperatura_c": 21.5,
+   "pixeles_leidos": 1353,
+   "rango_intercuartil_c": 3.02,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 14,
+   "fecha": "2007-06-27",
+   "fecha_hora_utc": "2007-06-27T09:53Z",
+   "zona": "caribe",
+   "temperatura_c": 28.41,
+   "pixeles_leidos": 925,
+   "rango_intercuartil_c": 0.17,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 15,
+   "fecha": "2007-07-04",
+   "fecha_hora_utc": "2007-07-04T15:15Z",
+   "zona": "oeste_acajutla",
+   "temperatura_c": 28.9,
+   "pixeles_leidos": 16,
+   "rango_intercuartil_c": 0.11,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 15,
+   "fecha": "2007-07-04",
+   "fecha_hora_utc": "2007-07-04T15:15Z",
+   "zona": "centro_la_libertad",
+   "temperatura_c": 28.97,
+   "pixeles_leidos": 13,
+   "rango_intercuartil_c": 0.16,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 15,
+   "fecha": "2007-07-04",
+   "fecha_hora_utc": "2007-07-04T15:15Z",
+   "zona": "este_el_cuco_fonseca",
+   "temperatura_c": 28.76,
+   "pixeles_leidos": 11,
+   "rango_intercuartil_c": 0.82,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 15,
+   "fecha": "2007-07-04",
+   "fecha_hora_utc": "2007-07-04T15:15Z",
+   "zona": "lengua_fria_ecuatorial",
+   "temperatura_c": 24.04,
+   "pixeles_leidos": 1186,
+   "rango_intercuartil_c": 3.13,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 15,
+   "fecha": "2007-07-04",
+   "fecha_hora_utc": "2007-07-04T15:15Z",
+   "zona": "caribe",
+   "temperatura_c": 28.43,
+   "pixeles_leidos": 920,
+   "rango_intercuartil_c": 0.23,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 16,
+   "fecha": "2007-07-11",
+   "fecha_hora_utc": "2007-07-11T20:38Z",
+   "zona": "oeste_acajutla",
+   "temperatura_c": 28.94,
+   "pixeles_leidos": 14,
+   "rango_intercuartil_c": 0.05,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 16,
+   "fecha": "2007-07-11",
+   "fecha_hora_utc": "2007-07-11T20:38Z",
+   "zona": "centro_la_libertad",
+   "temperatura_c": 28.86,
+   "pixeles_leidos": 13,
+   "rango_intercuartil_c": 0.12,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 16,
+   "fecha": "2007-07-11",
+   "fecha_hora_utc": "2007-07-11T20:38Z",
+   "zona": "este_el_cuco_fonseca",
+   "temperatura_c": 27.74,
+   "pixeles_leidos": 19,
+   "rango_intercuartil_c": 0.39,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 16,
+   "fecha": "2007-07-11",
+   "fecha_hora_utc": "2007-07-11T20:38Z",
+   "zona": "lengua_fria_ecuatorial",
+   "temperatura_c": 22.04,
+   "pixeles_leidos": 1380,
+   "rango_intercuartil_c": 2.94,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 16,
+   "fecha": "2007-07-11",
+   "fecha_hora_utc": "2007-07-11T20:38Z",
+   "zona": "caribe",
+   "temperatura_c": 28.35,
+   "pixeles_leidos": 941,
+   "rango_intercuartil_c": 0.43,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 17,
+   "fecha": "2007-07-19",
+   "fecha_hora_utc": "2007-07-19T02:00Z",
+   "zona": "oeste_acajutla",
+   "temperatura_c": 28.88,
+   "pixeles_leidos": 21,
+   "rango_intercuartil_c": 0.18,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 17,
+   "fecha": "2007-07-19",
+   "fecha_hora_utc": "2007-07-19T02:00Z",
+   "zona": "centro_la_libertad",
+   "temperatura_c": 28.87,
+   "pixeles_leidos": 14,
+   "rango_intercuartil_c": 0.44,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 17,
+   "fecha": "2007-07-19",
+   "fecha_hora_utc": "2007-07-19T02:00Z",
+   "zona": "este_el_cuco_fonseca",
+   "temperatura_c": 27.66,
+   "pixeles_leidos": 16,
+   "rango_intercuartil_c": 0.82,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 17,
+   "fecha": "2007-07-19",
+   "fecha_hora_utc": "2007-07-19T02:00Z",
+   "zona": "lengua_fria_ecuatorial",
+   "temperatura_c": 21.89,
+   "pixeles_leidos": 1430,
+   "rango_intercuartil_c": 3.07,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 17,
+   "fecha": "2007-07-19",
+   "fecha_hora_utc": "2007-07-19T02:00Z",
+   "zona": "caribe",
+   "temperatura_c": 28.17,
+   "pixeles_leidos": 928,
+   "rango_intercuartil_c": 0.54,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 18,
+   "fecha": "2007-07-26",
+   "fecha_hora_utc": "2007-07-26T07:23Z",
+   "zona": "oeste_acajutla",
+   "temperatura_c": 28.63,
+   "pixeles_leidos": 21,
+   "rango_intercuartil_c": 0.32,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 18,
+   "fecha": "2007-07-26",
+   "fecha_hora_utc": "2007-07-26T07:23Z",
+   "zona": "centro_la_libertad",
+   "temperatura_c": 28.71,
+   "pixeles_leidos": 12,
+   "rango_intercuartil_c": 0.2,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 18,
+   "fecha": "2007-07-26",
+   "fecha_hora_utc": "2007-07-26T07:23Z",
+   "zona": "este_el_cuco_fonseca",
+   "temperatura_c": 28.58,
+   "pixeles_leidos": 31,
+   "rango_intercuartil_c": 0.71,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 18,
+   "fecha": "2007-07-26",
+   "fecha_hora_utc": "2007-07-26T07:23Z",
+   "zona": "lengua_fria_ecuatorial",
+   "temperatura_c": 22.06,
+   "pixeles_leidos": 1668,
+   "rango_intercuartil_c": 3.42,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 18,
+   "fecha": "2007-07-26",
+   "fecha_hora_utc": "2007-07-26T07:23Z",
+   "zona": "caribe",
+   "temperatura_c": 28.44,
+   "pixeles_leidos": 915,
+   "rango_intercuartil_c": 0.38,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 19,
+   "fecha": "2007-08-02",
+   "fecha_hora_utc": "2007-08-02T12:46Z",
+   "zona": "oeste_acajutla",
+   "temperatura_c": 28.63,
+   "pixeles_leidos": 23,
+   "rango_intercuartil_c": 0.32,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 19,
+   "fecha": "2007-08-02",
+   "fecha_hora_utc": "2007-08-02T12:46Z",
+   "zona": "centro_la_libertad",
+   "temperatura_c": 28.68,
+   "pixeles_leidos": 14,
+   "rango_intercuartil_c": 0.4,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 19,
+   "fecha": "2007-08-02",
+   "fecha_hora_utc": "2007-08-02T12:46Z",
+   "zona": "este_el_cuco_fonseca",
+   "temperatura_c": 28.94,
+   "pixeles_leidos": 18,
+   "rango_intercuartil_c": 0.35,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 19,
+   "fecha": "2007-08-02",
+   "fecha_hora_utc": "2007-08-02T12:46Z",
+   "zona": "lengua_fria_ecuatorial",
+   "temperatura_c": 20.84,
+   "pixeles_leidos": 1731,
+   "rango_intercuartil_c": 2.18,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 19,
+   "fecha": "2007-08-02",
+   "fecha_hora_utc": "2007-08-02T12:46Z",
+   "zona": "caribe",
+   "temperatura_c": 28.51,
+   "pixeles_leidos": 933,
+   "rango_intercuartil_c": 0.3,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 20,
+   "fecha": "2007-08-09",
+   "fecha_hora_utc": "2007-08-09T18:08Z",
+   "zona": "oeste_acajutla",
+   "temperatura_c": 28.7,
+   "pixeles_leidos": 24,
+   "rango_intercuartil_c": 0.16,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 20,
+   "fecha": "2007-08-09",
+   "fecha_hora_utc": "2007-08-09T18:08Z",
+   "zona": "centro_la_libertad",
+   "temperatura_c": 28.92,
+   "pixeles_leidos": 13,
+   "rango_intercuartil_c": 0.47,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 20,
+   "fecha": "2007-08-09",
+   "fecha_hora_utc": "2007-08-09T18:08Z",
+   "zona": "este_el_cuco_fonseca",
+   "temperatura_c": 29.16,
+   "pixeles_leidos": 16,
+   "rango_intercuartil_c": 0.38,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 20,
+   "fecha": "2007-08-09",
+   "fecha_hora_utc": "2007-08-09T18:08Z",
+   "zona": "lengua_fria_ecuatorial",
+   "temperatura_c": 20.71,
+   "pixeles_leidos": 1707,
+   "rango_intercuartil_c": 2.2,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 20,
+   "fecha": "2007-08-09",
+   "fecha_hora_utc": "2007-08-09T18:08Z",
+   "zona": "caribe",
+   "temperatura_c": 28.63,
+   "pixeles_leidos": 912,
+   "rango_intercuartil_c": 0.28,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 21,
+   "fecha": "2007-08-16",
+   "fecha_hora_utc": "2007-08-16T23:31Z",
+   "zona": "oeste_acajutla",
+   "temperatura_c": 28.96,
+   "pixeles_leidos": 21,
+   "rango_intercuartil_c": 0.48,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 21,
+   "fecha": "2007-08-16",
+   "fecha_hora_utc": "2007-08-16T23:31Z",
+   "zona": "centro_la_libertad",
+   "temperatura_c": 28.95,
+   "pixeles_leidos": 17,
+   "rango_intercuartil_c": 0.5,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 21,
+   "fecha": "2007-08-16",
+   "fecha_hora_utc": "2007-08-16T23:31Z",
+   "zona": "este_el_cuco_fonseca",
+   "temperatura_c": 29.27,
+   "pixeles_leidos": 19,
+   "rango_intercuartil_c": 0.12,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 21,
+   "fecha": "2007-08-16",
+   "fecha_hora_utc": "2007-08-16T23:31Z",
+   "zona": "lengua_fria_ecuatorial",
+   "temperatura_c": 21.03,
+   "pixeles_leidos": 1717,
+   "rango_intercuartil_c": 3.02,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 21,
+   "fecha": "2007-08-16",
+   "fecha_hora_utc": "2007-08-16T23:31Z",
+   "zona": "caribe",
+   "temperatura_c": 28.64,
+   "pixeles_leidos": 900,
+   "rango_intercuartil_c": 0.14,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 22,
+   "fecha": "2007-08-24",
+   "fecha_hora_utc": "2007-08-24T04:53Z",
+   "zona": "oeste_acajutla",
+   "temperatura_c": 29.23,
+   "pixeles_leidos": 14,
+   "rango_intercuartil_c": 0.15,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 22,
+   "fecha": "2007-08-24",
+   "fecha_hora_utc": "2007-08-24T04:53Z",
+   "zona": "centro_la_libertad",
+   "temperatura_c": 29.2,
+   "pixeles_leidos": 11,
+   "rango_intercuartil_c": 0.15,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 22,
+   "fecha": "2007-08-24",
+   "fecha_hora_utc": "2007-08-24T04:53Z",
+   "zona": "este_el_cuco_fonseca",
+   "temperatura_c": 29.24,
+   "pixeles_leidos": 16,
+   "rango_intercuartil_c": 0.16,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 22,
+   "fecha": "2007-08-24",
+   "fecha_hora_utc": "2007-08-24T04:53Z",
+   "zona": "lengua_fria_ecuatorial",
+   "temperatura_c": 20.23,
+   "pixeles_leidos": 1695,
+   "rango_intercuartil_c": 4.22,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 22,
+   "fecha": "2007-08-24",
+   "fecha_hora_utc": "2007-08-24T04:53Z",
+   "zona": "caribe",
+   "temperatura_c": 28.7,
+   "pixeles_leidos": 869,
+   "rango_intercuartil_c": 0.12,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 23,
+   "fecha": "2007-08-31",
+   "fecha_hora_utc": "2007-08-31T10:16Z",
+   "zona": "oeste_acajutla",
+   "temperatura_c": 29.05,
+   "pixeles_leidos": 11,
+   "rango_intercuartil_c": 0.15,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 23,
+   "fecha": "2007-08-31",
+   "fecha_hora_utc": "2007-08-31T10:16Z",
+   "zona": "centro_la_libertad",
+   "temperatura_c": 29.19,
+   "pixeles_leidos": 9,
+   "rango_intercuartil_c": 0.04,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 23,
+   "fecha": "2007-08-31",
+   "fecha_hora_utc": "2007-08-31T10:16Z",
+   "zona": "este_el_cuco_fonseca",
+   "temperatura_c": 29.23,
+   "pixeles_leidos": 16,
+   "rango_intercuartil_c": 0.02,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 23,
+   "fecha": "2007-08-31",
+   "fecha_hora_utc": "2007-08-31T10:16Z",
+   "zona": "lengua_fria_ecuatorial",
+   "temperatura_c": 19.62,
+   "pixeles_leidos": 1660,
+   "rango_intercuartil_c": 3.95,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 23,
+   "fecha": "2007-08-31",
+   "fecha_hora_utc": "2007-08-31T10:16Z",
+   "zona": "caribe",
+   "temperatura_c": 28.74,
+   "pixeles_leidos": 862,
+   "rango_intercuartil_c": 0.17,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 24,
+   "fecha": "2007-09-07",
+   "fecha_hora_utc": "2007-09-07T15:38Z",
+   "zona": "oeste_acajutla",
+   "temperatura_c": null,
+   "pixeles_leidos": 5,
+   "rango_intercuartil_c": null,
+   "se_lee_bien": false
+  },
+  {
+   "semana": 24,
+   "fecha": "2007-09-07",
+   "fecha_hora_utc": "2007-09-07T15:38Z",
+   "zona": "centro_la_libertad",
+   "temperatura_c": 29.12,
+   "pixeles_leidos": 8,
+   "rango_intercuartil_c": 0.12,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 24,
+   "fecha": "2007-09-07",
+   "fecha_hora_utc": "2007-09-07T15:38Z",
+   "zona": "este_el_cuco_fonseca",
+   "temperatura_c": 29.08,
+   "pixeles_leidos": 14,
+   "rango_intercuartil_c": 0.31,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 24,
+   "fecha": "2007-09-07",
+   "fecha_hora_utc": "2007-09-07T15:38Z",
+   "zona": "lengua_fria_ecuatorial",
+   "temperatura_c": 22.03,
+   "pixeles_leidos": 1685,
+   "rango_intercuartil_c": 3.78,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 24,
+   "fecha": "2007-09-07",
+   "fecha_hora_utc": "2007-09-07T15:38Z",
+   "zona": "caribe",
+   "temperatura_c": 28.71,
+   "pixeles_leidos": 887,
+   "rango_intercuartil_c": 0.22,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 25,
+   "fecha": "2007-09-14",
+   "fecha_hora_utc": "2007-09-14T21:01Z",
+   "zona": "oeste_acajutla",
+   "temperatura_c": 28.91,
+   "pixeles_leidos": 12,
+   "rango_intercuartil_c": 0.03,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 25,
+   "fecha": "2007-09-14",
+   "fecha_hora_utc": "2007-09-14T21:01Z",
+   "zona": "centro_la_libertad",
+   "temperatura_c": 28.91,
+   "pixeles_leidos": 13,
+   "rango_intercuartil_c": 0.03,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 25,
+   "fecha": "2007-09-14",
+   "fecha_hora_utc": "2007-09-14T21:01Z",
+   "zona": "este_el_cuco_fonseca",
+   "temperatura_c": 28.52,
+   "pixeles_leidos": 17,
+   "rango_intercuartil_c": 0.79,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 25,
+   "fecha": "2007-09-14",
+   "fecha_hora_utc": "2007-09-14T21:01Z",
+   "zona": "lengua_fria_ecuatorial",
+   "temperatura_c": 21.02,
+   "pixeles_leidos": 1702,
+   "rango_intercuartil_c": 4.72,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 25,
+   "fecha": "2007-09-14",
+   "fecha_hora_utc": "2007-09-14T21:01Z",
+   "zona": "caribe",
+   "temperatura_c": 28.63,
+   "pixeles_leidos": 881,
+   "rango_intercuartil_c": 0.2,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 26,
+   "fecha": "2007-09-22",
+   "fecha_hora_utc": "2007-09-22T02:24Z",
+   "zona": "oeste_acajutla",
+   "temperatura_c": 28.82,
+   "pixeles_leidos": 14,
+   "rango_intercuartil_c": 0.04,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 26,
+   "fecha": "2007-09-22",
+   "fecha_hora_utc": "2007-09-22T02:24Z",
+   "zona": "centro_la_libertad",
+   "temperatura_c": 28.86,
+   "pixeles_leidos": 14,
+   "rango_intercuartil_c": 0.06,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 26,
+   "fecha": "2007-09-22",
+   "fecha_hora_utc": "2007-09-22T02:24Z",
+   "zona": "este_el_cuco_fonseca",
+   "temperatura_c": 28.71,
+   "pixeles_leidos": 13,
+   "rango_intercuartil_c": 0.58,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 26,
+   "fecha": "2007-09-22",
+   "fecha_hora_utc": "2007-09-22T02:24Z",
+   "zona": "lengua_fria_ecuatorial",
+   "temperatura_c": 20.62,
+   "pixeles_leidos": 1639,
+   "rango_intercuartil_c": 3.84,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 26,
+   "fecha": "2007-09-22",
+   "fecha_hora_utc": "2007-09-22T02:24Z",
+   "zona": "caribe",
+   "temperatura_c": 28.73,
+   "pixeles_leidos": 900,
+   "rango_intercuartil_c": 0.27,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 27,
+   "fecha": "2007-09-29",
+   "fecha_hora_utc": "2007-09-29T07:46Z",
+   "zona": "oeste_acajutla",
+   "temperatura_c": 28.94,
+   "pixeles_leidos": 15,
+   "rango_intercuartil_c": 0.04,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 27,
+   "fecha": "2007-09-29",
+   "fecha_hora_utc": "2007-09-29T07:46Z",
+   "zona": "centro_la_libertad",
+   "temperatura_c": 28.93,
+   "pixeles_leidos": 14,
+   "rango_intercuartil_c": 0.05,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 27,
+   "fecha": "2007-09-29",
+   "fecha_hora_utc": "2007-09-29T07:46Z",
+   "zona": "este_el_cuco_fonseca",
+   "temperatura_c": 28.93,
+   "pixeles_leidos": 14,
+   "rango_intercuartil_c": 0.1,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 27,
+   "fecha": "2007-09-29",
+   "fecha_hora_utc": "2007-09-29T07:46Z",
+   "zona": "lengua_fria_ecuatorial",
+   "temperatura_c": 21.45,
+   "pixeles_leidos": 1684,
+   "rango_intercuartil_c": 4.08,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 27,
+   "fecha": "2007-09-29",
+   "fecha_hora_utc": "2007-09-29T07:46Z",
+   "zona": "caribe",
+   "temperatura_c": 28.88,
+   "pixeles_leidos": 893,
+   "rango_intercuartil_c": 0.21,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 28,
+   "fecha": "2007-10-06",
+   "fecha_hora_utc": "2007-10-06T13:09Z",
+   "zona": "oeste_acajutla",
+   "temperatura_c": 29.06,
+   "pixeles_leidos": 19,
+   "rango_intercuartil_c": 0.14,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 28,
+   "fecha": "2007-10-06",
+   "fecha_hora_utc": "2007-10-06T13:09Z",
+   "zona": "centro_la_libertad",
+   "temperatura_c": 28.97,
+   "pixeles_leidos": 9,
+   "rango_intercuartil_c": 0.14,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 28,
+   "fecha": "2007-10-06",
+   "fecha_hora_utc": "2007-10-06T13:09Z",
+   "zona": "este_el_cuco_fonseca",
+   "temperatura_c": 29.02,
+   "pixeles_leidos": 19,
+   "rango_intercuartil_c": 0.07,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 28,
+   "fecha": "2007-10-06",
+   "fecha_hora_utc": "2007-10-06T13:09Z",
+   "zona": "lengua_fria_ecuatorial",
+   "temperatura_c": 21.7,
+   "pixeles_leidos": 1675,
+   "rango_intercuartil_c": 4.18,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 28,
+   "fecha": "2007-10-06",
+   "fecha_hora_utc": "2007-10-06T13:09Z",
+   "zona": "caribe",
+   "temperatura_c": 28.92,
+   "pixeles_leidos": 828,
+   "rango_intercuartil_c": 0.19,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 29,
+   "fecha": "2007-10-13",
+   "fecha_hora_utc": "2007-10-13T18:31Z",
+   "zona": "oeste_acajutla",
+   "temperatura_c": 28.41,
+   "pixeles_leidos": 26,
+   "rango_intercuartil_c": 0.2,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 29,
+   "fecha": "2007-10-13",
+   "fecha_hora_utc": "2007-10-13T18:31Z",
+   "zona": "centro_la_libertad",
+   "temperatura_c": 28.27,
+   "pixeles_leidos": 18,
+   "rango_intercuartil_c": 0.21,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 29,
+   "fecha": "2007-10-13",
+   "fecha_hora_utc": "2007-10-13T18:31Z",
+   "zona": "este_el_cuco_fonseca",
+   "temperatura_c": 28.12,
+   "pixeles_leidos": 16,
+   "rango_intercuartil_c": 0.04,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 29,
+   "fecha": "2007-10-13",
+   "fecha_hora_utc": "2007-10-13T18:31Z",
+   "zona": "lengua_fria_ecuatorial",
+   "temperatura_c": 22.87,
+   "pixeles_leidos": 1633,
+   "rango_intercuartil_c": 3.62,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 29,
+   "fecha": "2007-10-13",
+   "fecha_hora_utc": "2007-10-13T18:31Z",
+   "zona": "caribe",
+   "temperatura_c": 28.91,
+   "pixeles_leidos": 792,
+   "rango_intercuartil_c": 0.13,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 30,
+   "fecha": "2007-10-20",
+   "fecha_hora_utc": "2007-10-20T23:54Z",
+   "zona": "oeste_acajutla",
+   "temperatura_c": 27.68,
+   "pixeles_leidos": 16,
+   "rango_intercuartil_c": 0.16,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 30,
+   "fecha": "2007-10-20",
+   "fecha_hora_utc": "2007-10-20T23:54Z",
+   "zona": "centro_la_libertad",
+   "temperatura_c": 27.7,
+   "pixeles_leidos": 11,
+   "rango_intercuartil_c": 0.11,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 30,
+   "fecha": "2007-10-20",
+   "fecha_hora_utc": "2007-10-20T23:54Z",
+   "zona": "este_el_cuco_fonseca",
+   "temperatura_c": 27.64,
+   "pixeles_leidos": 13,
+   "rango_intercuartil_c": 0.1,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 30,
+   "fecha": "2007-10-20",
+   "fecha_hora_utc": "2007-10-20T23:54Z",
+   "zona": "lengua_fria_ecuatorial",
+   "temperatura_c": 21.73,
+   "pixeles_leidos": 1742,
+   "rango_intercuartil_c": 3.7,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 30,
+   "fecha": "2007-10-20",
+   "fecha_hora_utc": "2007-10-20T23:54Z",
+   "zona": "caribe",
+   "temperatura_c": 28.81,
+   "pixeles_leidos": 827,
+   "rango_intercuartil_c": 0.14,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 31,
+   "fecha": "2007-10-28",
+   "fecha_hora_utc": "2007-10-28T05:16Z",
+   "zona": "oeste_acajutla",
+   "temperatura_c": 26.97,
+   "pixeles_leidos": 8,
+   "rango_intercuartil_c": 0.47,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 31,
+   "fecha": "2007-10-28",
+   "fecha_hora_utc": "2007-10-28T05:16Z",
+   "zona": "centro_la_libertad",
+   "temperatura_c": null,
+   "pixeles_leidos": 6,
+   "rango_intercuartil_c": null,
+   "se_lee_bien": false
+  },
+  {
+   "semana": 31,
+   "fecha": "2007-10-28",
+   "fecha_hora_utc": "2007-10-28T05:16Z",
+   "zona": "este_el_cuco_fonseca",
+   "temperatura_c": 27.02,
+   "pixeles_leidos": 8,
+   "rango_intercuartil_c": 0.06,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 31,
+   "fecha": "2007-10-28",
+   "fecha_hora_utc": "2007-10-28T05:16Z",
+   "zona": "lengua_fria_ecuatorial",
+   "temperatura_c": 22.23,
+   "pixeles_leidos": 1792,
+   "rango_intercuartil_c": 3.49,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 31,
+   "fecha": "2007-10-28",
+   "fecha_hora_utc": "2007-10-28T05:16Z",
+   "zona": "caribe",
+   "temperatura_c": 28.77,
+   "pixeles_leidos": 829,
+   "rango_intercuartil_c": 0.13,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 32,
+   "fecha": "2007-11-04",
+   "fecha_hora_utc": "2007-11-04T10:39Z",
+   "zona": "oeste_acajutla",
+   "temperatura_c": 27.2,
+   "pixeles_leidos": 9,
+   "rango_intercuartil_c": 0.14,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 32,
+   "fecha": "2007-11-04",
+   "fecha_hora_utc": "2007-11-04T10:39Z",
+   "zona": "centro_la_libertad",
+   "temperatura_c": null,
+   "pixeles_leidos": 7,
+   "rango_intercuartil_c": null,
+   "se_lee_bien": false
+  },
+  {
+   "semana": 32,
+   "fecha": "2007-11-04",
+   "fecha_hora_utc": "2007-11-04T10:39Z",
+   "zona": "este_el_cuco_fonseca",
+   "temperatura_c": 27.0,
+   "pixeles_leidos": 14,
+   "rango_intercuartil_c": 0.07,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 32,
+   "fecha": "2007-11-04",
+   "fecha_hora_utc": "2007-11-04T10:39Z",
+   "zona": "lengua_fria_ecuatorial",
+   "temperatura_c": 20.57,
+   "pixeles_leidos": 1764,
+   "rango_intercuartil_c": 3.76,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 32,
+   "fecha": "2007-11-04",
+   "fecha_hora_utc": "2007-11-04T10:39Z",
+   "zona": "caribe",
+   "temperatura_c": 28.66,
+   "pixeles_leidos": 837,
+   "rango_intercuartil_c": 0.11,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 33,
+   "fecha": "2007-11-11",
+   "fecha_hora_utc": "2007-11-11T16:01Z",
+   "zona": "oeste_acajutla",
+   "temperatura_c": 25.79,
+   "pixeles_leidos": 15,
+   "rango_intercuartil_c": 0.18,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 33,
+   "fecha": "2007-11-11",
+   "fecha_hora_utc": "2007-11-11T16:01Z",
+   "zona": "centro_la_libertad",
+   "temperatura_c": 25.67,
+   "pixeles_leidos": 10,
+   "rango_intercuartil_c": 0.04,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 33,
+   "fecha": "2007-11-11",
+   "fecha_hora_utc": "2007-11-11T16:01Z",
+   "zona": "este_el_cuco_fonseca",
+   "temperatura_c": 26.2,
+   "pixeles_leidos": 25,
+   "rango_intercuartil_c": 0.24,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 33,
+   "fecha": "2007-11-11",
+   "fecha_hora_utc": "2007-11-11T16:01Z",
+   "zona": "lengua_fria_ecuatorial",
+   "temperatura_c": 22.4,
+   "pixeles_leidos": 1639,
+   "rango_intercuartil_c": 4.06,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 33,
+   "fecha": "2007-11-11",
+   "fecha_hora_utc": "2007-11-11T16:01Z",
+   "zona": "caribe",
+   "temperatura_c": 28.57,
+   "pixeles_leidos": 882,
+   "rango_intercuartil_c": 0.12,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 34,
+   "fecha": "2007-11-18",
+   "fecha_hora_utc": "2007-11-18T21:24Z",
+   "zona": "oeste_acajutla",
+   "temperatura_c": 25.65,
+   "pixeles_leidos": 15,
+   "rango_intercuartil_c": 0.18,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 34,
+   "fecha": "2007-11-18",
+   "fecha_hora_utc": "2007-11-18T21:24Z",
+   "zona": "centro_la_libertad",
+   "temperatura_c": 25.66,
+   "pixeles_leidos": 9,
+   "rango_intercuartil_c": 0.08,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 34,
+   "fecha": "2007-11-18",
+   "fecha_hora_utc": "2007-11-18T21:24Z",
+   "zona": "este_el_cuco_fonseca",
+   "temperatura_c": 26.01,
+   "pixeles_leidos": 14,
+   "rango_intercuartil_c": 0.18,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 34,
+   "fecha": "2007-11-18",
+   "fecha_hora_utc": "2007-11-18T21:24Z",
+   "zona": "lengua_fria_ecuatorial",
+   "temperatura_c": 21.92,
+   "pixeles_leidos": 1610,
+   "rango_intercuartil_c": 2.82,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 34,
+   "fecha": "2007-11-18",
+   "fecha_hora_utc": "2007-11-18T21:24Z",
+   "zona": "caribe",
+   "temperatura_c": 28.45,
+   "pixeles_leidos": 910,
+   "rango_intercuartil_c": 0.15,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 35,
+   "fecha": "2007-11-26",
+   "fecha_hora_utc": "2007-11-26T02:47Z",
+   "zona": "oeste_acajutla",
+   "temperatura_c": 26.26,
+   "pixeles_leidos": 18,
+   "rango_intercuartil_c": 0.2,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 35,
+   "fecha": "2007-11-26",
+   "fecha_hora_utc": "2007-11-26T02:47Z",
+   "zona": "centro_la_libertad",
+   "temperatura_c": 26.38,
+   "pixeles_leidos": 10,
+   "rango_intercuartil_c": 0.09,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 35,
+   "fecha": "2007-11-26",
+   "fecha_hora_utc": "2007-11-26T02:47Z",
+   "zona": "este_el_cuco_fonseca",
+   "temperatura_c": 26.23,
+   "pixeles_leidos": 23,
+   "rango_intercuartil_c": 0.15,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 35,
+   "fecha": "2007-11-26",
+   "fecha_hora_utc": "2007-11-26T02:47Z",
+   "zona": "lengua_fria_ecuatorial",
+   "temperatura_c": 21.16,
+   "pixeles_leidos": 1554,
+   "rango_intercuartil_c": 3.37,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 35,
+   "fecha": "2007-11-26",
+   "fecha_hora_utc": "2007-11-26T02:47Z",
+   "zona": "caribe",
+   "temperatura_c": 28.23,
+   "pixeles_leidos": 888,
+   "rango_intercuartil_c": 0.21,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 36,
+   "fecha": "2007-12-03",
+   "fecha_hora_utc": "2007-12-03T08:09Z",
+   "zona": "oeste_acajutla",
+   "temperatura_c": 26.41,
+   "pixeles_leidos": 11,
+   "rango_intercuartil_c": 0.13,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 36,
+   "fecha": "2007-12-03",
+   "fecha_hora_utc": "2007-12-03T08:09Z",
+   "zona": "centro_la_libertad",
+   "temperatura_c": 26.41,
+   "pixeles_leidos": 9,
+   "rango_intercuartil_c": 0.17,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 36,
+   "fecha": "2007-12-03",
+   "fecha_hora_utc": "2007-12-03T08:09Z",
+   "zona": "este_el_cuco_fonseca",
+   "temperatura_c": 26.13,
+   "pixeles_leidos": 16,
+   "rango_intercuartil_c": 0.27,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 36,
+   "fecha": "2007-12-03",
+   "fecha_hora_utc": "2007-12-03T08:09Z",
+   "zona": "lengua_fria_ecuatorial",
+   "temperatura_c": 22.16,
+   "pixeles_leidos": 1417,
+   "rango_intercuartil_c": 3.17,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 36,
+   "fecha": "2007-12-03",
+   "fecha_hora_utc": "2007-12-03T08:09Z",
+   "zona": "caribe",
+   "temperatura_c": 28.07,
+   "pixeles_leidos": 876,
+   "rango_intercuartil_c": 0.15,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 37,
+   "fecha": "2007-12-10",
+   "fecha_hora_utc": "2007-12-10T13:32Z",
+   "zona": "oeste_acajutla",
+   "temperatura_c": 26.57,
+   "pixeles_leidos": 17,
+   "rango_intercuartil_c": 0.12,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 37,
+   "fecha": "2007-12-10",
+   "fecha_hora_utc": "2007-12-10T13:32Z",
+   "zona": "centro_la_libertad",
+   "temperatura_c": null,
+   "pixeles_leidos": 7,
+   "rango_intercuartil_c": null,
+   "se_lee_bien": false
+  },
+  {
+   "semana": 37,
+   "fecha": "2007-12-10",
+   "fecha_hora_utc": "2007-12-10T13:32Z",
+   "zona": "este_el_cuco_fonseca",
+   "temperatura_c": 26.46,
+   "pixeles_leidos": 15,
+   "rango_intercuartil_c": 0.04,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 37,
+   "fecha": "2007-12-10",
+   "fecha_hora_utc": "2007-12-10T13:32Z",
+   "zona": "lengua_fria_ecuatorial",
+   "temperatura_c": 21.79,
+   "pixeles_leidos": 1305,
+   "rango_intercuartil_c": 2.95,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 37,
+   "fecha": "2007-12-10",
+   "fecha_hora_utc": "2007-12-10T13:32Z",
+   "zona": "caribe",
+   "temperatura_c": 27.97,
+   "pixeles_leidos": 817,
+   "rango_intercuartil_c": 0.18,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 38,
+   "fecha": "2007-12-17",
+   "fecha_hora_utc": "2007-12-17T18:54Z",
+   "zona": "oeste_acajutla",
+   "temperatura_c": 26.7,
+   "pixeles_leidos": 10,
+   "rango_intercuartil_c": 0.3,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 38,
+   "fecha": "2007-12-17",
+   "fecha_hora_utc": "2007-12-17T18:54Z",
+   "zona": "centro_la_libertad",
+   "temperatura_c": null,
+   "pixeles_leidos": 7,
+   "rango_intercuartil_c": null,
+   "se_lee_bien": false
+  },
+  {
+   "semana": 38,
+   "fecha": "2007-12-17",
+   "fecha_hora_utc": "2007-12-17T18:54Z",
+   "zona": "este_el_cuco_fonseca",
+   "temperatura_c": 26.46,
+   "pixeles_leidos": 22,
+   "rango_intercuartil_c": 0.05,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 38,
+   "fecha": "2007-12-17",
+   "fecha_hora_utc": "2007-12-17T18:54Z",
+   "zona": "lengua_fria_ecuatorial",
+   "temperatura_c": 22.53,
+   "pixeles_leidos": 1394,
+   "rango_intercuartil_c": 2.89,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 38,
+   "fecha": "2007-12-17",
+   "fecha_hora_utc": "2007-12-17T18:54Z",
+   "zona": "caribe",
+   "temperatura_c": 27.87,
+   "pixeles_leidos": 820,
+   "rango_intercuartil_c": 0.19,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 39,
+   "fecha": "2007-12-25",
+   "fecha_hora_utc": "2007-12-25T00:17Z",
+   "zona": "oeste_acajutla",
+   "temperatura_c": 26.59,
+   "pixeles_leidos": 15,
+   "rango_intercuartil_c": 0.24,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 39,
+   "fecha": "2007-12-25",
+   "fecha_hora_utc": "2007-12-25T00:17Z",
+   "zona": "centro_la_libertad",
+   "temperatura_c": 26.5,
+   "pixeles_leidos": 11,
+   "rango_intercuartil_c": 0.1,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 39,
+   "fecha": "2007-12-25",
+   "fecha_hora_utc": "2007-12-25T00:17Z",
+   "zona": "este_el_cuco_fonseca",
+   "temperatura_c": 26.49,
+   "pixeles_leidos": 29,
+   "rango_intercuartil_c": 0.06,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 39,
+   "fecha": "2007-12-25",
+   "fecha_hora_utc": "2007-12-25T00:17Z",
+   "zona": "lengua_fria_ecuatorial",
+   "temperatura_c": 21.89,
+   "pixeles_leidos": 1400,
+   "rango_intercuartil_c": 2.53,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 39,
+   "fecha": "2007-12-25",
+   "fecha_hora_utc": "2007-12-25T00:17Z",
+   "zona": "caribe",
+   "temperatura_c": 27.78,
+   "pixeles_leidos": 821,
+   "rango_intercuartil_c": 0.15,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 40,
+   "fecha": "2008-01-01",
+   "fecha_hora_utc": "2008-01-01T05:39Z",
+   "zona": "oeste_acajutla",
+   "temperatura_c": 26.44,
+   "pixeles_leidos": 12,
+   "rango_intercuartil_c": 0.15,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 40,
+   "fecha": "2008-01-01",
+   "fecha_hora_utc": "2008-01-01T05:39Z",
+   "zona": "centro_la_libertad",
+   "temperatura_c": 26.49,
+   "pixeles_leidos": 12,
+   "rango_intercuartil_c": 0.15,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 40,
+   "fecha": "2008-01-01",
+   "fecha_hora_utc": "2008-01-01T05:39Z",
+   "zona": "este_el_cuco_fonseca",
+   "temperatura_c": 26.52,
+   "pixeles_leidos": 22,
+   "rango_intercuartil_c": 0.06,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 40,
+   "fecha": "2008-01-01",
+   "fecha_hora_utc": "2008-01-01T05:39Z",
+   "zona": "lengua_fria_ecuatorial",
+   "temperatura_c": 22.92,
+   "pixeles_leidos": 1344,
+   "rango_intercuartil_c": 2.81,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 40,
+   "fecha": "2008-01-01",
+   "fecha_hora_utc": "2008-01-01T05:39Z",
+   "zona": "caribe",
+   "temperatura_c": 27.68,
+   "pixeles_leidos": 842,
+   "rango_intercuartil_c": 0.15,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 41,
+   "fecha": "2008-01-08",
+   "fecha_hora_utc": "2008-01-08T11:02Z",
+   "zona": "oeste_acajutla",
+   "temperatura_c": 26.32,
+   "pixeles_leidos": 16,
+   "rango_intercuartil_c": 0.15,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 41,
+   "fecha": "2008-01-08",
+   "fecha_hora_utc": "2008-01-08T11:02Z",
+   "zona": "centro_la_libertad",
+   "temperatura_c": 26.3,
+   "pixeles_leidos": 13,
+   "rango_intercuartil_c": 0.21,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 41,
+   "fecha": "2008-01-08",
+   "fecha_hora_utc": "2008-01-08T11:02Z",
+   "zona": "este_el_cuco_fonseca",
+   "temperatura_c": 26.12,
+   "pixeles_leidos": 16,
+   "rango_intercuartil_c": 0.48,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 41,
+   "fecha": "2008-01-08",
+   "fecha_hora_utc": "2008-01-08T11:02Z",
+   "zona": "lengua_fria_ecuatorial",
+   "temperatura_c": 22.42,
+   "pixeles_leidos": 1393,
+   "rango_intercuartil_c": 2.09,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 41,
+   "fecha": "2008-01-08",
+   "fecha_hora_utc": "2008-01-08T11:02Z",
+   "zona": "caribe",
+   "temperatura_c": 27.48,
+   "pixeles_leidos": 861,
+   "rango_intercuartil_c": 0.23,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 42,
+   "fecha": "2008-01-15",
+   "fecha_hora_utc": "2008-01-15T16:24Z",
+   "zona": "oeste_acajutla",
+   "temperatura_c": 26.54,
+   "pixeles_leidos": 21,
+   "rango_intercuartil_c": 0.36,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 42,
+   "fecha": "2008-01-15",
+   "fecha_hora_utc": "2008-01-15T16:24Z",
+   "zona": "centro_la_libertad",
+   "temperatura_c": 26.71,
+   "pixeles_leidos": 17,
+   "rango_intercuartil_c": 0.25,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 42,
+   "fecha": "2008-01-15",
+   "fecha_hora_utc": "2008-01-15T16:24Z",
+   "zona": "este_el_cuco_fonseca",
+   "temperatura_c": 26.21,
+   "pixeles_leidos": 16,
+   "rango_intercuartil_c": 0.51,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 42,
+   "fecha": "2008-01-15",
+   "fecha_hora_utc": "2008-01-15T16:24Z",
+   "zona": "lengua_fria_ecuatorial",
+   "temperatura_c": 23.53,
+   "pixeles_leidos": 1064,
+   "rango_intercuartil_c": 2.23,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 42,
+   "fecha": "2008-01-15",
+   "fecha_hora_utc": "2008-01-15T16:24Z",
+   "zona": "caribe",
+   "temperatura_c": 27.41,
+   "pixeles_leidos": 832,
+   "rango_intercuartil_c": 0.22,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 43,
+   "fecha": "2008-01-22",
+   "fecha_hora_utc": "2008-01-22T21:47Z",
+   "zona": "oeste_acajutla",
+   "temperatura_c": 26.7,
+   "pixeles_leidos": 26,
+   "rango_intercuartil_c": 0.54,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 43,
+   "fecha": "2008-01-22",
+   "fecha_hora_utc": "2008-01-22T21:47Z",
+   "zona": "centro_la_libertad",
+   "temperatura_c": 26.58,
+   "pixeles_leidos": 20,
+   "rango_intercuartil_c": 0.54,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 43,
+   "fecha": "2008-01-22",
+   "fecha_hora_utc": "2008-01-22T21:47Z",
+   "zona": "este_el_cuco_fonseca",
+   "temperatura_c": 26.39,
+   "pixeles_leidos": 16,
+   "rango_intercuartil_c": 0.18,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 43,
+   "fecha": "2008-01-22",
+   "fecha_hora_utc": "2008-01-22T21:47Z",
+   "zona": "lengua_fria_ecuatorial",
+   "temperatura_c": 24.36,
+   "pixeles_leidos": 1036,
+   "rango_intercuartil_c": 1.31,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 43,
+   "fecha": "2008-01-22",
+   "fecha_hora_utc": "2008-01-22T21:47Z",
+   "zona": "caribe",
+   "temperatura_c": 27.27,
+   "pixeles_leidos": 851,
+   "rango_intercuartil_c": 0.2,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 44,
+   "fecha": "2008-01-30",
+   "fecha_hora_utc": "2008-01-30T03:10Z",
+   "zona": "oeste_acajutla",
+   "temperatura_c": 26.7,
+   "pixeles_leidos": 20,
+   "rango_intercuartil_c": 0.34,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 44,
+   "fecha": "2008-01-30",
+   "fecha_hora_utc": "2008-01-30T03:10Z",
+   "zona": "centro_la_libertad",
+   "temperatura_c": 26.37,
+   "pixeles_leidos": 16,
+   "rango_intercuartil_c": 0.24,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 44,
+   "fecha": "2008-01-30",
+   "fecha_hora_utc": "2008-01-30T03:10Z",
+   "zona": "este_el_cuco_fonseca",
+   "temperatura_c": 26.3,
+   "pixeles_leidos": 20,
+   "rango_intercuartil_c": 0.1,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 44,
+   "fecha": "2008-01-30",
+   "fecha_hora_utc": "2008-01-30T03:10Z",
+   "zona": "lengua_fria_ecuatorial",
+   "temperatura_c": 24.37,
+   "pixeles_leidos": 1132,
+   "rango_intercuartil_c": 1.55,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 44,
+   "fecha": "2008-01-30",
+   "fecha_hora_utc": "2008-01-30T03:10Z",
+   "zona": "caribe",
+   "temperatura_c": 27.18,
+   "pixeles_leidos": 839,
+   "rango_intercuartil_c": 0.25,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 45,
+   "fecha": "2008-02-06",
+   "fecha_hora_utc": "2008-02-06T08:32Z",
+   "zona": "oeste_acajutla",
+   "temperatura_c": 26.72,
+   "pixeles_leidos": 21,
+   "rango_intercuartil_c": 0.21,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 45,
+   "fecha": "2008-02-06",
+   "fecha_hora_utc": "2008-02-06T08:32Z",
+   "zona": "centro_la_libertad",
+   "temperatura_c": 26.53,
+   "pixeles_leidos": 10,
+   "rango_intercuartil_c": 0.23,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 45,
+   "fecha": "2008-02-06",
+   "fecha_hora_utc": "2008-02-06T08:32Z",
+   "zona": "este_el_cuco_fonseca",
+   "temperatura_c": 26.36,
+   "pixeles_leidos": 32,
+   "rango_intercuartil_c": 0.08,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 45,
+   "fecha": "2008-02-06",
+   "fecha_hora_utc": "2008-02-06T08:32Z",
+   "zona": "lengua_fria_ecuatorial",
+   "temperatura_c": 24.84,
+   "pixeles_leidos": 1049,
+   "rango_intercuartil_c": 1.23,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 45,
+   "fecha": "2008-02-06",
+   "fecha_hora_utc": "2008-02-06T08:32Z",
+   "zona": "caribe",
+   "temperatura_c": 27.03,
+   "pixeles_leidos": 834,
+   "rango_intercuartil_c": 0.32,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 46,
+   "fecha": "2008-02-13",
+   "fecha_hora_utc": "2008-02-13T13:55Z",
+   "zona": "oeste_acajutla",
+   "temperatura_c": 26.95,
+   "pixeles_leidos": 11,
+   "rango_intercuartil_c": 0.1,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 46,
+   "fecha": "2008-02-13",
+   "fecha_hora_utc": "2008-02-13T13:55Z",
+   "zona": "centro_la_libertad",
+   "temperatura_c": 26.84,
+   "pixeles_leidos": 13,
+   "rango_intercuartil_c": 0.19,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 46,
+   "fecha": "2008-02-13",
+   "fecha_hora_utc": "2008-02-13T13:55Z",
+   "zona": "este_el_cuco_fonseca",
+   "temperatura_c": 26.74,
+   "pixeles_leidos": 29,
+   "rango_intercuartil_c": 0.18,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 46,
+   "fecha": "2008-02-13",
+   "fecha_hora_utc": "2008-02-13T13:55Z",
+   "zona": "lengua_fria_ecuatorial",
+   "temperatura_c": 25.1,
+   "pixeles_leidos": 1275,
+   "rango_intercuartil_c": 1.38,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 46,
+   "fecha": "2008-02-13",
+   "fecha_hora_utc": "2008-02-13T13:55Z",
+   "zona": "caribe",
+   "temperatura_c": 26.96,
+   "pixeles_leidos": 856,
+   "rango_intercuartil_c": 0.33,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 47,
+   "fecha": "2008-02-20",
+   "fecha_hora_utc": "2008-02-20T19:17Z",
+   "zona": "oeste_acajutla",
+   "temperatura_c": 26.9,
+   "pixeles_leidos": 13,
+   "rango_intercuartil_c": 0.15,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 47,
+   "fecha": "2008-02-20",
+   "fecha_hora_utc": "2008-02-20T19:17Z",
+   "zona": "centro_la_libertad",
+   "temperatura_c": 26.98,
+   "pixeles_leidos": 13,
+   "rango_intercuartil_c": 0.05,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 47,
+   "fecha": "2008-02-20",
+   "fecha_hora_utc": "2008-02-20T19:17Z",
+   "zona": "este_el_cuco_fonseca",
+   "temperatura_c": 26.97,
+   "pixeles_leidos": 27,
+   "rango_intercuartil_c": 0.2,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 47,
+   "fecha": "2008-02-20",
+   "fecha_hora_utc": "2008-02-20T19:17Z",
+   "zona": "lengua_fria_ecuatorial",
+   "temperatura_c": 25.72,
+   "pixeles_leidos": 1011,
+   "rango_intercuartil_c": 0.72,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 47,
+   "fecha": "2008-02-20",
+   "fecha_hora_utc": "2008-02-20T19:17Z",
+   "zona": "caribe",
+   "temperatura_c": 26.89,
+   "pixeles_leidos": 840,
+   "rango_intercuartil_c": 0.33,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 48,
+   "fecha": "2008-02-28",
+   "fecha_hora_utc": "2008-02-28T00:40Z",
+   "zona": "oeste_acajutla",
+   "temperatura_c": 27.05,
+   "pixeles_leidos": 10,
+   "rango_intercuartil_c": 0.14,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 48,
+   "fecha": "2008-02-28",
+   "fecha_hora_utc": "2008-02-28T00:40Z",
+   "zona": "centro_la_libertad",
+   "temperatura_c": 27.03,
+   "pixeles_leidos": 18,
+   "rango_intercuartil_c": 0.13,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 48,
+   "fecha": "2008-02-28",
+   "fecha_hora_utc": "2008-02-28T00:40Z",
+   "zona": "este_el_cuco_fonseca",
+   "temperatura_c": 27.03,
+   "pixeles_leidos": 29,
+   "rango_intercuartil_c": 0.14,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 48,
+   "fecha": "2008-02-28",
+   "fecha_hora_utc": "2008-02-28T00:40Z",
+   "zona": "lengua_fria_ecuatorial",
+   "temperatura_c": 26.06,
+   "pixeles_leidos": 1107,
+   "rango_intercuartil_c": 0.69,
+   "se_lee_bien": true
+  },
+  {
+   "semana": 48,
+   "fecha": "2008-02-28",
+   "fecha_hora_utc": "2008-02-28T00:40Z",
+   "zona": "caribe",
+   "temperatura_c": 26.81,
+   "pixeles_leidos": 866,
+   "rango_intercuartil_c": 0.34,
+   "se_lee_bien": true
+  }
+ ]
+}

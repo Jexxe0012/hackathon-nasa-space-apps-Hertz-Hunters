@@ -1,0 +1,14 @@
+# Imágenes y videos de la NASA: pesados, viven fuera del repo (carpeta de contexto de cada quien)
+*.tif
+*.tiff
+*.exr
+*.mp4
+*.webm
+datos/
+imagen-a-sonido/**/frames/
+imagen-a-sonido/**/datos/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
