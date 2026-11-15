@@ -1,82 +1,76 @@
 /*
- * Página mínima del disco Luces (la interfaz bonita la hace Josué; la voz, el bot del otro Diego).
- * Carga el JSON de luces, lo hace sonar con motor-luces.js, muestra el mapa y la curva sincronizados y exporta el WAV.
+ * Disco Luces: "escucha cómo se veía el mundo de noche" en fechas importantes de 2012 a 2023.
+ * Un radar recorre el mapa de oeste a este y suena lo que toca (motor-luces.js). Sin voz (la pone el bot).
  */
 (function () {
   'use strict';
   const M = window.MotorLuces;
-  const RUTA_DATOS = '../../imagen-a-sonido/luces_5276/resultados/luces_5276.json';
+  const RUTA = '../../imagen-a-sonido/luces_5276/resultados/luces_radar.json';
+
+  // Fechas importantes (una por año). El mapa es el promedio del año: no muestra ese día.
+  const FECHAS = {
+    2012: { es: ['El rover Curiosity llega a Marte', '6 de agosto de 2012 · y es el primer año de este mapa de luces'], en: ['The Curiosity rover lands on Mars', 'August 6, 2012 · and the first year of this night-lights map'] },
+    2013: { es: ['La NASA confirma que la Voyager 1 salió al espacio interestelar', 'septiembre de 2013'], en: ['NASA confirms Voyager 1 reached interstellar space', 'September 2013'] },
+    2014: { es: ['Philae, de la misión Rosetta, se posa sobre un cometa', '12 de noviembre de 2014'], en: ['Philae, from the Rosetta mission, lands on a comet', 'November 12, 2014'] },
+    2015: { es: ['New Horizons pasa junto a Plutón', '14 de julio de 2015'], en: ['New Horizons flies past Pluto', 'July 14, 2015'] },
+    2016: { es: ['La sonda Juno llega a Júpiter', '4 de julio de 2016'], en: ['The Juno probe arrives at Jupiter', 'July 4, 2016'] },
+    2017: { es: ['Gran eclipse total de Sol en Estados Unidos', '21 de agosto de 2017'], en: ['Great total solar eclipse across the United States', 'August 21, 2017'] },
+    2018: { es: ['Despega la sonda solar Parker', '12 de agosto de 2018'], en: ['The Parker Solar Probe launches', 'August 12, 2018'] },
+    2019: { es: ['Primera imagen de un agujero negro', '10 de abril de 2019'], en: ['First image of a black hole', 'April 10, 2019'] },
+    2020: { es: ['Pandemia de COVID-19', 'la OMS la declara el 11 de marzo de 2020'], en: ['COVID-19 pandemic', 'declared by the WHO on March 11, 2020'] },
+    2021: { es: ['El rover Perseverance llega a Marte', '18 de febrero de 2021'], en: ['The Perseverance rover lands on Mars', 'February 18, 2021'] },
+    2022: { es: ['Primeras imágenes del telescopio James Webb', '12 de julio de 2022'], en: ['First images from the James Webb Space Telescope', 'July 12, 2022'] },
+    2023: { es: ['OSIRIS-REx trae a la Tierra muestras del asteroide Bennu', '24 de septiembre de 2023'], en: ['OSIRIS-REx brings samples of asteroid Bennu to Earth', 'September 24, 2023'] },
+  };
 
   const TXT = {
     es: {
       disco: 'Disco 2 · Luces nocturnas · NASA SVS 5276',
-      titulo: 'Escucha cómo se enciende El Salvador',
-      aviso: 'Las luces de noche vistas desde el espacio, de 2012 a 2023 (satélite VIIRS, NASA y NOAA). Observación real. La NASA no da números: se compara cada año con 2012.',
-      idioma: 'Idioma · Language',
-      h_anio: 'Año actual',
-      anio_control: 'Año (flechas ← → para moverte)',
-      h_controles: 'Escuchar',
-      demo: 'Escuchar los 12 años (30 s)',
+      titulo: 'Escucha cómo se veía el mundo de noche',
+      aviso: 'Elige una fecha importante y escucha las luces del planeta ese año, vistas desde el espacio (satélite VIIRS de la NASA y la NOAA). Cada mapa es el promedio de todo el año, no de ese día.',
+      idioma: 'Idioma · Language', fecha: 'Fecha',
+      leyenda_mapa: 'La línea recorre el mundo de oeste a este (de América a Asia) y suena lo que toca: más luz, más notas; norte agudo, sur grave.',
+      escuchar: 'Escuchar {anio} (12 s)', comparar: 'Comparar 2012 → {anio} (25 s)',
       reproducir: 'Reproducir', pausar: 'Pausar',
-      prev: 'Año anterior', next: 'Año siguiente',
-      teclas: 'Teclado: <kbd>←</kbd> <kbd>→</kbd> cambiar de año · <kbd>Espacio</kbd> reproducir o pausar',
+      teclas: 'Teclado: <kbd>Espacio</kbd> reproducir o pausar · <kbd>←</kbd> <kbd>→</kbd> cambiar de fecha',
       porque: '¿Por qué suena así?',
       h_exportar: 'Exportar audio',
-      exportar_texto: 'Genera los 12 años (30 s) como archivo WAV con el mismo motor que escuchas aquí. Sirve para el video de la demo.',
+      exportar_texto: 'Genera el recorrido de 2012 y del año elegido como archivo WAV, con el mismo motor que escuchas aquí. Sirve para el video de la demo.',
       exportar: 'Exportar en WAV', exportando: 'Generando el audio…', exportado: 'Listo: {archivo} ({seg} s).', export_error: 'No se pudo generar el audio: {error}',
-      mapa_mundo: 'Todo el mundo de noche (NASA SVS 5276). El recuadro blanco es la zona ampliada.',
-      mapa_zoom: 'Zoom: Centroamérica. Recuadro punteado = El Salvador, la luz que escuchas.',
+      fin: 'Fin del recorrido.', cargando: 'Cargando datos…', error_datos: 'No se pudieron cargar los datos. Abre la página desde un servidor web (ver LEEME.md).',
       pie: 'Datos e imágenes: NASA Scientific Visualization Studio, SVS 5276 (Black Marble, VIIRS / Suomi NPP). Piano: Salamander Grand Piano (Alexander Holm, CC BY 3.0). Hertz Hunters · NASA Space Apps Challenge 2026 · San Salvador.',
-      referencia: 'Año de referencia',
-      vs2012: { mas: 'Más luz que en 2012', igual: 'Igual que en 2012', menos: 'Menos luz que en 2012' },
-      vsAnterior: { mas: 'más que el año anterior', igual: 'igual que el año anterior', menos: 'menos que el año anterior' },
-      fin_demo: 'Fin.',
-      cargando: 'Cargando datos…',
-      error_datos: 'No se pudieron cargar los datos. Abre la página desde un servidor web (ver LEEME.md).',
-      ahora: 'Este año: nota {nota} (escalón {paso}), {dps} destellos por segundo.',
-      porque_html: [
-        '<strong>Qué escuchas.</strong> Las luces nocturnas de El Salvador vistas desde el espacio (satélite VIIRS de la NASA y la NOAA, mapas Black Marble), un año tras otro de 2012 a 2023. Es una observación real.',
-        '<strong>Solo suenan dos cosas:</strong> destellos (las luces) y una nota de piano por año.',
-        '<strong>Más destellos = más luz.</strong> Con la luz de 2012 suenan 5 destellos por segundo; con más luz, más destellos, en la misma proporción. Cada destello suena a la izquierda o a la derecha según dónde está la luz en el país: el oeste (Ahuachapán, Sonsonate) a la izquierda y el este (San Miguel, La Unión) a la derecha.',
-        '<strong>Piano más agudo = más luz.</strong> Cada 10 % más de luz que en 2012 sube un escalón; si la luz baja, la nota baja.',
-        '<strong>Sin números, a propósito.</strong> La barra de la NASA no tiene unidades, así que decimos "más luz" o "menos luz" comparado con 2012. Más luz no es bueno ni malo por sí solo: puede ser ciudades que crecen, electrificación o más alumbrado.',
-        '<strong>Cómo se midió:</strong> sumamos el brillo de los pixeles dentro de un recuadro sobre El Salvador (cada pixel ≈ 10 km; el recuadro toca bordes de Guatemala y Honduras) y lo comparamos con 2012. En la curva, la línea gris punteada es Centroamérica completa, para comparar.',
+      porque_lista: (rel) => [
+        '<strong>Qué escuchas.</strong> El mundo de noche visto desde el espacio (mapas Black Marble de la NASA, satélite VIIRS) el año de la fecha que elegiste. Cada mapa es el promedio de todo ese año: la fecha es solo para ubicarte en el tiempo.',
+        '<strong>El radar.</strong> Una línea recorre el mapa de oeste a este en 12 segundos y suena lo que va tocando. El sonido también viaja de izquierda a derecha en tus audífonos.',
+        '<strong>Más luz = más notas y más fuertes.</strong> Las ciudades suenan; los océanos y los desiertos oscuros quedan en silencio.',
+        '<strong>Norte agudo, sur grave.</strong> Cada franja de latitud es una nota de una escala pentatónica: Europa suena aguda; Brasil, Sudáfrica y Australia, graves.',
+        '<strong>Comparar con 2012.</strong> Primero suena 2012 y después tu año. En 2023 el mundo tiene un ' + Math.round(100 * (rel[2023] - 1)) + ' % más de luz que en 2012 (se oyen más notas), y en 2020 hubo menos luz que en 2019.',
+        '<strong>Sin números, a propósito.</strong> La NASA no da unidades: el brillo es relativo y comparable entre años. Más luz no es buena ni mala por sí sola.',
       ],
       decimal: ',',
     },
     en: {
       disco: 'Disc 2 · Night lights · NASA SVS 5276',
-      titulo: 'Listen to El Salvador lighting up',
-      aviso: 'Night lights seen from space, 2012 to 2023 (VIIRS satellite, NASA and NOAA). Real observation. NASA gives no numbers: each year is compared with 2012.',
-      idioma: 'Idioma · Language',
-      h_anio: 'Current year',
-      anio_control: 'Year (use ← → arrows to move)',
-      h_controles: 'Listen',
-      demo: 'Play the 12 years (30 s)',
+      titulo: 'Listen to how the world looked at night',
+      aviso: 'Pick an important date and listen to the planet\'s lights that year, seen from space (NASA–NOAA VIIRS satellite). Each map is the average of the whole year, not of that day.',
+      idioma: 'Idioma · Language', fecha: 'Date',
+      leyenda_mapa: 'The line sweeps the world from west to east (from the Americas to Asia) and plays what it touches: more light, more notes; north high, south low.',
+      escuchar: 'Listen to {anio} (12 s)', comparar: 'Compare 2012 → {anio} (25 s)',
       reproducir: 'Play', pausar: 'Pause',
-      prev: 'Previous year', next: 'Next year',
-      teclas: 'Keyboard: <kbd>←</kbd> <kbd>→</kbd> change year · <kbd>Space</kbd> play or pause',
+      teclas: 'Keyboard: <kbd>Space</kbd> play or pause · <kbd>←</kbd> <kbd>→</kbd> change date',
       porque: 'Why does it sound like this?',
       h_exportar: 'Export audio',
-      exportar_texto: 'Renders the 12 years (30 s) as a WAV file with the same engine you hear here. Use it for the demo video.',
+      exportar_texto: 'Renders the sweep of 2012 and of the chosen year as a WAV file, with the same engine you hear here. Use it for the demo video.',
       exportar: 'Export as WAV', exportando: 'Rendering audio…', exportado: 'Done: {archivo} ({seg} s).', export_error: 'Could not render the audio: {error}',
-      mapa_mundo: 'The whole world at night (NASA SVS 5276). The white box is the zoomed area.',
-      mapa_zoom: 'Zoom: Central America. Dashed box = El Salvador, the light you hear.',
+      fin: 'End of the sweep.', cargando: 'Loading data…', error_datos: 'Could not load the data. Open the page from a web server (see LEEME.md).',
       pie: 'Data and images: NASA Scientific Visualization Studio, SVS 5276 (Black Marble, VIIRS / Suomi NPP). Piano: Salamander Grand Piano (Alexander Holm, CC BY 3.0). Hertz Hunters · NASA Space Apps Challenge 2026 · San Salvador.',
-      referencia: 'Reference year',
-      vs2012: { mas: 'More light than in 2012', igual: 'Same as 2012', menos: 'Less light than in 2012' },
-      vsAnterior: { mas: 'more than the year before', igual: 'same as the year before', menos: 'less than the year before' },
-      fin_demo: 'End.',
-      cargando: 'Loading data…',
-      error_datos: 'Could not load the data. Open the page from a web server (see LEEME.md).',
-      ahora: 'This year: note {nota} (step {paso}), {dps} sparkles per second.',
-      porque_html: [
-        '<strong>What you hear.</strong> El Salvador\'s night lights seen from space (NASA–NOAA VIIRS satellite, Black Marble maps), year after year from 2012 to 2023. It is a real observation.',
-        '<strong>Only two things play:</strong> sparkles (the lights) and one piano note per year.',
-        '<strong>More sparkles = more light.</strong> With 2012\'s light there are 5 sparkles per second; with more light, more sparkles, in the same proportion. Each sparkle plays left or right depending on where the light is in the country: west (Ahuachapán, Sonsonate) on the left and east (San Miguel, La Unión) on the right.',
-        '<strong>Higher piano = more light.</strong> Every 10 % more light than in 2012 moves one step up; if the light drops, the note drops.',
-        '<strong>No numbers, on purpose.</strong> NASA\'s color bar has no units, so we say "more light" or "less light" compared with 2012. More light is neither good nor bad by itself: it can be growing cities, electrification or more street lighting.',
-        '<strong>How it was measured:</strong> we added up pixel brightness inside a box over El Salvador (each pixel ≈ 10 km; the box touches the edges of Guatemala and Honduras) and compared it with 2012. In the curve, the dashed gray line is all of Central America, for comparison.',
+      porque_lista: (rel) => [
+        '<strong>What you hear.</strong> The world at night seen from space (NASA Black Marble maps, VIIRS satellite) in the year of the date you picked. Each map is the average of the whole year: the date only places you in time.',
+        '<strong>The radar.</strong> A line sweeps the map from west to east in 12 seconds and plays what it touches. The sound also travels from left to right in your headphones.',
+        '<strong>More light = more and louder notes.</strong> Cities sound; dark oceans and deserts stay silent.',
+        '<strong>North high, south low.</strong> Each latitude band is a note of a pentatonic scale: Europe sounds high; Brazil, South Africa and Australia, low.',
+        '<strong>Compare with 2012.</strong> First 2012 plays, then your year. In 2023 the world has ' + Math.round(100 * (rel[2023] - 1)) + ' % more light than in 2012 (you hear more notes), and 2020 had less light than 2019.',
+        '<strong>No numbers, on purpose.</strong> NASA gives no units: brightness is relative and comparable between years. More light is neither good nor bad by itself.',
       ],
       decimal: '.',
     },
@@ -84,94 +78,40 @@
 
   const $ = (id) => document.getElementById(id);
   const rep = new M.Reproductor();
-  let idioma = 'es', datos = null, anios = [], comp = [], ultimaMostrada = -1, destello = null;
+  let idioma = 'es', datos = null, anio = 2023;
   const L = () => TXT[idioma];
   function t(clave, vars) { let s = L()[clave]; if (vars) for (const k in vars) s = s.split('{' + k + '}').join(vars[k]); return s; }
   const num = (x, d) => x.toFixed(d).replace('.', L().decimal);
-  const comparar = (a, b) => (Math.abs(a - b) < 0.005 ? 'igual' : a > b ? 'mas' : 'menos');
-
-  function textoEstado(i) {
-    if (i === 0) return L().referencia;
-    return L().vs2012[comparar(anios[i].rel, 1)] + ' · ' + L().vsAnterior[comparar(anios[i].rel, anios[i - 1].rel)];
-  }
+  const imgs = {};
 
   function aplicarIdioma() {
     document.documentElement.lang = idioma;
     document.querySelectorAll('[data-t]').forEach((el) => { el.textContent = t(el.dataset.t); });
     $('teclas').innerHTML = t('teclas');
-    $('btn-demo').textContent = t('demo');
-    $('btn-prev').innerHTML = '<span aria-hidden="true">◀ </span>' + t('prev');
-    $('btn-next').innerHTML = t('next') + '<span aria-hidden="true"> ▶</span>';
     $('btn-exportar').textContent = t('exportar');
-    $('porque-texto').innerHTML = '<ul>' + L().porque_html.map((x) => '<li>' + x + '</li>').join('') + '</ul>';
+    const sel = $('fecha'), previo = sel.value || String(anio);
+    sel.innerHTML = Object.keys(FECHAS).map((a) => `<option value="${a}">${a} · ${FECHAS[a][idioma][0]}</option>`).join('');
+    sel.value = previo;
+    if (datos) $('porque-texto').innerHTML = '<ul>' + L().porque_lista(datos.total_relativo_2012).map((x) => '<li>' + x + '</li>').join('') + '</ul>';
+    mostrarFecha();
+  }
+
+  function mostrarFecha() {
+    const f = FECHAS[anio][idioma];
+    $('evento').textContent = anio + ' · ' + f[0];
+    $('evento-sub').textContent = f[1];
+    $('btn-escuchar').textContent = t('escuchar', { anio });
+    $('btn-comparar').textContent = t('comparar', { anio });
+    $('btn-comparar').disabled = anio === 2012;
+    if (!rep.sonando) ponerMapa(anio, 0);
     actualizarBotonPlay(true);
-    construirCurva();
-    ultimaMostrada = -1;
   }
 
-  // ---------------------------------------------------------------- visual: mundo + zoom + curva (mismo reloj que el audio)
-  const imgs = { mundo: [], zoom: [] };
-  const CURVA = { x0: 30, x1: 470, y0: 10, y1: 126, rmin: 0.9, rmax: 1.75 };
-  const cxs = (i) => CURVA.x0 + (CURVA.x1 - CURVA.x0) * i / (anios.length - 1);
-  const cys = (r) => CURVA.y1 - (CURVA.y1 - CURVA.y0) * (Math.max(CURVA.rmin, Math.min(CURVA.rmax, r)) - CURVA.rmin) / (CURVA.rmax - CURVA.rmin);
-  function construirCurva() {
-    if (!anios.length) return;
-    const linea = (s) => s.map((v, i) => (i ? 'L' : 'M') + cxs(i).toFixed(1) + ' ' + cys(v).toFixed(1)).join('');
-    const yRef = cys(1);
-    let etiquetas = '';
-    anios.forEach((a, i) => { if ([2012, 2015, 2018, 2021, 2023].includes(a.anio)) etiquetas += `<text x="${cxs(i).toFixed(1)}" y="146" font-size="9" fill="var(--suave)" text-anchor="middle">${a.anio}</text>`; });
-    $('curva').innerHTML =
-      '<defs><clipPath id="hecho"><rect id="hecho-rect" x="0" y="0" width="0" height="150"/></clipPath></defs>' +
-      `<line x1="${CURVA.x0}" x2="${CURVA.x1}" y1="${yRef}" y2="${yRef}" stroke="var(--ref)" stroke-width="1.2" stroke-dasharray="4 3"/>` +
-      `<text x="0" y="${yRef + 3}" font-size="9" fill="var(--ref)">2012</text>` +
-      `<text x="0" y="${CURVA.y0 + 6}" font-size="9" fill="var(--suave)">${idioma === 'es' ? '+luz' : '+light'}</text>` +
-      etiquetas +
-      `<path d="${linea(comp)}" fill="none" stroke="var(--comp)" stroke-width="1.6" stroke-dasharray="3 3"/>` +
-      `<path d="${linea(anios.map((a) => a.rel))}" fill="none" stroke="var(--borde)" stroke-width="2"/>` +
-      `<path d="${linea(anios.map((a) => a.rel))}" fill="none" stroke="var(--acento)" stroke-width="2.8" stroke-linejoin="round" clip-path="url(#hecho)"/>` +
-      `<line id="cursor" x1="0" x2="0" y1="${CURVA.y0 - 6}" y2="${CURVA.y1 + 4}" stroke="var(--texto)" stroke-width="1" opacity=".45"/>` +
-      '<circle id="punto" r="4.5" fill="var(--acento)" stroke="var(--tarjeta)" stroke-width="1.5" style="transition:r .12s"/>';
-  }
-  let imgActual = -1;
-  function actualizarVisual(p, enDemo) {
-    const n = anios.length, i = Math.max(0, Math.min(n - 1, Math.floor(p)));
-    if (i !== imgActual && imgs.mundo[i]) {
-      $('mundo').style.backgroundImage = 'url(' + imgs.mundo[i].src + ')';
-      $('zoom').style.backgroundImage = 'url(' + imgs.zoom[i].src + ')';
-      imgActual = i;
-    }
-    const q = Math.max(0, Math.min(n - 1, p)), x = cxs(q), f = q - Math.floor(q);
-    const r = anios[Math.floor(q)].rel + (anios[Math.min(n - 1, Math.floor(q) + 1)].rel - anios[Math.floor(q)].rel) * f;
-    const rect = document.getElementById('hecho-rect');
-    if (!rect) return;
-    rect.setAttribute('width', enDemo ? x : 480);
-    $('cursor').setAttribute('x1', x); $('cursor').setAttribute('x2', x);
-    $('punto').setAttribute('cx', x); $('punto').setAttribute('cy', cys(r));
-  }
-  function revisarNotas(ahoraV) {
-    const cola = rep.motor && rep.motor.notasVisuales;
-    if (!cola || !cola.length) return;
-    let suena = false;
-    while (cola.length && cola[0] <= ahoraV) { cola.shift(); suena = true; }
-    if (!suena) return;
-    $('zoom').classList.add('pulso'); $('punto').setAttribute('r', '7');
-    clearTimeout(destello);
-    destello = setTimeout(() => { $('zoom').classList.remove('pulso'); const pt = $('punto'); if (pt) pt.setAttribute('r', '4.5'); }, 140);
-  }
-  function relojVisual() {
-    if (!rep.motor || !window.Tone) return 0;
-    const raw = Tone.getContext().rawContext;
-    return Tone.getContext().currentTime - (raw.outputLatency || raw.baseLatency || 0);
-  }
-
-  function mostrar(i, accesible) {
-    const a = anios[i], d = M.describir(a.rel, idioma);
-    $('anio').textContent = a.anio;
-    $('estado').textContent = textoEstado(i);
-    const sl = $('control-anio');
-    sl.value = String(i + 1);
-    if (accesible) sl.setAttribute('aria-valuetext', a.anio + ': ' + textoEstado(i));
-    $('ahora-explica').textContent = t('ahora', { nota: d.nota, paso: d.paso, dps: num(d.destellosPorSegundo, 1) });
+  let mapaActual = null;
+  function ponerMapa(a, fraccion) {
+    if (a !== mapaActual && imgs[a]) { $('mapa').style.backgroundImage = 'url(' + imgs[a].src + ')'; $('etiqueta-anio').textContent = a; mapaActual = a; }
+    $('radar').style.left = (100 * fraccion) + '%';
+    $('estela').style.width = (100 * fraccion) + '%';
   }
 
   let textoPlay = '';
@@ -180,38 +120,52 @@
     if (forzar || nuevo !== textoPlay) { textoPlay = nuevo; $('btn-play').textContent = nuevo; }
   }
 
+  function relojVisual() {
+    if (!rep.motor || !window.Tone) return 0;
+    const raw = Tone.getContext().rawContext;
+    return Tone.getContext().currentTime - (raw.outputLatency || raw.baseLatency || 0);
+  }
+
   function bucle() {
-    if (anios.length) {
-      const ahoraV = relojVisual(), enDemo = rep.modo === 'demo' && !!rep.est;
-      const p = enDemo ? (rep.sonando ? (ahoraV - rep.est.t0) / M.DEMO.anio : rep.posDemo) : rep.anio;
-      const i = Math.max(0, Math.min(anios.length - 1, Math.floor(p)));
-      if (i !== ultimaMostrada) { mostrar(i, !(enDemo && rep.sonando)); ultimaMostrada = i; }
+    if (datos) {
+      const l = rep.linea(relojVisual());
+      if (l) ponerMapa(l.anio, l.fraccion);
       actualizarBotonPlay(false);
-      actualizarVisual(p, enDemo);
-      revisarNotas(ahoraV);
     }
     requestAnimationFrame(bucle);
   }
 
-  async function demo() { $('control-anio').focus(); await rep.iniciarDemo(); ultimaMostrada = -1; }
-  async function alternar() { await rep.alternar(); if (!rep.sonando) mostrar(rep.anioActual(), true); }
-  function irA(i) { if (rep.modo === 'demo') rep.anio = rep.anioActual(); rep.irA(i); mostrar(rep.anio, true); ultimaMostrada = rep.anio; }
-  const mover = (d) => irA(rep.anioActual() + d);
+  async function escuchar(anios) { await rep.iniciar(anios); }
+  async function alternar() {
+    if (rep.sonando) rep.pausar();
+    else if (rep.est && !terminado) await rep.continuar();
+    else await escuchar([anio]);
+  }
+  let terminado = false;
+  function elegir(a) {
+    anio = a; $('fecha').value = String(a);
+    const sonaba = rep.sonando;
+    if (sonaba) rep.pausar();
+    rep.est = null; terminado = false;
+    mostrarFecha();
+    if (sonaba) escuchar([anio]);
+  }
 
   function aWav(buffer) {
     const nc = buffer.numberOfChannels, sr = buffer.sampleRate, n = buffer.length, dv = new DataView(new ArrayBuffer(44 + n * nc * 2));
-    const texto = (o, s) => { for (let i = 0; i < s.length; i++) dv.setUint8(o + i, s.charCodeAt(i)); };
-    texto(0, 'RIFF'); dv.setUint32(4, 36 + n * nc * 2, true); texto(8, 'WAVE'); texto(12, 'fmt '); dv.setUint32(16, 16, true); dv.setUint16(20, 1, true);
+    const tx = (o, s) => { for (let i = 0; i < s.length; i++) dv.setUint8(o + i, s.charCodeAt(i)); };
+    tx(0, 'RIFF'); dv.setUint32(4, 36 + n * nc * 2, true); tx(8, 'WAVE'); tx(12, 'fmt '); dv.setUint32(16, 16, true); dv.setUint16(20, 1, true);
     dv.setUint16(22, nc, true); dv.setUint32(24, sr, true); dv.setUint32(28, sr * nc * 2, true); dv.setUint16(32, nc * 2, true); dv.setUint16(34, 16, true);
-    texto(36, 'data'); dv.setUint32(40, n * nc * 2, true);
+    tx(36, 'data'); dv.setUint32(40, n * nc * 2, true);
     const c = []; for (let k = 0; k < nc; k++) c.push(buffer.getChannelData(k));
     let o = 44;
     for (let i = 0; i < n; i++) for (let k = 0; k < nc; k++) { dv.setInt16(o, Math.max(-32768, Math.min(32767, Math.round(c[k][i] * 32767 + Math.random() - Math.random()))), true); o += 2; }
     return new Blob([dv], { type: 'audio/wav' });
   }
-  async function generarWav() {
-    const buffer = await M.renderizar(anios, { sampleRate: 48000 });
-    return { blob: aWav(buffer), buffer, segundos: buffer.duration, nombre: 'luces_5276_el_salvador_30s.wav' };
+  async function generarWav(anios) {
+    anios = anios || (anio === 2012 ? [2012] : [2012, anio]);
+    const buffer = await M.renderizar(datos.anios, anios, { sampleRate: 48000 });
+    return { blob: aWav(buffer), buffer, segundos: buffer.duration, nombre: 'luces_radar_' + anios.join('_vs_') + '.wav' };
   }
   async function exportar() {
     const btn = $('btn-exportar'), est = $('estado-export');
@@ -226,45 +180,38 @@
   }
 
   document.addEventListener('keydown', (e) => {
-    if (!anios.length || e.altKey || e.ctrlKey || e.metaKey) return;
-    const el = e.target, tag = el.tagName, tipo = (el.type || '').toLowerCase();
-    const nativo = tag === 'BUTTON' || tag === 'SUMMARY' || tag === 'SELECT' || tag === 'A' || (tag === 'INPUT' && tipo !== 'range');
+    if (!datos || e.altKey || e.ctrlKey || e.metaKey) return;
+    const el = e.target, tag = el.tagName;
     if (e.key === ' ' || e.code === 'Space') {
-      if (nativo && !(el.id === 'btn-demo' && rep.motor)) return;
+      if (tag === 'SELECT' || tag === 'SUMMARY' || (tag === 'BUTTON' && !['btn-escuchar', 'btn-comparar'].includes(el.id))) return;
+      if (tag === 'BUTTON' && !rep.motor) return; // primera vez: el botón hace lo suyo
       e.preventDefault(); alternar();
     } else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
-      if (tag === 'SELECT' || (tag === 'INPUT' && tipo !== 'range')) return;
-      e.preventDefault(); mover(e.key === 'ArrowLeft' ? -1 : 1);
+      if (tag === 'SELECT') return;
+      e.preventDefault(); elegir(Math.max(2012, Math.min(2023, anio + (e.key === 'ArrowLeft' ? -1 : 1))));
     }
   });
 
   async function iniciar() {
     aplicarIdioma();
-    $('anio').textContent = t('cargando');
-    $('btn-demo').addEventListener('click', demo);
+    $('evento').textContent = t('cargando');
+    $('idioma').addEventListener('change', (e) => { idioma = e.target.value; aplicarIdioma(); });
+    $('fecha').addEventListener('change', (e) => elegir(Number(e.target.value)));
+    $('btn-escuchar').addEventListener('click', () => { terminado = false; escuchar([anio]); });
+    $('btn-comparar').addEventListener('click', () => { terminado = false; escuchar([2012, anio]); });
     $('btn-play').addEventListener('click', alternar);
-    $('btn-prev').addEventListener('click', () => mover(-1));
-    $('btn-next').addEventListener('click', () => mover(1));
     $('btn-exportar').addEventListener('click', exportar);
-    $('control-anio').addEventListener('input', (e) => irA(Number(e.target.value) - 1));
-    $('idioma').addEventListener('change', (e) => { idioma = e.target.value; aplicarIdioma(); if (anios.length) mostrar(rep.anioActual(), true); });
-    rep.alTerminarDemo = () => { mostrar(rep.anioActual(), true); const a = $('anuncio'); a.textContent = ''; setTimeout(() => { a.textContent = t('fin_demo'); }, 30); };
-    if (!window.Tone) { $('anio').textContent = 'Tone.js no cargó (¿sin internet?)'; return; }
-    M.cargarPiano().then((p) => rep.usarPiano(p)).catch(() => { /* suena la campana de respaldo */ });
+    rep.alTerminar = () => { terminado = true; $('estado').textContent = t('fin'); };
+    if (!window.Tone) { $('evento').textContent = 'Tone.js no cargó (¿sin internet?)'; return; }
+    M.cargarPiano().then((p) => rep.usarPiano(p)).catch(() => { /* suena la campana */ });
     try {
-      const r = await fetch(RUTA_DATOS, { cache: 'no-cache' });
+      const r = await fetch(RUTA, { cache: 'no-cache' });
       if (!r.ok) throw new Error(r.status);
       datos = await r.json();
-    } catch (e) { $('anio').textContent = t('error_datos'); $('anio').setAttribute('role', 'alert'); return; }
-    anios = datos.series.el_salvador.map((s) => ({ anio: s.anio, rel: s.luz_relativa_2012, reparto: s.oeste_a_este }));
-    comp = datos.series.centroamerica.map((s) => s.luz_relativa_2012);
-    rep.cargar(anios);
-    anios.forEach((a) => { const m = new Image(); m.src = 'mapas/mundo_' + a.anio + '.webp'; imgs.mundo.push(m); const z = new Image(); z.src = 'mapas/zoom_' + a.anio + '.webp'; imgs.zoom.push(z); });
-    // Recuadros: zoom = lon −92,5…−85,5, lat 11,5…16,5; El Salvador = lon −90,15…−87,65, lat 13,1…14,45 (mapa 3840×2160)
-    Object.assign($('recuadro').style, { left: '24.30%', top: '40.83%', width: '1.95%', height: '2.78%' });
-    Object.assign($('zona-medida').style, { left: '33.9%', top: '41%', width: '35.6%', height: '27%' });
-    construirCurva();
-    mostrar(0, true);
+    } catch (e) { $('evento').textContent = t('error_datos'); $('evento').setAttribute('role', 'alert'); return; }
+    rep.mallas = datos.anios;
+    Object.keys(FECHAS).forEach((a) => { const im = new Image(); im.src = 'mapas/mundo_' + a + '.webp'; imgs[a] = im; });
+    aplicarIdioma();
     requestAnimationFrame(bucle);
   }
 

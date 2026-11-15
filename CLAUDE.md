@@ -56,6 +56,9 @@ Contexto completo del reto (análisis, decisiones, bitácora): carpeta local `C:
 - El limitador del navegador suma ganancia automática (+2,28 dB con techo −4, medido); se compensa con un recorte justo después.
 
 ## Disco Luces (5276) — `sonido/luces/`, datos en `imagen-a-sonido/luces_5276/`
-- Lectura: `leer_luces.mjs` (Node: en esta PC no había numpy/Pillow). Mapas anuales 3840×2160 = mundo estirado a 16:9 (x=(lon+180)/360·W, y=(90−lat)/180·H, comprobado con el delta del Nilo), 1 px ≈ 10 km. Luz = suma de luminancia sobre un umbral de fondo (0,04) en un recuadro; **siempre relativa a 2012** (la barra no tiene números).
-- El Salvador (recuadro lon −90,15…−87,65, lat 13,1…14,45; toca bordes vecinos): 2023 ≈ 1,65× la luz de 2012, bajones en 2016 y 2020, salto en 2022–2023. Mapa de cambio: solo luces nuevas.
-- Sonido (mismo principio, dos capas): **destellos** de cristal = cuánta luz (5/s × luz relativa) y dónde (paneo oeste → este según el reparto de la luz); **una nota de piano por año** = nivel de luz (1 escalón pentatónico por cada 10 % vs 2012, 2012 = La3). Sin voz. Medido: −20 LUFS, 0 clics.
+- Versión 1 (solo El Salvador: destellos + nota por año) **descartada** el 15/11: sonaba bien pero no se entendía a qué aludía el sonido.
+- **Versión 2: radar global + fechas importantes.** Una línea recorre el mapa del mundo de noche de oeste a este en 12 s y suena lo que toca: cada franja de latitud es una nota (norte agudo, sur grave, pentatónica La2–La5), más luz = nota más fuerte y repetida más seguido, sin luz = silencio; el sonido viaja de izquierda a derecha con la línea. Piano real, máx. 3 notas nuevas por paso, notas cortas.
+- Fechas: un acontecimiento por año 2012–2023 (sobre todo hitos de la NASA, más la pandemia en 2020). **Cada mapa es el promedio del año, no del día**: se dice en la página. Botón para comparar 2012 → año elegido (25 s).
+- Datos: `radar_luces.mjs` (Node; en esta PC no había numpy/Pillow) → `luces_radar.json`: malla 192 columnas × 16 franjas (72°N–56°S) por año, brillo 0–1000 normalizado con el máximo de todos los años (comparable entre años); se tapa el texto del año de cada imagen. Luz total del mundo: 2023 = 1,37× 2012; 2020 < 2019.
+- Mapa 3840×2160 = mundo estirado a 16:9 (x=(lon+180)/360·W, y=(90−lat)/180·H, comprobado con el delta del Nilo). `leer_luces.mjs` / `luces_5276.json` (El Salvador) quedan de la v1.
+- Medido sobre el WAV (2012 vs 2023): −20,7 LUFS, pico −5,3 dBFS, 0 clics.

@@ -1,30 +1,31 @@
-# Disco Luces · motor de sonido (NASA SVS 5276)
+# Disco Luces · radar del mundo de noche (NASA SVS 5276)
 
-Las luces nocturnas de El Salvador vistas desde el espacio, de 2012 a 2023 (Black Marble, satélite VIIRS de la NASA y la NOAA), convertidas en sonido. Es una **observación real**. La barra de la NASA **no tiene números**: todo se compara con 2012 ("más luz / menos luz").
+**"Escucha cómo se veía el mundo de noche"** en fechas importantes de 2012 a 2023 (Black Marble, satélite VIIRS de la NASA y la NOAA). Observación real. Cada mapa es el **promedio de todo el año**, no del día de la fecha.
 
-**Solo suenan dos cosas: destellos (las luces) y una nota de piano por año.** Sin voz (la pone el bot).
+## Cómo suena: un radar
 
-## Qué suena y por qué
+Una línea recorre el mapa de oeste a este (de América a Asia) en 12 segundos y suena lo que toca:
 
 | Dato | Sonido |
 |---|---|
-| Cuánta luz hay | **Destellos** de cristal: 5 por segundo con la luz de 2012, más en la misma proporción cuanta más luz |
-| Dónde está la luz | Cada destello suena a la izquierda (oeste: Ahuachapán, Sonsonate) o a la derecha (este: San Miguel, La Unión) según cómo se reparte la luz ese año |
-| Nivel de luz | **Piano**: un escalón de la pentatónica por cada 10 % más (o menos) de luz que en 2012 (2012 = La3) |
+| Hay luz en esa franja | suena una nota de piano; sin luz, silencio (océanos, desiertos) |
+| Cuánta luz | nota más fuerte y repetida más seguido |
+| Latitud | norte agudo, sur grave (16 franjas de 8°, pentatónica La2–La5) |
+| Longitud | es el tiempo: la línea avanza y el sonido viaja de izquierda a derecha |
 
-Lo que se oye con los datos: 2023 tiene ~65 % más luz que 2012, con bajones en 2016 y 2020 y un salto fuerte en 2022–2023. Más luz no es bueno ni malo por sí solo.
+**Comparar 2012 → año elegido**: suenan los dos recorridos seguidos (25 s). En 2023 el mundo tiene un 37 % más de luz que en 2012; en 2020 hubo menos luz que en 2019. La NASA no da unidades: el brillo es relativo y comparable entre años. Sin voz (la pone el bot).
+
+## Fechas (una por año)
+
+2012 Curiosity en Marte · 2013 Voyager 1 en el espacio interestelar · 2014 Philae sobre un cometa · 2015 New Horizons en Plutón · 2016 Juno en Júpiter · 2017 gran eclipse en EE. UU. · 2018 despega la sonda Parker · 2019 primera imagen de un agujero negro · 2020 pandemia de COVID-19 · 2021 Perseverance en Marte · 2022 primeras imágenes del James Webb · 2023 OSIRIS-REx trae muestras de Bennu.
 
 ## Cómo abrirla
 
-Igual que el Océano: desde la raíz del repo `python -m http.server 8000` y abrir `http://localhost:8000/sonido/luces/`. Celular sin servidor: `https://raw.githack.com/diegonoetorresvillatoro-netizen/hackathon-nasa-space-apps-Hertz-Hunters/fuentes/sonido/luces/index.html`.
-Teclado: ← → año, Espacio reproducir/pausar. Botón para exportar los 12 años en WAV (30,0 s).
-
-## Lo que se ve
-
-El mundo de noche de cada año (con recuadro en la zona ampliada), un zoom a Centroamérica con El Salvador en recuadro punteado y la curva de luz relativa a 2012 que se dibuja mientras suena (gris punteada = Centroamérica, para comparar). Todo con el reloj del audio.
+Desde la raíz del repo `python -m http.server 8000` → `http://localhost:8000/sonido/luces/`. Celular: `https://raw.githack.com/diegonoetorresvillatoro-netizen/hackathon-nasa-space-apps-Hertz-Hunters/fuentes/sonido/luces/index.html`.
+Teclado: Espacio reproducir/pausar, ← → cambiar de fecha. Exportar WAV (2012 + año elegido).
 
 ## Datos
 
-`imagen-a-sonido/luces_5276/leer_luces.mjs` (Node, sin librerías) → `resultados/luces_5276.json`: `series.el_salvador` / `san_salvador` / `centroamerica` = `{anio, luz_relativa_2012, pixeles_encendidos, oeste_a_este}` y `cambio_2012_2023` (nuevas / apagadas). Medido sobre el WAV: ~−20 LUFS, 0 saturación, 0 clics.
+`imagen-a-sonido/luces_5276/radar_luces.mjs` → `resultados/luces_radar.json` (malla 192 columnas × 16 franjas por año, brillo 0–1000). Medido sobre el WAV: −20,7 LUFS, 0 saturación, 0 clics.
 
 Imágenes: NASA/SVS 5276. Piano: Salamander Grand Piano (Alexander Holm, CC BY 3.0).
