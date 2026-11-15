@@ -17,7 +17,7 @@ export interface Track {
 }
 
 export const listeningLegend =
-  'Esta sonificación es una muestra provisional, pendiente de revisión por Diego. Escuchas la imagen de izquierda a derecha. Cada medio segundo suena una de sus 96 franjas verticales. ' +
+  'Esta sonificación es una muestra provisional basada en el brillo. Escuchas la imagen de izquierda a derecha. Cada medio segundo suena una de sus 96 franjas verticales. ' +
   'El brillo medio determina la nota: las franjas más oscuras de esta imagen suenan graves y las más claras, agudas. ' +
   'El fondo y los rótulos también influyen. La duración corresponde al recorrido de la imagen.'
 
