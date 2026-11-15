@@ -198,7 +198,12 @@ export default function App() {
             Cómo escuchar
           </button>
         </aside>
-        <main id="workspace" ref={main} tabIndex={-1}>
+        <main
+          id="workspace"
+          ref={main}
+          tabIndex={-1}
+          data-scene={view.library ? undefined : track.id}
+        >
           {view.library ? (
             <div className="page-content">
               <h1 ref={heading} tabIndex={-1}>
