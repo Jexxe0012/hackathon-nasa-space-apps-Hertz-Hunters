@@ -4,6 +4,10 @@ Proyecto del equipo Hertz Hunters para el NASA Space Apps Challenge.
 
 Earth Jukebox presenta cuatro visualizaciones de la Tierra con imágenes, descripciones en español y audio de prueba. Una persona puede elegir una pista, leer qué representa y recorrer el audio con el teclado. La aplicación lleva el diseño **Enfoque** a React, TypeScript y Vite, con iconos pixel art, un visor central y controles de reproducción al pie. [Diseño de Enfoque en Figma](https://www.figma.com/design/4q6sU5VYc8qZHcr2rmdSLO?node-id=6-11720)
 
+Cada disco tiene un fondo inspirado en su tema: océano, bosques, aerosoles y un cielo estrellado para luces nocturnas. El modo de alto contraste utiliza un fondo limpio para facilitar la lectura.
+
+La interfaz combina detalles pixel art con títulos de mayor legibilidad y fondos suaves para reducir la carga visual.
+
 ## Ejecutar en local
 
 Con Node.js 22.12 o posterior y npm, ejecuta desde la raíz del repositorio:
@@ -26,7 +30,7 @@ Las imágenes, las fuentes y los MP3 se sirven desde el proyecto. La aplicación
 
 En **Colección** puedes elegir cualquiera de las cuatro pistas. **Sobre la pista** incluye su periodo, variable, procedencia y límites de interpretación. **Original NASA** muestra la imagen fuente y **Arte píxel** permite explorar su reinterpretación gráfica.
 
-Al pulsar **Reproducir** se escucha una muestra provisional de 48 segundos. El generador divide la imagen fuente en 96 franjas verticales y calcula el brillo medio de cada una. Dentro de esa imagen, una franja más clara produce una nota más aguda. Cada nota dura medio segundo. El fondo y los rótulos también afectan al cálculo. Los tonos expresan brillo relativo y el contador indica tiempo de escucha. Diego se encargará del diseño y la validación de los sonidos del proyecto.
+Al pulsar **Reproducir** se escucha una muestra provisional de 48 segundos. El generador divide la imagen fuente en 96 franjas verticales y calcula el brillo medio de cada una. Dentro de esa imagen, una franja más clara produce una nota más aguda. Cada nota dura medio segundo. El fondo y los rótulos también afectan al cálculo. Los tonos expresan brillo relativo y el contador indica tiempo de escucha. Diego Fuentes se encargará del diseño y la validación de los sonidos del proyecto.
 
 La propuesta del equipo distingue los discos temporales de océano y luces nocturnas de las imágenes estáticas de bosques y aerosoles. El reproductor actual reproduce muestras de audio y muestra una imagen por pista; la selección de fechas, la exploración espacial con teclado, el asistente y la interfaz bilingüe están pendientes de desarrollo. El mapa nocturno actual es la imagen Black Marble de 2016, usada como referencia visual mientras se integra la serie 2012–2023.
 
@@ -47,6 +51,6 @@ El catálogo y las descripciones están en [src/data.ts](src/data.ts). El genera
 
 ## Desarrollo en equipo
 
-Josué trabaja en el diseño y la interfaz accesible. Diego se encarga de los sonidos y otro integrante del equipo desarrollará el backend. Las sonificaciones actuales son una base de prueba pendiente de revisión por Diego.
+Josué trabaja en el diseño y la interfaz accesible. Diego Fuentes se encarga de los sonidos y Diego del bot guía. El backend lo desarrollará el integrante asignado por el equipo. Las sonificaciones actuales son una base de prueba pendiente de revisión por Diego Fuentes.
 
 Agrupamos los cambios por tarea en ramas de trabajo. Usamos mensajes como `feat(datos)`, `feat(reproductor)`, `fix(accesibilidad)` y `docs(readme)`. Cuando una tarea cambia lo que puede hacer la aplicación o cómo ejecutarla, actualizamos este README.
