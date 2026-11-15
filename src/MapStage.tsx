@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import type { Track } from './data'
 import './map-stage.css'
 
-type StageProps = { track: Track; index: number }
+type StageProps = { track: Track }
 type Mode = 'pixel' | 'original'
 type RGB = readonly [number, number, number]
 
@@ -168,7 +168,7 @@ function Plate({
   )
 }
 
-export function MapStage({ track, index }: StageProps) {
+export function MapStage({ track }: StageProps) {
   const [mode, setMode] = useState<Mode>('pixel')
   return (
     <figure
@@ -206,7 +206,7 @@ export function MapStage({ track, index }: StageProps) {
         <Plate
           key={track.image}
           track={track}
-          night={index === 0}
+          night={track.id === 'luces-nocturnas'}
           mode={mode}
         />
         <i

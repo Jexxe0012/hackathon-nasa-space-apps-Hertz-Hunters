@@ -5,27 +5,18 @@ import Player from './Player'
 import MapStage from './MapStage'
 
 const families = [
-  'Huella humana',
   'Océanos',
-  'Océanos',
-  'Atmósfera',
-  'Atmósfera',
-  'Atmósfera',
-  'Tormentas',
-  'Ciclo del agua',
   'Bosques',
+  'Atmósfera',
+  'Huella humana',
 ]
 const introductions = [
-  'La luz de pueblos y ciudades dibuja la huella humana sobre el planeta.',
   'Sigue las corrientes que transportan calor por la superficie del océano.',
-  'Explora las trayectorias del agua en una simulación de la circulación oceánica.',
-  'Distingue el polvo, el humo y las partículas que viajan por el aire.',
-  'Observa cómo se distribuyen distintos contaminantes en la atmósfera.',
-  'Sigue la distribución del dióxido de carbono a través de la atmósfera.',
-  'Descubre los destellos que registra un sensor desde la Estación Espacial Internacional.',
-  'Explora una franja de humedad que transporta agua a través de la atmósfera.',
   'Compara la altura del dosel forestal que observa la misión GEDI.',
+  'Distingue el polvo, el humo y las partículas que viajan por el aire.',
+  'La luz de pueblos y ciudades dibuja la huella humana sobre el planeta.',
 ]
+const spriteIndexes = [1, 8, 3, 0]
 const number = (i: number) => String(i + 1).padStart(2, '0')
 const trackHref = (index: number) => '#pista/' + tracks[index].id
 function readLocation() {
@@ -166,7 +157,7 @@ export default function App() {
         <aside className="library" aria-label="Biblioteca de pistas">
           <div className="library-title">
             <h2>Biblioteca</h2>
-            <span>09</span>
+            <span>{number(tracks.length - 1)}</span>
           </div>
           <nav aria-label="Seleccionar pista">
             <ol>
@@ -185,7 +176,7 @@ export default function App() {
                       {number(i)}
                     </span>
                     <span className={'sprite-tile tile-' + i}>
-                      <Sprite index={i} />
+                      <Sprite index={spriteIndexes[i]} />
                     </span>
                     <span className="list-copy">
                       <strong>{item.shortTitle}</strong>
@@ -214,7 +205,7 @@ export default function App() {
                 Colección
               </h1>
               <p className="intro">
-                Nueve formas de escuchar la Tierra. Elige una pista para
+                Cuatro formas de explorar la Tierra. Elige una pista para
                 explorar su imagen y su sonido.
               </p>
               <div className="album-grid">
@@ -249,7 +240,7 @@ export default function App() {
                   <p className="intro">{introductions[selected]}</p>
                 </div>
               </div>
-              <MapStage key={track.id} track={track} index={selected} />
+                <MapStage key={track.id} track={track} />
               <section
                 className="track-info"
                 aria-label="Información de la pista"
@@ -359,7 +350,7 @@ export default function App() {
         ) : (
           <div className="help-text">
             <p>
-              Elige una de las nueve pistas en la colección. Puedes leer la
+              Elige una de las cuatro pistas en la colección. Puedes leer la
               descripción antes de pulsar Reproducir.
             </p>
             <p>{listeningLegend}</p>

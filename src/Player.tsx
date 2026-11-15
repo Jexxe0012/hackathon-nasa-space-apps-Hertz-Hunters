@@ -175,7 +175,7 @@ export function Player({
         <img src={track.image} alt="" width="52" height="52" />
         <div>
           <span className="hh-player__track-number">
-            Pista {digits(index + 1)} / {digits(total)}
+            Pista {digits(index + 1)} / {digits(total)} · Audio de prueba
           </span>
           <strong>{track.shortTitle}</strong>
         </div>
