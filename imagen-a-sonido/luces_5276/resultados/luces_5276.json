@@ -1,0 +1,679 @@
+{
+ "fuente": "NASA SVS 5276 · Black Marble (VIIRS, Suomi NPP), mapas anuales 2012–2023 y mapa de cambio 2012–2023, 3840×2160",
+ "aviso_es": "Observación real desde satélite. La barra no tiene números: todo es relativo a 2012 (más luz / menos luz). Más luz no es ni bueno ni malo por sí solo.",
+ "aviso_en": "Real satellite observation. The color bar has no numbers: everything is relative to 2012 (more light / less light). More light is neither good nor bad by itself.",
+ "metodo": "brillo (luminancia) de cada pixel menos un umbral de fondo de 0.04, sumado dentro de cada recuadro; dividido entre el de 2012",
+ "km_por_pixel": 10.4,
+ "zonas": {
+  "el_salvador": {
+   "nombre_es": "El Salvador (recuadro del país, incluye bordes vecinos)",
+   "nombre_en": "El Salvador (country box, includes neighbor edges)",
+   "lon": [
+    -90.15,
+    -87.65
+   ],
+   "lat": [
+    13.1,
+    14.45
+   ]
+  },
+  "san_salvador": {
+   "nombre_es": "Gran San Salvador",
+   "nombre_en": "Greater San Salvador",
+   "lon": [
+    -89.4,
+    -88.95
+   ],
+   "lat": [
+    13.55,
+    13.85
+   ]
+  },
+  "centroamerica": {
+   "nombre_es": "Centroamérica (comparación)",
+   "nombre_en": "Central America (comparison)",
+   "lon": [
+    -92.3,
+    -77.2
+   ],
+   "lat": [
+    7.2,
+    18.5
+   ]
+  }
+ },
+ "cambio_2012_2023": {
+  "el_salvador": {
+   "nuevas": 0.406,
+   "apagadas": 0
+  },
+  "san_salvador": {
+   "nuevas": 0.276,
+   "apagadas": 0
+  },
+  "centroamerica": {
+   "nuevas": 6.811,
+   "apagadas": 0.523
+  }
+ },
+ "series": {
+  "el_salvador": [
+   {
+    "anio": 2012,
+    "luz_relativa_2012": 1,
+    "pixeles_encendidos": 93,
+    "oeste_a_este": [
+     0.038,
+     0.13,
+     0.191,
+     0.369,
+     0.056,
+     0.009,
+     0.023,
+     0.08,
+     0.021,
+     0.084
+    ]
+   },
+   {
+    "anio": 2013,
+    "luz_relativa_2012": 1.082,
+    "pixeles_encendidos": 92,
+    "oeste_a_este": [
+     0.037,
+     0.125,
+     0.189,
+     0.358,
+     0.067,
+     0.012,
+     0.026,
+     0.077,
+     0.023,
+     0.087
+    ]
+   },
+   {
+    "anio": 2014,
+    "luz_relativa_2012": 1.11,
+    "pixeles_encendidos": 98,
+    "oeste_a_este": [
+     0.036,
+     0.128,
+     0.189,
+     0.351,
+     0.065,
+     0.012,
+     0.032,
+     0.07,
+     0.023,
+     0.094
+    ]
+   },
+   {
+    "anio": 2015,
+    "luz_relativa_2012": 1.166,
+    "pixeles_encendidos": 103,
+    "oeste_a_este": [
+     0.032,
+     0.125,
+     0.185,
+     0.365,
+     0.071,
+     0.013,
+     0.026,
+     0.068,
+     0.023,
+     0.092
+    ]
+   },
+   {
+    "anio": 2016,
+    "luz_relativa_2012": 1.093,
+    "pixeles_encendidos": 99,
+    "oeste_a_este": [
+     0.032,
+     0.124,
+     0.187,
+     0.377,
+     0.063,
+     0.013,
+     0.021,
+     0.069,
+     0.024,
+     0.09
+    ]
+   },
+   {
+    "anio": 2017,
+    "luz_relativa_2012": 1.2,
+    "pixeles_encendidos": 104,
+    "oeste_a_este": [
+     0.033,
+     0.127,
+     0.185,
+     0.358,
+     0.069,
+     0.013,
+     0.027,
+     0.067,
+     0.029,
+     0.091
+    ]
+   },
+   {
+    "anio": 2018,
+    "luz_relativa_2012": 1.213,
+    "pixeles_encendidos": 108,
+    "oeste_a_este": [
+     0.035,
+     0.123,
+     0.188,
+     0.354,
+     0.075,
+     0.013,
+     0.028,
+     0.066,
+     0.031,
+     0.088
+    ]
+   },
+   {
+    "anio": 2019,
+    "luz_relativa_2012": 1.179,
+    "pixeles_encendidos": 106,
+    "oeste_a_este": [
+     0.035,
+     0.121,
+     0.18,
+     0.36,
+     0.07,
+     0.014,
+     0.028,
+     0.071,
+     0.03,
+     0.089
+    ]
+   },
+   {
+    "anio": 2020,
+    "luz_relativa_2012": 1.13,
+    "pixeles_encendidos": 104,
+    "oeste_a_este": [
+     0.034,
+     0.125,
+     0.181,
+     0.368,
+     0.064,
+     0.014,
+     0.027,
+     0.072,
+     0.027,
+     0.087
+    ]
+   },
+   {
+    "anio": 2021,
+    "luz_relativa_2012": 1.218,
+    "pixeles_encendidos": 105,
+    "oeste_a_este": [
+     0.039,
+     0.13,
+     0.195,
+     0.346,
+     0.07,
+     0.015,
+     0.027,
+     0.067,
+     0.027,
+     0.083
+    ]
+   },
+   {
+    "anio": 2022,
+    "luz_relativa_2012": 1.428,
+    "pixeles_encendidos": 115,
+    "oeste_a_este": [
+     0.048,
+     0.13,
+     0.189,
+     0.321,
+     0.079,
+     0.016,
+     0.033,
+     0.07,
+     0.029,
+     0.085
+    ]
+   },
+   {
+    "anio": 2023,
+    "luz_relativa_2012": 1.646,
+    "pixeles_encendidos": 133,
+    "oeste_a_este": [
+     0.053,
+     0.135,
+     0.181,
+     0.294,
+     0.087,
+     0.02,
+     0.038,
+     0.076,
+     0.034,
+     0.083
+    ]
+   }
+  ],
+  "san_salvador": [
+   {
+    "anio": 2012,
+    "luz_relativa_2012": 1,
+    "pixeles_encendidos": 25,
+    "oeste_a_este": [
+     0.186,
+     0.386,
+     0,
+     0.278,
+     0,
+     0.058,
+     0.036,
+     0,
+     0.056,
+     0
+    ]
+   },
+   {
+    "anio": 2013,
+    "luz_relativa_2012": 1.07,
+    "pixeles_encendidos": 25,
+    "oeste_a_este": [
+     0.189,
+     0.377,
+     0,
+     0.274,
+     0,
+     0.058,
+     0.037,
+     0,
+     0.066,
+     0
+    ]
+   },
+   {
+    "anio": 2014,
+    "luz_relativa_2012": 1.089,
+    "pixeles_encendidos": 25,
+    "oeste_a_este": [
+     0.193,
+     0.374,
+     0,
+     0.271,
+     0,
+     0.058,
+     0.037,
+     0,
+     0.066,
+     0
+    ]
+   },
+   {
+    "anio": 2015,
+    "luz_relativa_2012": 1.136,
+    "pixeles_encendidos": 25,
+    "oeste_a_este": [
+     0.189,
+     0.371,
+     0,
+     0.271,
+     0,
+     0.06,
+     0.045,
+     0,
+     0.065,
+     0
+    ]
+   },
+   {
+    "anio": 2016,
+    "luz_relativa_2012": 1.083,
+    "pixeles_encendidos": 25,
+    "oeste_a_este": [
+     0.191,
+     0.382,
+     0,
+     0.269,
+     0,
+     0.059,
+     0.042,
+     0,
+     0.057,
+     0
+    ]
+   },
+   {
+    "anio": 2017,
+    "luz_relativa_2012": 1.137,
+    "pixeles_encendidos": 25,
+    "oeste_a_este": [
+     0.187,
+     0.377,
+     0,
+     0.268,
+     0,
+     0.057,
+     0.045,
+     0,
+     0.066,
+     0
+    ]
+   },
+   {
+    "anio": 2018,
+    "luz_relativa_2012": 1.143,
+    "pixeles_encendidos": 25,
+    "oeste_a_este": [
+     0.189,
+     0.377,
+     0,
+     0.265,
+     0,
+     0.055,
+     0.048,
+     0,
+     0.067,
+     0
+    ]
+   },
+   {
+    "anio": 2019,
+    "luz_relativa_2012": 1.129,
+    "pixeles_encendidos": 25,
+    "oeste_a_este": [
+     0.184,
+     0.379,
+     0,
+     0.271,
+     0,
+     0.055,
+     0.047,
+     0,
+     0.064,
+     0
+    ]
+   },
+   {
+    "anio": 2020,
+    "luz_relativa_2012": 1.092,
+    "pixeles_encendidos": 25,
+    "oeste_a_este": [
+     0.181,
+     0.387,
+     0,
+     0.277,
+     0,
+     0.056,
+     0.041,
+     0,
+     0.058,
+     0
+    ]
+   },
+   {
+    "anio": 2021,
+    "luz_relativa_2012": 1.149,
+    "pixeles_encendidos": 25,
+    "oeste_a_este": [
+     0.193,
+     0.371,
+     0,
+     0.265,
+     0,
+     0.058,
+     0.048,
+     0,
+     0.064,
+     0
+    ]
+   },
+   {
+    "anio": 2022,
+    "luz_relativa_2012": 1.269,
+    "pixeles_encendidos": 25,
+    "oeste_a_este": [
+     0.193,
+     0.351,
+     0,
+     0.255,
+     0,
+     0.067,
+     0.059,
+     0,
+     0.075,
+     0
+    ]
+   },
+   {
+    "anio": 2023,
+    "luz_relativa_2012": 1.342,
+    "pixeles_encendidos": 26,
+    "oeste_a_este": [
+     0.191,
+     0.333,
+     0,
+     0.254,
+     0,
+     0.072,
+     0.057,
+     0,
+     0.093,
+     0
+    ]
+   }
+  ],
+  "centroamerica": [
+   {
+    "anio": 2012,
+    "luz_relativa_2012": 1,
+    "pixeles_encendidos": 793,
+    "oeste_a_este": [
+     0.114,
+     0.155,
+     0.174,
+     0.131,
+     0.063,
+     0.162,
+     0.029,
+     0.02,
+     0.104,
+     0.048
+    ]
+   },
+   {
+    "anio": 2013,
+    "luz_relativa_2012": 1.104,
+    "pixeles_encendidos": 852,
+    "oeste_a_este": [
+     0.118,
+     0.151,
+     0.164,
+     0.129,
+     0.065,
+     0.167,
+     0.033,
+     0.023,
+     0.104,
+     0.047
+    ]
+   },
+   {
+    "anio": 2014,
+    "luz_relativa_2012": 1.149,
+    "pixeles_encendidos": 892,
+    "oeste_a_este": [
+     0.118,
+     0.151,
+     0.161,
+     0.13,
+     0.069,
+     0.168,
+     0.032,
+     0.026,
+     0.102,
+     0.043
+    ]
+   },
+   {
+    "anio": 2015,
+    "luz_relativa_2012": 1.169,
+    "pixeles_encendidos": 897,
+    "oeste_a_este": [
+     0.119,
+     0.151,
+     0.16,
+     0.132,
+     0.069,
+     0.161,
+     0.032,
+     0.027,
+     0.106,
+     0.043
+    ]
+   },
+   {
+    "anio": 2016,
+    "luz_relativa_2012": 1.157,
+    "pixeles_encendidos": 872,
+    "oeste_a_este": [
+     0.117,
+     0.147,
+     0.157,
+     0.131,
+     0.068,
+     0.163,
+     0.035,
+     0.029,
+     0.109,
+     0.044
+    ]
+   },
+   {
+    "anio": 2017,
+    "luz_relativa_2012": 1.215,
+    "pixeles_encendidos": 906,
+    "oeste_a_este": [
+     0.119,
+     0.15,
+     0.157,
+     0.135,
+     0.067,
+     0.158,
+     0.033,
+     0.029,
+     0.109,
+     0.043
+    ]
+   },
+   {
+    "anio": 2018,
+    "luz_relativa_2012": 1.228,
+    "pixeles_encendidos": 918,
+    "oeste_a_este": [
+     0.117,
+     0.149,
+     0.154,
+     0.136,
+     0.07,
+     0.155,
+     0.035,
+     0.032,
+     0.11,
+     0.042
+    ]
+   },
+   {
+    "anio": 2019,
+    "luz_relativa_2012": 1.231,
+    "pixeles_encendidos": 906,
+    "oeste_a_este": [
+     0.117,
+     0.146,
+     0.157,
+     0.132,
+     0.066,
+     0.157,
+     0.036,
+     0.035,
+     0.111,
+     0.043
+    ]
+   },
+   {
+    "anio": 2020,
+    "luz_relativa_2012": 1.151,
+    "pixeles_encendidos": 858,
+    "oeste_a_este": [
+     0.119,
+     0.15,
+     0.154,
+     0.131,
+     0.063,
+     0.155,
+     0.034,
+     0.036,
+     0.117,
+     0.042
+    ]
+   },
+   {
+    "anio": 2021,
+    "luz_relativa_2012": 1.167,
+    "pixeles_encendidos": 861,
+    "oeste_a_este": [
+     0.131,
+     0.158,
+     0.156,
+     0.128,
+     0.058,
+     0.149,
+     0.032,
+     0.034,
+     0.112,
+     0.042
+    ]
+   },
+   {
+    "anio": 2022,
+    "luz_relativa_2012": 1.325,
+    "pixeles_encendidos": 982,
+    "oeste_a_este": [
+     0.137,
+     0.155,
+     0.154,
+     0.124,
+     0.061,
+     0.148,
+     0.033,
+     0.036,
+     0.105,
+     0.047
+    ]
+   },
+   {
+    "anio": 2023,
+    "luz_relativa_2012": 1.508,
+    "pixeles_encendidos": 1109,
+    "oeste_a_este": [
+     0.141,
+     0.153,
+     0.157,
+     0.12,
+     0.061,
+     0.143,
+     0.036,
+     0.038,
+     0.1,
+     0.051
+    ]
+   }
+  ]
+ }
+}

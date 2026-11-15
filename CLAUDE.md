@@ -54,3 +54,8 @@ Contexto completo del reto (análisis, decisiones, bitácora): carpeta local `C:
 - Medido sobre el WAV: ~−20 LUFS, pico ~−3,5 dBFS, 0 saturación, 0 clics.
 - **Visual sincronizado**: el mapa del Pacífico cambia cada semana en dos paneles (mundo completo con recuadro + zoom a la costa con la franja medida punteada; nada encima del mapa, textos debajo: pedido de Diego), la curva del año se dibuja mientras suena y el zoom y el punto brillan en cada nota. Todo con el reloj del audio menos la latencia de salida (se ve cuando se oye). Ubicación de la costa por proyección del globo (centro 480,270, radio 340, lon −132,6°): aproximada ±7 px. `motor.notasVisuales` = momentos de cada nota, para que Josué conecte sus animaciones.
 - El limitador del navegador suma ganancia automática (+2,28 dB con techo −4, medido); se compensa con un recorte justo después.
+
+## Disco Luces (5276) — `sonido/luces/`, datos en `imagen-a-sonido/luces_5276/`
+- Lectura: `leer_luces.mjs` (Node: en esta PC no había numpy/Pillow). Mapas anuales 3840×2160 = mundo estirado a 16:9 (x=(lon+180)/360·W, y=(90−lat)/180·H, comprobado con el delta del Nilo), 1 px ≈ 10 km. Luz = suma de luminancia sobre un umbral de fondo (0,04) en un recuadro; **siempre relativa a 2012** (la barra no tiene números).
+- El Salvador (recuadro lon −90,15…−87,65, lat 13,1…14,45; toca bordes vecinos): 2023 ≈ 1,65× la luz de 2012, bajones en 2016 y 2020, salto en 2022–2023. Mapa de cambio: solo luces nuevas.
+- Sonido (mismo principio, dos capas): **destellos** de cristal = cuánta luz (5/s × luz relativa) y dónde (paneo oeste → este según el reparto de la luz); **una nota de piano por año** = nivel de luz (1 escalón pentatónico por cada 10 % vs 2012, 2012 = La3). Sin voz. Medido: −20 LUFS, 0 clics.
