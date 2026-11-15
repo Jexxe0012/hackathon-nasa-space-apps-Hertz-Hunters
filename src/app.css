@@ -102,6 +102,42 @@ main:focus {
 .skip:focus {
   top: 8px;
 }
+.screen-reader-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+.access-notice {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 16px clamp(16px, 3.5vw, 64px) 0;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 15px;
+  line-height: 1.4;
+}
+.access-notice > .ui-icon { color: var(--mint); }
+.access-notice p { flex: 1; }
+.access-notice button {
+  display: grid;
+  place-items: center;
+  flex: none;
+  min-width: 44px;
+  min-height: 44px;
+  color: var(--ink);
+  background: transparent;
+  border: 1px solid var(--line);
+}
+.access-notice button:hover { background: var(--raised); }
 .ui-icon {
   width: 1.12em;
   height: 1.12em;
@@ -512,6 +548,12 @@ dialog::backdrop {
   padding: 14px 0;
   font-size: 18px;
 }
+.settings__help {
+  color: var(--muted);
+  line-height: 1.5;
+  max-width: 52ch;
+  margin-bottom: 10px;
+}
 .settings input {
   width: 22px;
   height: 22px;
@@ -658,4 +700,138 @@ dialog::backdrop {
   .library {
     overflow: visible;
   }
+}
+
+/* Bienvenida */
+.workarea--welcome {
+  grid-template-columns: minmax(0, 1fr);
+}
+.welcome {
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: clamp(24px, 4vw, 58px) clamp(18px, 4.5vw, 72px) 48px;
+}
+.welcome__hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(28px, 5vw, 78px);
+}
+.welcome__copy h1 {
+  font-size: clamp(38px, 4.8vw, 66px);
+  line-height: 1.05;
+  max-width: 13ch;
+  letter-spacing: -0.025em;
+}
+.welcome__lead {
+  color: var(--muted);
+  max-width: 53ch;
+  font-size: clamp(18px, 1.5vw, 21px);
+  line-height: 1.5;
+  margin-top: 21px;
+}
+.welcome__action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 54px;
+  margin-top: 27px;
+  padding: 12px 22px;
+  background: var(--gold);
+  color: #132037;
+  border: 1px solid var(--gold);
+  border-radius: 4px;
+  font-weight: 700;
+  font-size: 18px;
+}
+.welcome__action:hover { background: #ffe8a8; }
+.welcome__accessibility {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 54px;
+  margin: 12px 0 0 10px;
+  padding: 12px 18px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 17px;
+  font-weight: 700;
+}
+.welcome__accessibility:hover { background: var(--raised); border-color: var(--mint); }
+.welcome__note {
+  margin-top: 14px;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.4;
+}
+.welcome__visual {
+  background: #080f20;
+  border: 1px solid var(--line);
+  padding: clamp(12px, 1.6vw, 24px);
+}
+.welcome__visual img {
+  display: block;
+  width: 100%;
+  height: clamp(200px, 25vw, 340px);
+  object-fit: contain;
+}
+.welcome__visual figcaption {
+  color: #c3d4e1;
+  font-size: 14px;
+  line-height: 1.4;
+  margin-top: 12px;
+}
+.welcome__guide {
+  margin-top: clamp(42px, 6vw, 78px);
+  padding-top: 26px;
+  border-top: 1px solid var(--line);
+}
+.welcome__guide h2 {
+  font-size: clamp(25px, 2vw, 32px);
+  line-height: 1.2;
+}
+.welcome__steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px clamp(25px, 4vw, 60px);
+  padding: 0;
+  margin-top: 22px;
+  list-style: none;
+}
+.welcome__steps li {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+.welcome__steps .ui-icon {
+  width: 23px;
+  height: 23px;
+  color: var(--mint);
+  margin-top: 2px;
+}
+.welcome__steps h3 {
+  font-size: 19px;
+  line-height: 1.25;
+}
+.welcome__steps p, .welcome__disclaimer {
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.45;
+  margin-top: 5px;
+}
+.welcome__disclaimer { margin-top: 24px; }
+@media (max-width: 760px) {
+  .welcome { padding: 27px 20px 38px; }
+  .welcome__hero { grid-template-columns: 1fr; gap: 26px; }
+  .welcome__copy h1 { font-size: clamp(35px, 9vw, 46px); }
+  .welcome__lead { font-size: 18px; margin-top: 15px; }
+  .welcome__action { width: 100%; margin-top: 22px; }
+  .welcome__accessibility { width: 100%; margin: 10px 0 0; }
+  .welcome__visual img { height: clamp(160px, 43vw, 250px); }
+  .welcome__guide { margin-top: 36px; padding-top: 23px; }
+  .welcome__steps { grid-template-columns: 1fr; gap: 20px; }
 }
