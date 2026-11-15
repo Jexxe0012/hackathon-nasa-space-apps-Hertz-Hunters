@@ -55,12 +55,16 @@
   footer { color: var(--suave); font-size: 0.85rem; margin-top: 24px; }
   .solo-lector { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
   .visual { margin: 0 0 12px; }
-  .mapa { position: relative; border-radius: 10px; overflow: hidden; background: #000; aspect-ratio: 16 / 9; }
-  .mapa img { width: 100%; height: 100%; display: block; }
-  .marca { position: absolute; width: 24px; height: 24px; margin: -12px 0 0 -12px; border: 2px solid #fff; border-radius: 50%;
-    box-shadow: 0 0 0 2px rgba(0,0,0,.55); transition: transform .12s ease-out; }
-  .marca.pulso { transform: scale(1.5); }
-  .marca span { position: absolute; right: 30px; top: 2px; color: #fff; font-size: 12px; font-weight: 600; text-shadow: 0 1px 3px #000; white-space: nowrap; }
+  .paneles { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media (max-width: 560px) { .paneles { grid-template-columns: 1fr; } }
+  .globo { position: relative; aspect-ratio: 680 / 540; background: #000 center / 141.18% auto no-repeat; border-radius: 10px; overflow: hidden; }
+  .zoom { position: relative; aspect-ratio: 150 / 119; background-color: #000; background-repeat: no-repeat; border-radius: 10px; overflow: hidden;
+    outline: 2px solid rgba(255,255,255,.85); outline-offset: -2px; transition: box-shadow .12s ease-out; }
+  .zoom.pulso { box-shadow: inset 0 0 18px rgba(255,255,255,.55); }
+  .recuadro { position: absolute; border: 2px solid #fff; border-radius: 3px; box-shadow: 0 0 0 1px rgba(0,0,0,.6); }
+  .zona-medida { position: absolute; border: 2px dashed #fff; border-radius: 4px; box-shadow: 0 0 0 1px rgba(0,0,0,.45); transition: transform .12s ease-out; }
+  .zona-medida.pulso { transform: scale(1.18); }
+  .leyenda-mapa { font-size: .82rem; color: var(--suave); margin: 4px 0 0; line-height: 1.35; }
   #curva { width: 100%; height: auto; display: block; margin-top: 8px; }
   #curva .punto { transition: r .12s ease-out; }
   @media (max-width: 480px) { .temp { font-size: 2.2rem; } .fila button { flex: 1 1 auto; } }
@@ -88,7 +92,10 @@
   <section class="tarjeta" aria-labelledby="h-semana">
     <h2 id="h-semana" class="solo-lector" data-t="h_semana"></h2>
     <figure class="visual" aria-hidden="true">
-      <div class="mapa"><img id="mapa" alt="" width="960" height="540"><div class="marca" id="marca"><span id="marca-texto"></span></div></div>
+      <div class="paneles">
+        <div><div class="globo" id="globo"><div class="recuadro" id="recuadro"></div></div><p class="leyenda-mapa" data-t="mapa_globo"></p></div>
+        <div><div class="zoom" id="zoom"><div class="zona-medida" id="zona-medida"></div></div><p class="leyenda-mapa" id="leyenda-zoom"></p></div>
+      </div>
       <svg id="curva" viewBox="0 0 480 150"></svg>
     </figure>
     <p class="fecha" id="fecha"></p>

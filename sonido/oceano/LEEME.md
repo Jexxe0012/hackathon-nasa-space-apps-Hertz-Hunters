@@ -31,7 +31,7 @@ La página carga un JSON, así que **no funciona con doble clic** (`file://`): n
 
 ## Lo que se ve
 
-El mapa de la NASA (vista del Pacífico, `mapas/`) cambia semana a semana con el sonido, con una marca en El Salvador (aproximada). Debajo, la curva de temperatura se dibuja mientras suena, con el umbral de 26,5 °C y la zona neutra. La marca y el punto brillan en cada nota. Todo va con el reloj del audio.
+El mapa de la NASA (vista del Pacífico, `mapas/`) cambia semana a semana con el sonido, en dos paneles: el mundo completo (con un recuadro en la zona ampliada) y un zoom a la costa de El Salvador con un recuadro punteado sobre la franja de mar que escuchamos (aproximada). Los textos van debajo, nunca sobre el mapa. Debajo, la curva de temperatura se dibuja mientras suena, con el umbral de 26,5 °C y la zona neutra. El zoom y el punto de la curva brillan en cada nota. Todo va con el reloj del audio.
 
 ## Qué suena y por qué
 

@@ -17,6 +17,8 @@
       idioma: 'Idioma · Language',
       zona: 'Zona',
       instrumento: 'Melodía',
+      mapa_globo: 'Todo el Pacífico (NASA SVS 3912). El recuadro blanco es la zona ampliada.',
+      mapa_zoom: 'Zoom: {zona}. Recuadro punteado = el mar que escuchas (aprox.).',
       mar: 'Mar ↔ Melodía',
       mar_valor: 'mar {db} dB respecto de la melodía',
       piano: 'Piano',
@@ -75,6 +77,8 @@
       idioma: 'Idioma · Language',
       zona: 'Zone',
       instrumento: 'Melody',
+      mapa_globo: 'The whole Pacific (NASA SVS 3912). The white box is the zoomed area.',
+      mapa_zoom: 'Zoom: {zona}. Dashed box = the sea you hear (approx.).',
       mar: 'Sea ↔ Melody',
       mar_valor: 'sea {db} dB relative to the melody',
       piano: 'Piano',
@@ -232,7 +236,10 @@
   // Vista de globo del SVS 3912 (cámara fija, 960×540): centro (480, 270), radio 340 px, centrada en lon -132,6° y el
   // ecuador (calculado con la costa de Ecuador como referencia). La marca es aproximada (±7 px).
   const GLOBO = { cx: 480, cy: 270, r: 340, lon0: -132.6 };
-  const LUGARES = { costa: { lon: -89.1, lat: 13.0, es: 'El Salvador', en: 'El Salvador' }, caribe: { lon: -76, lat: 15, es: 'Caribe', en: 'Caribbean' } };
+  // Zonas en grados (la costa: de Acajutla al Golfo de Fonseca, de la costa a ~176 km mar adentro)
+  const ZONAS_GEO = { costa: { lon: [-90.15, -87.7], lat: [12.1, 13.5] }, caribe: { lon: [-80, -72], lat: [13, 17] } };
+  const ZOOM = { w: 150, h: 119 };    // pedazo del mapa (en px de 960×540) que se ve ampliado
+  const CROP = { x: 140, w: 680 };    // recorte del globo (sin los bordes negros)
   function proyectar(lon, lat) {
     const r = Math.PI / 180;
     return { x: GLOBO.cx + GLOBO.r * Math.cos(lat * r) * Math.sin((lon - GLOBO.lon0) * r), y: GLOBO.cy - GLOBO.r * Math.sin(lat * r) };
@@ -242,14 +249,30 @@
   const cxs = (i) => CURVA.x0 + (CURVA.x1 - CURVA.x0) * i / (serie.length - 1);
   const cys = (T) => CURVA.y1 - (CURVA.y1 - CURVA.y0) * (Math.max(CURVA.tmin, Math.min(CURVA.tmax, T)) - CURVA.tmin) / (CURVA.tmax - CURVA.tmin);
   let mapaActual = -1, destello = null;
+  const pct = (x) => (100 * x).toFixed(3) + '%';
 
   function construirVisual() {
     if (!serie.length) return;
     if (!mapas.length) for (let i = 1; i <= serie.length; i++) { const im = new Image(); im.src = 'mapas/s' + String(i).padStart(2, '0') + '.webp'; mapas.push(im); }
-    const lugar = LUGARES[zonaSel], p = proyectar(lugar.lon, lugar.lat);
-    $('marca').style.left = (100 * p.x / 960) + '%';
-    $('marca').style.top = (100 * p.y / 540) + '%';
-    $('marca-texto').textContent = lugar[idioma];
+    // caja de la zona medida (esquinas proyectadas en el globo)
+    const g = ZONAS_GEO[zonaSel], pts = [];
+    g.lon.forEach((lo) => g.lat.forEach((la) => pts.push(proyectar(lo, la))));
+    const x0 = Math.min(...pts.map((q) => q.x)) - 1.5, x1 = Math.max(...pts.map((q) => q.x)) + 1.5;
+    const y0 = Math.min(...pts.map((q) => q.y)) - 1.5, y1 = Math.max(...pts.map((q) => q.y)) + 1.5;
+    // pedazo ampliado, centrado en la zona (un poco hacia el mar)
+    const izq = Math.max(0, Math.min(960 - ZOOM.w, (x0 + x1) / 2 - ZOOM.w / 2 - 8));
+    const arr = Math.max(0, Math.min(540 - ZOOM.h, (y0 + y1) / 2 - ZOOM.h / 2 + 6));
+    const zoom = $('zoom');
+    zoom.style.backgroundSize = pct(960 / ZOOM.w) + ' auto';
+    zoom.style.backgroundPosition = pct(izq / (960 - ZOOM.w)) + ' ' + pct(arr / (540 - ZOOM.h));
+    const zm = $('zona-medida').style;
+    zm.left = pct((x0 - izq) / ZOOM.w); zm.top = pct((y0 - arr) / ZOOM.h);
+    zm.width = pct((x1 - x0) / ZOOM.w); zm.height = pct((y1 - y0) / ZOOM.h);
+    const rc = $('recuadro').style;
+    rc.left = pct((izq - CROP.x) / CROP.w); rc.top = pct(arr / 540);
+    rc.width = pct(ZOOM.w / CROP.w); rc.height = pct(ZOOM.h / 540);
+    const zs = datos.zonas[zonaSel];
+    $('leyenda-zoom').textContent = t('mapa_zoom', { zona: idioma === 'es' ? zs.nombre_es : zs.nombre_en });
     let d = '';
     serie.forEach((s, i) => { if (s.temperatura_c != null) d += (d ? 'L' : 'M') + cxs(i).toFixed(1) + ' ' + cys(s.temperatura_c).toFixed(1); });
     const yU = cys(M.REGLAS.umbralC), yN0 = cys(M.REGLAS.neutraMaxC), yN1 = cys(M.REGLAS.neutraMinC);
@@ -278,7 +301,7 @@
   // p = posición en semanas (con decimales). En la demo la línea se dibuja hasta el cursor; explorando se ve entera.
   function actualizarVisual(p, enDemo) {
     const n = serie.length, i = Math.max(0, Math.min(n - 1, Math.floor(p)));
-    if (i !== mapaActual && mapas[i]) { $('mapa').src = mapas[i].src; mapaActual = i; }
+    if (i !== mapaActual && mapas[i]) { const u = 'url(' + mapas[i].src + ')'; $('globo').style.backgroundImage = u; $('zoom').style.backgroundImage = u; mapaActual = i; }
     const q = Math.max(0, Math.min(n - 1, p)), x = cxs(q);
     const a = serie[Math.floor(q)].temperatura_c, b = serie[Math.min(n - 1, Math.floor(q) + 1)].temperatura_c;
     const T = a == null ? b : (b == null ? a : a + (b - a) * (q - Math.floor(q)));
@@ -296,10 +319,10 @@
     let suena = false;
     while (cola.length && cola[0] <= ahoraVisual) { cola.shift(); suena = true; }
     if (!suena) return;
-    $('marca').classList.add('pulso');
+    $('zoom').classList.add('pulso'); $('zona-medida').classList.add('pulso');
     $('punto').setAttribute('r', '7');
     clearTimeout(destello);
-    destello = setTimeout(() => { $('marca').classList.remove('pulso'); const pt = $('punto'); if (pt) pt.setAttribute('r', '4.5'); }, 110);
+    destello = setTimeout(() => { $('zoom').classList.remove('pulso'); $('zona-medida').classList.remove('pulso'); const pt = $('punto'); if (pt) pt.setAttribute('r', '4.5'); }, 110);
   }
 
   function relojVisual() {
