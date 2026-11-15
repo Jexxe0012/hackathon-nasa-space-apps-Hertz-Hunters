@@ -37,20 +37,18 @@ Contexto completo del reto (análisis, decisiones, bitácora): carpeta local `C:
 - Emoción solo por activación (tempo, densidad, aspereza), por comparación (antes/después, umbrales con fuente) y por significado (cercanía local).
 - Nada de música de fondo, rangos inflados, alarmas sin fuente ni sonidos "tristes" para decir que algo está mal.
 
-## Reglas de sonido del Océano (motor en `sonido/oceano/`)
-- Instrumento: **pad** suave (voces levemente desafinadas, ataque lento, filtro de agudos, chorus y reverb).
-- **Altura = temperatura**, en escala **pentatónica**: un escalón por cada 0,5 °C (≈ el error de lectura). Escala fija para todas las zonas (24 °C = La2), sin estirarla al rango de cada zona.
-- **Ritmo = activación**: más caliente, pulsos más seguidos (1 pulso/s a 26 °C y el doble por cada 2 °C más).
-- **26,5 °C** = umbral que favorece la formación de huracanes (NOAA).
-- **Zona neutra 26–27 °C** (±0,5 °C, del tamaño del error de lectura de 0,46 °C): sonido limpio; la voz dice "cerca del umbral".
-- **Sobre 27 °C**: la aspereza (modulación de amplitud rápida, 45 Hz) crece poco a poco hasta el máximo del año (~29,3 °C, tope fijo).
-- **Bajo 26 °C**: limpio y calmado.
-- **Voz**: números redondos ("unos 29 grados").
-- Calidad: todo cambio con rampas suaves (cero clics), limitador al final, volumen parejo entre graves y agudos, máximo 3–4 notas a la vez. El WAV exportado usa el mismo motor.
+## Reglas de sonido del Océano (motor en `sonido/oceano/`) — versión 2: olas + melodía
+- La versión 1 (pad continuo + pulsos + aspereza de 45 Hz + voz de los meses) se **descartó** el 15/11 tras escucharla: zumbido, demasiado llena, monótona y no se oía el cambio. No volver a ella.
+- **Solo dos cosas suenan: el mar (olas) y una melodía (piano real; campana como alternativa).** Nada de colchón de fondo ni capas extra.
+- **Melodía = temperatura**, pentatónica, un escalón por cada 0,5 °C (≈ error de lectura), escala fija para todas las zonas (24 °C = La3). **Cada cambio de escalón suena en el momento en que empieza la semana**: se oye la subida y la caída nota por nota.
+- **Ritmo = activación**: notas más seguidas (1/s a 26 °C, el doble cada 2 °C más) y olas más seguidas (una cada 4,4 s a 26 °C, la mitad de tiempo cada 2,5 °C más), más llenas y brillantes.
+- **26,5 °C** = umbral que favorece la formación de huracanes (NOAA). **Zona neutra 26–27 °C** (error de lectura 0,46 °C): mar liso.
+- **Sobre 27 °C: espuma** (las olas rompen con un siseo en la cresta) que crece hasta 29,3 °C. Reemplaza a la aspereza. **Bajo 26 °C**: mar en calma.
+- **Sin voz en la página**: la voz para personas ciegas la pone el bot (rama `diego`).
 
 ## Motor de sonido (`sonido/oceano/`, detalle en su `LEEME.md`)
-- `motor-oceano.js` (reglas + instrumento + reproductor, Tone.js 14.8.49), `app.js` (interfaz mínima accesible, voz ES/EN, teclado, exportar WAV), `index.html`. La interfaz bonita es de Josué.
-- El mismo código suena en vivo y genera el WAV (`Tone.Offline`): demo = 48 semanas en 27,8 s, archivo de 30,0 s.
-- Medido sobre el WAV: −19 LUFS, pico −5 dBFS (el limitador, techo −4 dBFS, no actúa), 0 saturación, 0 clics; volumen ±0,7 dB entre notas de la costa; aspereza 0 hasta 27 °C.
-- Desafinación del pad fija en Hz (no en cents) y capa grave sin desafinar: si no, aparecen latidos cuyo ritmo depende de la nota y compiten con los pulsos (el dato).
+- `motor-oceano.js` (reglas + instrumento + reproductor, Tone.js 14.8.49), `app.js` (interfaz mínima, teclado, balance mar ↔ melodía, exportar WAV), `index.html`. La interfaz bonita es de Josué.
+- Piano: Salamander Grand Piano (Alexander Holm, CC BY 3.0) cargado desde tonejs.github.io; si no carga, suena la campana.
+- El mismo código suena en vivo y genera el WAV (`Tone.Offline`): demo = 48 semanas en 27,8 s, archivo de 30,0 s. Los eventos (semana, nota, ola) se programan en orden de tiempo: si no, el WAV (que se programa de una vez) pierde notas.
+- Medido sobre el WAV: ~−20 LUFS, pico ~−3,5 dBFS, 0 saturación, 0 clics.
 - El limitador del navegador suma ganancia automática (+2,28 dB con techo −4, medido); se compensa con un recorte justo después.

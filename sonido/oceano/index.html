@@ -69,6 +69,10 @@
         <select id="idioma"><option value="es">Español</option><option value="en">English</option></select></label>
       <label><span data-t="zona"></span>
         <select id="zona"><option value="costa"></option><option value="caribe"></option></select></label>
+      <label><span data-t="instrumento"></span>
+        <select id="instrumento"><option value="piano"></option><option value="campana"></option></select></label>
+      <label><span data-t="mar"></span>
+        <input type="range" id="mar" min="-12" max="6" step="1" value="0" style="width:140px;height:28px"> <span id="mar-valor" aria-hidden="true">0 dB</span></label>
     </div>
   </header>
 
@@ -94,10 +98,7 @@
       <button type="button" id="btn-play"></button>
       <button type="button" id="btn-prev"></button>
       <button type="button" id="btn-next"></button>
-      <button type="button" id="btn-decir"></button>
-      <button type="button" id="btn-leyenda"></button>
     </div>
-    <p class="fila" style="margin-top:12px"><label><input type="checkbox" id="chk-meses" checked> <span data-t="casilla_meses"></span></label></p>
     <p class="teclas" id="teclas"></p>
   </section>
 
@@ -106,7 +107,6 @@
       <summary data-t="porque"></summary>
       <div id="porque-texto"></div>
       <p class="ahora-explica" id="ahora-explica"></p>
-      <button type="button" id="btn-leer"></button>
     </details>
   </section>
 

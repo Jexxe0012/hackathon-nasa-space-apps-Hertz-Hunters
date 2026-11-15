@@ -2,6 +2,8 @@
 
 El mar frente a la costa salvadoreña ("frente a Surf City") durante un año simulado por la NASA (ECCO2, mar 2007 – feb 2008), convertido en sonido en vivo en el navegador. Es el ciclo de las estaciones, **no** calentamiento global.
 
+**Solo suenan dos cosas: el mar (olas) y una melodía (piano).** Sin voz: la voz para personas ciegas la pone el bot.
+
 ## Cómo abrirla
 
 La página carga un JSON, así que **no funciona con doble clic** (`file://`): necesita un servidor web, aunque sea local.
@@ -11,10 +13,10 @@ La página carga un JSON, así que **no funciona con doble clic** (`file://`): n
   python -m http.server 8000
   ```
   y abrir `http://localhost:8000/sonido/oceano/`
-- **En el celular (misma red Wi‑Fi)**: `python -m http.server 8000 --bind 0.0.0.0` en la computadora, ver su IP con `ipconfig` y abrir `http://<IP>:8000/sonido/oceano/` en el celular (Windows puede pedir permiso de firewall: aceptar en redes privadas).
+- **En el celular (misma red Wi‑Fi)**: `python -m http.server 8000 --bind 0.0.0.0` en la computadora, ver su IP con `ipconfig` y abrir `http://<IP>:8000/sonido/oceano/` (Windows puede pedir permiso de firewall: aceptar en redes privadas).
 - **En el celular, sin servidor** (repo público, rama `fuentes`):
   `https://raw.githack.com/diegonoetorresvillatoro-netizen/hackathon-nasa-space-apps-Hertz-Hunters/fuentes/sonido/oceano/index.html`
-- Necesita internet la primera vez (Tone.js viene de un CDN). En iPhone, quitar el modo silencio: si no, el audio web no suena.
+- Necesita internet (Tone.js y las muestras del piano vienen de la web). En iPhone, quitar el modo silencio.
 
 ## Uso
 
@@ -23,38 +25,35 @@ La página carga un JSON, así que **no funciona con doble clic** (`file://`): n
 | Año completo en 30 s (demo) | — | **Escuchar el año (30 s)** |
 | Reproducir / pausar | Espacio | Reproducir / Pausar |
 | Semana anterior / siguiente | ← → | botones o deslizador |
-| Decir la semana y la temperatura | Enter | Decir la semana |
-| Tres referencias (más fresco, umbral, más caliente) | — | Leyenda sonora |
-| Explicación | — | ¿Por qué suena así? (con "Leer en voz alta") |
-| Archivo para el video | — | Exportar el año en WAV (30,0 s, 48 kHz, estéreo) |
-
-Voz en español o inglés (selector de idioma). Todo se usa solo con teclado y con lector de pantalla.
+| Instrumento de la melodía | — | Melodía: Piano / Campana |
+| Balance entre el mar y la melodía | — | Mar ↔ Melodía (−12 a +6 dB) |
+| Archivo para el video | — | Exportar el año en WAV (30,0 s, 48 kHz, estéreo; usa el instrumento y el balance elegidos) |
 
 ## Qué suena y por qué
 
 | Dato | Sonido |
 |---|---|
-| Temperatura | **Altura**: pentatónica, un escalón por cada 0,5 °C (≈ error de lectura). Escala fija: 24 °C = La2 |
-| Activación | **Pulsos**: 1 por segundo a 26 °C, el doble por cada 2 °C más |
-| Sobre 27 °C | **Aspereza**: modulación de amplitud a 45 Hz, crece hasta 29,3 °C (máximo del año) |
-| 26–27 °C | Zona neutra alrededor del umbral de 26,5 °C (huracanes, NOAA): limpio; la voz dice "cerca del umbral" |
-| Bajo 26 °C | Limpio y calmado |
+| Temperatura | **Melodía**: pentatónica, un escalón por cada 0,5 °C (≈ error de lectura). Escala fija: 24 °C = La3. Cada cambio de escalón suena al empezar la semana |
+| Activación | **Ritmo**: notas más seguidas (1/s a 26 °C, el doble cada 2 °C) y olas más seguidas (una cada 4,4 s a 26 °C, la mitad de tiempo cada 2,5 °C), más llenas y brillantes |
+| Sobre 27 °C | **Espuma**: las olas rompen con un siseo en la cresta, que crece hasta 29,3 °C |
+| 26–27 °C | Zona neutra alrededor del umbral de 26,5 °C (huracanes, NOAA): mar liso |
+| Bajo 26 °C | Mar en calma: olas lentas y largas, notas espaciadas |
 
-El instrumento es un **pad**: 3 sierras levemente desafinadas (separación fija en Hz, ondulan lento y siempre igual), un triángulo una octava abajo, filtro que sigue a la nota, chorus y una reverb propia sin graves ni agudos. Los pulsos son "gotas" una octava arriba.
-Principio: **la emoción sigue al dato**. No hay música de fondo, ni sonidos tristes, ni alarmas, y el volumen no es un dato.
+Principio: **la emoción sigue al dato**. No hay música de fondo, ni sonidos tristes, ni alarmas.
 
 ## Calidad (medida sobre el WAV exportado)
 
-- Sonoridad **−19 LUFS**, pico **−5 dBFS**: el limitador (techo −4 dBFS) ni siquiera actúa. **0** muestras saturadas, **0** clics.
-- Volumen parejo entre notas: ±0,7 dB en el rango de la costa (25,5–29,5 °C).
-- Aspereza medida en la salida: 0 hasta 27 °C y crece pareja hasta ~29,5 °C.
-- Todo cambio (nota, filtro, volumen, aspereza) va con rampas suaves. Como máximo suenan 3–4 notas a la vez.
+- Sonoridad **~−20 LUFS**, pico **~−3,5 dBFS**, **0** muestras saturadas, **0** clics (piano y campana igualados).
+- Todo cambio de volumen va con rampas; cada ola empieza desde el silencio sin saltos.
 
 ## Para Josué y el bot (Diego 2)
 
 - Datos: `imagen-a-sonido/oceano_3912/resultados/oceano_3912_costa.json` → `series.costa` y `series.caribe` = `{semana, fecha, temperatura_c}`.
 - `motor-oceano.js` expone `window.MotorOceano` (requiere Tone.js 14.8):
-  - `new MotorOceano.Reproductor()` → `cargar(temps)`, `iniciarDemo()`, `alternar()`, `irA(i)`, `semanaActual()`, `alTerminarDemo`.
-  - `MotorOceano.describir(temp, 'es'|'en')` → nota, pulsos por segundo, aspereza y zona (sirve para "¿por qué suena así?").
-  - `MotorOceano.renderizar(temps)` → AudioBuffer del año completo (es lo que usa "Exportar WAV").
-- Ajustes rápidos (todos en `motor-oceano.js`): `REGLAS.asperezaProfMax` (cuánta aspereza), `NIVEL.*` (mezcla), `DEMO.semana` (duración de la demo).
+  - `new MotorOceano.Reproductor()` → `cargar(temps)`, `iniciarDemo()`, `alternar()`, `irA(i)`, `semanaActual()`, `fijarTemperatura(t)`, `usarMar(db)`, `alTerminarDemo`.
+  - `MotorOceano.cargarPiano()` y `reproductor.usarPiano(piano)` para la melodía de piano.
+  - `MotorOceano.describir(temp, 'es'|'en')` → nota, notas por segundo, segundos por ola, espuma y zona (para "¿por qué suena así?" y para que el bot lo diga).
+  - `MotorOceano.renderizar(temps, {instrumento, marDb})` → AudioBuffer del año completo.
+- Ajustes rápidos (en `motor-oceano.js`): `NIVEL.*` (mezcla), `REGLAS.*` (reglas), `DEMO.semana` (duración de la demo).
+
+Piano: Salamander Grand Piano, de Alexander Holm (CC BY 3.0).

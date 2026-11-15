@@ -1,18 +1,15 @@
 /*
  * Motor de sonido del disco Océano · NASA SVS 3912 · Hertz Hunters (NASA Space Apps 2026)
  *
- * Convierte la temperatura del mar (una cifra por semana) en sonido generado en vivo, sin grabaciones.
- * El MISMO código sirve para escuchar en el navegador y para exportar el WAV (Tone.Offline):
- * el archivo exportado suena igual que la página.
+ * Dos cosas suenan, nada más: EL MAR (olas) y UNA MELODÍA (piano). Todo sale del dato:
+ *   melodía  = temperatura: más agudo = más caliente (pentatónica, 1 escalón cada 0,5 °C, escala fija).
+ *              Cada vez que la temperatura cambia de escalón, la nota suena en ese momento.
+ *   ritmo    = activación: notas y olas más seguidas cuando el mar está más caliente.
+ *   espuma   = tensión sobre 27 °C: las olas rompen con espuma (siseo en la cresta) que crece hasta 29,3 °C.
+ *              Bajo 27 °C el mar queda liso, sin espuma. 26–27 °C es la zona neutra alrededor de 26,5 °C.
+ *   Principio: la emoción sigue al dato. Si el dato no cambia, el sonido no cambia. Sin voz (la pone el bot).
  *
- * Reglas (ver CLAUDE.md):
- *   altura   = temperatura, pentatónica, 1 escalón cada 0,5 °C, escala fija (24 °C = La2)
- *   ritmo    = activación: 1 pulso/s a 26 °C y el doble por cada 2 °C más
- *   aspereza = solo sobre 27 °C, crece hasta el tope fijo de 29,3 °C (máximo del año)
- *   26–27 °C = zona neutra (±0,5 °C alrededor del umbral de 26,5 °C): limpio
- *   Principio: la emoción sigue al dato. Si el dato no cambia, el sonido no cambia.
- *
- * Requiere Tone.js (global `Tone`). Expone `window.MotorOceano`.
+ * El MISMO código suena en vivo y genera el WAV (Tone.Offline). Requiere Tone.js. Expone `window.MotorOceano`.
  */
 (function (global) {
   'use strict';
@@ -22,261 +19,244 @@
     umbralC: 26.5,              // temperatura del mar que favorece la formación de huracanes (NOAA)
     neutraMinC: 26.0,           // zona neutra: ±0,5 °C alrededor del umbral (error de lectura 0,46 °C)
     neutraMaxC: 27.0,
-    asperezaTopeC: 29.3,        // máximo del año en la costa: aspereza completa
+    espumaTopeC: 29.3,          // máximo del año en la costa: espuma completa
     pasoC: 0.5,                 // medio grado = un escalón de la escala
-    baseC: 24.0,                // 24 °C suena La2 (110 Hz); la escala es la misma para todas las zonas
-    baseHz: 110,
+    baseC: 24.0,                // 24 °C suena La3 (220 Hz); la escala es la misma para todas las zonas
+    baseHz: 220,
     pentatonica: [0, 2, 4, 7, 9], // La, Si, Do#, Mi, Fa# (pentatónica mayor: ninguna nota choca)
-    pulsosRefC: 26.0,           // a 26 °C, 1 pulso por segundo...
-    pulsosRefHz: 1.0,
-    pulsosDoblaCadaC: 2.0,      // ...y el doble por cada 2 °C más
-    asperezaHz: 45,             // modulación de amplitud rápida: el oído la siente como aspereza
-    asperezaProfMax: 0.8,       // profundidad máxima de esa modulación (0 = nada, 1 = total); la reverb y el
-                                // chorus la suavizan: a la salida llega ~65 % (medido)
+    notasRefC: 26.0,            // a 26 °C, 1 nota por segundo y el doble por cada 2 °C más
+    notasDoblaCadaC: 2.0,
+    olaRefC: 26.0,              // a 26 °C, una ola cada 4,4 s; la mitad de tiempo por cada 2,5 °C más
+    olaPeriodoRefS: 4.4,
+    olaMitadCadaC: 2.5,
+    fuerzaMinC: 25.0,           // fuerza del mar (olas más llenas y brillantes, toque más firme): 0 a 25 °C...
+    fuerzaMaxC: 29.5,           // ...1 a 29,5 °C
   });
 
   // Demo: 48 semanas en 27,8 s; el archivo completo (con entrada y salida suaves) dura 30,0 s.
-  const DEMO = Object.freeze({ entrada: 0.3, semana: 0.58, salida: 1.86, subida: 0.9 });
-  // Tiempo que tarda el sonido en deslizarse de una semana a la otra (s).
-  const DESLIZ = Object.freeze({ demo: 0.2, explorar: 0.6 });
+  const DEMO = Object.freeze({ entrada: 0.3, semana: 0.58, salida: 1.86, subida: 0.25 });
 
   // ---------------------------------------------------------------- mezcla (calibrada midiendo el WAV)
   const NIVEL = Object.freeze({
-    raizDb: -15,       // voz principal del pad (sierra suave filtrada)
-    subDb: -17,        // octava de abajo (triángulo), da calidez
-    pulsosDb: -6,      // pulsos ("gotas"): ~6 dB bajo el pad, se oyen claros sin tapar
-    retornoRevDb: -9,  // cuánta reverb vuelve a la mezcla
-    salida: 0.62,      // volumen general (lineal): el año queda en ~-19 LUFS con picos ~-5 dBFS (medido)
+    olasDb: -6,        // el mar, ~3 dB bajo la melodía: se oye claro sin taparla
+    espumaDb: -12,
+    melodiaDb: -4,
+    retornoRevDb: -10,
+    salida: 2.3,       // volumen general: el año queda en ~-20 LUFS (medido)
   });
-  // Volumen parejo entre graves y agudos: dB que se suman por cada octava bajo la referencia
-  const COMP = Object.freeze({ raiz: 3, sub: 1.5, pulsos: 2 });
-  const DESAFINACION_HZ = [0, 0.31, -0.43]; // voz central, izquierda, derecha
-  const CORTE_X_NOTA = 4;   // el filtro del pad sigue a la nota: deja pasar ~4 armónicos (mismo timbre en grave y agudo)
-  const DUR_PULSO = 0.62;   // ataque + caída de cada pulso (s)
-  const VOCES_PULSO = 8;    // voces que se turnan para los pulsos (nunca se corta una nota sonando)
+
+  const PIANO = Object.freeze({
+    base: 'https://tonejs.github.io/audio/salamander/', // Salamander Grand Piano (Alexander Holm, CC BY 3.0)
+    notas: { A3: 'A3', C4: 'C4', 'D#4': 'Ds4', 'F#4': 'Fs4', A4: 'A4', C5: 'C5', 'D#5': 'Ds5', 'F#5': 'Fs5', A5: 'A5', C6: 'C6' },
+  });
 
   // ---------------------------------------------------------------- funciones puras (también para Josué y el bot)
+  const limitar = (x, a, b) => Math.max(a, Math.min(b, x));
+
   function paso(t) { return Math.round((t - REGLAS.baseC) / REGLAS.pasoC); }
-
-  function semitonos(p) {
-    const oct = Math.floor(p / 5);
-    const grado = ((p % 5) + 5) % 5;
-    return 12 * oct + REGLAS.pentatonica[grado];
-  }
-
+  function semitonos(p) { const o = Math.floor(p / 5), g = ((p % 5) + 5) % 5; return 12 * o + REGLAS.pentatonica[g]; }
   function frecuencia(t) { return REGLAS.baseHz * Math.pow(2, semitonos(paso(t)) / 12); }
-
-  function pulsosPorSegundo(t) {
-    return REGLAS.pulsosRefHz * Math.pow(2, (t - REGLAS.pulsosRefC) / REGLAS.pulsosDoblaCadaC);
-  }
-
-  // 0 a 1. La aspereza percibida crece ~ profundidad^1,6, así que se usa x^0,625 para que suba parejo.
-  function aspereza(t) {
+  function notasPorSegundo(t) { return Math.pow(2, (t - REGLAS.notasRefC) / REGLAS.notasDoblaCadaC); }
+  function olaPeriodo(t) { return REGLAS.olaPeriodoRefS / Math.pow(2, (t - REGLAS.olaRefC) / REGLAS.olaMitadCadaC); }
+  function fuerza(t) { return limitar((t - REGLAS.fuerzaMinC) / (REGLAS.fuerzaMaxC - REGLAS.fuerzaMinC), 0, 1); }
+  // 0 a 1. Sube parejo al oído (la percepción crece más rápido que la cantidad, por eso x^0,625)
+  function espuma(t) {
     if (!(t > REGLAS.neutraMaxC)) return 0;
-    const x = Math.min(1, (t - REGLAS.neutraMaxC) / (REGLAS.asperezaTopeC - REGLAS.neutraMaxC));
-    return Math.pow(x, 0.625);
+    return Math.pow(Math.min(1, (t - REGLAS.neutraMaxC) / (REGLAS.espumaTopeC - REGLAS.neutraMaxC)), 0.625);
   }
-
   function zona(t) {
     if (t == null) return 'sin_dato';
     if (t < REGLAS.neutraMinC) return 'bajo';
     if (t <= REGLAS.neutraMaxC) return 'cerca';
     return 'sobre';
   }
+  const NOMBRES = { es: { 9: 'La', 11: 'Si', 1: 'Do#', 4: 'Mi', 6: 'Fa#' }, en: { 9: 'A', 11: 'B', 1: 'C#', 4: 'E', 6: 'F#' } };
 
-  const NOMBRES = {
-    es: { 9: 'La', 11: 'Si', 1: 'Do#', 4: 'Mi', 6: 'Fa#' },
-    en: { 9: 'A', 11: 'B', 1: 'C#', 4: 'E', 6: 'F#' },
-  };
-
-  // Todo lo que suena para una temperatura (para el botón "¿por qué suena así?").
+  // Todo lo que suena para una temperatura (para "¿por qué suena así?" y para el bot).
   function describir(t, idioma) {
     if (t == null || !isFinite(t)) return { temp: null, zona: 'sin_dato' };
-    const p = paso(t);
-    const midi = 45 + semitonos(p); // La2 = 45
-    const nombres = NOMBRES[idioma] || NOMBRES.es;
+    const p = paso(t), midi = 57 + semitonos(p); // La3 = 57
     return {
-      temp: t,
-      paso: p,
-      nota: nombres[midi % 12] + (Math.floor(midi / 12) - 1),
-      hz: frecuencia(t),
-      pulsosPorSegundo: pulsosPorSegundo(t),
-      aspereza: aspereza(t),
-      zona: zona(t),
+      temp: t, paso: p, nota: (NOMBRES[idioma] || NOMBRES.es)[midi % 12] + (Math.floor(midi / 12) - 1), hz: frecuencia(t),
+      notasPorSegundo: notasPorSegundo(t), olaPeriodo: olaPeriodo(t), espuma: espuma(t), fuerza: fuerza(t), zona: zona(t),
     };
   }
 
-  // Volumen parejo: el oído escucha más bajos los graves, así que se suben un poco (dB por octava bajo ref).
-  function compensacionDb(f, ref, dbPorOctava) { return f < ref ? dbPorOctava * Math.log2(ref / f) : 0; }
+  // Variación natural de cada ola (ninguna ola es idéntica). Fija por número de ola: la página y el WAV coinciden.
+  function azar(i, k) { const x = Math.sin(i * 12.9898 + k * 78.233) * 43758.5453; return x - Math.floor(x); }
 
-  // Reverb propia: ruido con caída exponencial y cola cada vez más oscura (agua, sin metal).
-  // Semilla fija: el WAV y la página usan exactamente la misma reverb.
+  // Reverb propia (sala amplia y suave para el piano). Semilla fija.
   function respuestaReverb(sr) {
-    const dur = 2.8, pre = Math.floor(0.022 * sr), n = Math.floor(dur * sr);
+    const dur = 2.4, pre = Math.floor(0.018 * sr), n = Math.floor(dur * sr);
     const canales = [new Float32Array(n), new Float32Array(n)];
     for (let c = 0; c < 2; c++) {
       let s = c === 0 ? 0x9e3779b9 : 0x7f4a7c15;
-      const azar = () => { s ^= s << 13; s ^= s >>> 17; s ^= s << 5; return ((s >>> 0) / 4294967296) * 2 - 1; };
-      const d = canales[c];
+      const rnd = () => { s ^= s << 13; s ^= s >>> 17; s ^= s << 5; return ((s >>> 0) / 4294967296) * 2 - 1; };
       let lp = 0;
       for (let i = pre; i < n; i++) {
-        const t = (i - pre) / sr;
-        const caida = Math.exp(-6.9 * t / (dur - 0.022));  // -60 dB al final
-        const suave = Math.min(1, t / 0.03);               // entrada suave de la reverb
-        const a = Math.min(0.93, 0.35 + t * 0.3);          // la cola se oscurece con el tiempo
-        lp = lp * a + azar() * (1 - a);
-        d[i] = lp * caida * suave * (1 + 2.5 * a);         // compensa la pérdida del filtro
+        const t = (i - pre) / sr, a = Math.min(0.9, 0.3 + t * 0.3);
+        lp = lp * a + rnd() * (1 - a);
+        canales[c][i] = lp * Math.exp(-6.9 * t / (dur - 0.018)) * Math.min(1, t / 0.02) * (1 + 2.5 * a);
       }
     }
     return canales;
   }
 
-  // Lleva un parámetro a `valor` desde el tiempo `t`, sin saltos (curva exponencial suave).
-  function aproximar(param, valor, t, tc) {
-    param.cancelScheduledValues(t);
-    param.setTargetAtTime(valor, t, tc);
+  // Carga las muestras de piano una vez (AudioBuffer sirve tanto en vivo como al exportar).
+  let pianoCache = null;
+  function cargarPiano() {
+    if (pianoCache) return pianoCache;
+    const dec = new OfflineAudioContext(1, 1, 48000);
+    pianoCache = Promise.all(Object.entries(PIANO.notas).map(async ([nota, archivo]) => {
+      const r = await fetch(PIANO.base + archivo + '.mp3');
+      if (!r.ok) throw new Error('piano ' + r.status);
+      return [nota, await dec.decodeAudioData(await r.arrayBuffer())];
+    })).then(Object.fromEntries).catch((e) => { pianoCache = null; throw e; });
+    return pianoCache;
   }
 
   // ---------------------------------------------------------------- el instrumento
   class Motor {
-    // Crea el instrumento en el contexto de audio actual de Tone (en vivo u offline).
-    construir() {
-      const T = global.Tone;
-      const g = T.dbToGain;
+    // piano: mapa nota → AudioBuffer (o null: se usa la campana sintetizada)
+    construir(piano, instrumento) {
+      const T = global.Tone, g = T.dbToGain;
 
-      // Salida: volumen general → limpieza de graves y agudos → limitador → seguro final
+      // Salida → limpieza → limitador (techo -4 dBFS; el navegador suma +2,28 dB que el recorte quita) → seguro
       this.salida = new T.Gain(0);
-      const hp = new T.Filter({ type: 'highpass', frequency: 55, rolloff: -12, Q: 0.5 });
-      const lp = new T.Filter({ type: 'lowpass', frequency: 8500, rolloff: -12, Q: 0.5 });
-      // Limitador: techo -4 dBFS, sin rodilla. El navegador le suma una ganancia automática
-      // (makeup = 0,6 × 3,8 dB = 2,28 dB, medido); el recorte de después la quita, así que no cambia
-      // nada mientras el sonido esté bajo el techo. Medido: aun con +3 dBFS de entrada, sale a -3,4 dBFS.
-      this.limitador = new T.Compressor({ threshold: -4, ratio: 20, knee: 0, attack: 0.002, release: 0.12 });
+      const hp = new T.Filter({ type: 'highpass', frequency: 40, rolloff: -12, Q: 0.5 });
+      const limitador = new T.Compressor({ threshold: -4, ratio: 20, knee: 0, attack: 0.002, release: 0.12 });
       const recorte = new T.Gain(g(-2.28));
-      // Seguro: idéntico bajo 0,8; sobre eso se curva suave hasta un máximo de 0,95 (nunca satura).
-      const seguro = new T.WaveShaper((x) => {
-        const a = Math.abs(x);
-        if (a <= 0.8) return x;
-        return Math.sign(x) * (0.8 + 0.15 * Math.tanh((a - 0.8) / 0.15));
-      }, 4096);
-      this.salida.chain(hp, lp, this.limitador, recorte, seguro, T.getDestination());
+      const seguro = new T.WaveShaper((x) => { const a = Math.abs(x); return a <= 0.8 ? x : Math.sign(x) * (0.8 + 0.15 * Math.tanh((a - 0.8) / 0.15)); }, 4096);
+      this.salida.chain(hp, limitador, recorte, seguro, T.getDestination());
 
-      // Reverb amplia pero sin embarrar: sin graves (no hay barro) y sin agudos (no hay brillo metálico)
+      // Reverb (sobre todo para el piano)
       this.envio = new T.Gain(1);
-      const hpRev = new T.Filter({ type: 'highpass', frequency: 260, rolloff: -12 });
-      const lpRev = new T.Filter({ type: 'lowpass', frequency: 5000, rolloff: -12 });
-      const ir = T.ToneAudioBuffer.fromArray(respuestaReverb(T.getContext().sampleRate));
-      this.reverb = new T.Convolver(ir);
+      const hpRev = new T.Filter({ type: 'highpass', frequency: 300, rolloff: -12 });
+      const reverb = new T.Convolver(T.ToneAudioBuffer.fromArray(respuestaReverb(T.getContext().sampleRate)));
       const retorno = new T.Gain(g(NIVEL.retornoRevDb));
-      this.envio.chain(hpRev, lpRev, this.reverb, retorno, this.salida);
+      this.envio.chain(hpRev, reverb, retorno, this.salida);
 
-      // Pad: dos capas → aspereza (solo la capa principal) → chorus (ondulación) → salida y reverb
-      this.chorus = new T.Chorus({ frequency: 0.33, delayTime: 3.5, depth: 0.3, spread: 160, wet: 0.45 });
-      this.chorus.start();
-      this.pad = new T.Gain(1); // baja a 0 si una semana no tuviera dato
-      this.pad.connect(this.chorus);
-      this.chorus.connect(this.salida);
-      const envioPad = new T.Gain(g(-3));
-      this.chorus.connect(envioPad);
-      envioPad.connect(this.envio);
-
-      const f0 = frecuencia(REGLAS.umbralC);
-      // Capa principal: 3 sierras levemente desafinadas, con filtro que sigue a la nota.
-      // La desafinación es fija en Hz (no en cents): las voces ondulan lento (cada ~2–3 s) y SIEMPRE
-      // al mismo ritmo, sea cual sea la nota. Así esa ondulación no se confunde con los pulsos (el dato).
-      // Las voces de los lados van a izquierda y derecha y más suaves: la ondulación es amplia pero leve.
-      this.nivelRaiz = new T.Gain(0);
-      this.vocesRaiz = DESAFINACION_HZ.map((dHz, i) => {
-        const osc = new T.Oscillator({ frequency: f0 + dHz, type: 'sawtooth' });
-        const nivel = new T.Gain(i === 0 ? 1 : 0.42);
-        const pan = new T.Panner(i === 0 ? 0 : (i === 1 ? -0.6 : 0.6));
-        osc.chain(nivel, pan, this.nivelRaiz);
-        return { osc, dHz };
+      // ---- EL MAR: 3 olas que se turnan (una puede seguir sonando mientras llega la siguiente)
+      this.olasBus = new T.Gain(g(NIVEL.olasDb));
+      const hpOlas = new T.Filter({ type: 'highpass', frequency: 90, rolloff: -12 }); // sin retumbo grave
+      this.olasBus.connect(hpOlas);
+      hpOlas.connect(this.salida);
+      const envioOlas = new T.Gain(g(-14));
+      this.olasBus.connect(envioOlas);
+      envioOlas.connect(this.envio);
+      const ruidoEspuma = new T.Noise('white');
+      const hpEspuma = new T.Filter({ type: 'highpass', frequency: 2500, rolloff: -12 });
+      const lpEspuma = new T.Filter({ type: 'lowpass', frequency: 7500, rolloff: -12 });
+      ruidoEspuma.chain(hpEspuma, lpEspuma);
+      this.fuentes = [ruidoEspuma];
+      this.olas = [-0.5, 0.5, 0].map((p) => {
+        const ruido = new T.Noise('pink');
+        const filtro = new T.Filter({ type: 'lowpass', frequency: 300, rolloff: -24, Q: 0.2 });
+        const nivel = new T.Gain(0);
+        const espumaNivel = new T.Gain(0);
+        const pan = new T.Panner(p);
+        ruido.chain(filtro, nivel, pan);
+        lpEspuma.connect(espumaNivel);
+        const espumaBus = new T.Gain(g(NIVEL.espumaDb - NIVEL.olasDb));
+        espumaNivel.chain(espumaBus, pan);
+        pan.connect(this.olasBus);
+        this.fuentes.push(ruido);
+        return { filtro, nivel, espumaNivel };
       });
-      this.filtroRaiz = new T.Filter({ type: 'lowpass', frequency: f0 * CORTE_X_NOTA, rolloff: -24, Q: 0.6 });
-      // Aspereza: ganancia = a + b·sen(2π·45·t). Con b = 0 el sonido queda limpio.
-      this.am = new T.Gain(1);
-      this.amOsc = new T.Oscillator({ frequency: REGLAS.asperezaHz, type: 'sine' });
-      this.amProf = new T.Gain(0);
-      this.amOsc.connect(this.amProf);
-      this.amProf.connect(this.am.gain);
-      this.nivelRaiz.chain(this.filtroRaiz, this.am, this.pad);
-      // Deriva muy lenta del filtro (±1 semitono cada ~16 s): le quita lo "quieto" de sintetizador.
-      // Es constante: no depende del dato, así que no agrega emoción.
-      this.deriva = new T.LFO({ frequency: 0.06, min: -100, max: 100 });
-      this.deriva.connect(this.filtroRaiz.detune);
+      this.sigOla = 0;
 
-      // Capa de calidez: un triángulo limpio una octava abajo, filtrado (sin desafinar: dos voces
-      // desafinadas en el grave laten fuerte y meten un ritmo que no viene del dato)
-      this.oscSub = new T.Oscillator({ frequency: f0 / 2, type: 'triangle' });
-      this.nivelSub = new T.Gain(0);
-      const filtroSub = new T.Filter({ type: 'lowpass', frequency: 700, rolloff: -12 });
-      this.oscSub.chain(this.nivelSub, filtroSub, this.pad);
-
-      // Pulsos ("gotas"): una octava arriba de la nota del pad, ataque suave, caída corta
-      this.nivelPulsos = new T.Gain(g(NIVEL.pulsosDb));
-      const filtroPulsos = new T.Filter({ type: 'lowpass', frequency: 2600, rolloff: -12 });
-      filtroPulsos.connect(this.nivelPulsos);
-      this.nivelPulsos.connect(this.salida);
-      const envioPulsos = new T.Gain(g(-1));
-      this.nivelPulsos.connect(envioPulsos);
-      envioPulsos.connect(this.envio);
-      this.voces = [];
-      for (let i = 0; i < VOCES_PULSO; i++) {
-        const v = new T.Synth({
-          oscillator: { partials: [1, 0.16, 0.04] },
-          envelope: { attack: 0.02, attackCurve: 'sine', decay: DUR_PULSO - 0.02, decayCurve: 'exponential',
-            sustain: 0, release: 0.3, releaseCurve: 'exponential' },
-        });
-        v.connect(filtroPulsos);
-        this.voces.push(v);
+      // ---- LA MELODÍA: piano real (o campana si no cargó el piano)
+      this.melodiaBus = new T.Gain(g(NIVEL.melodiaDb));
+      const lpMelodia = new T.Filter({ type: 'lowpass', frequency: 4200, rolloff: -12 });
+      this.melodiaBus.connect(lpMelodia);
+      lpMelodia.connect(this.salida);
+      const envioMel = new T.Gain(g(-3));
+      lpMelodia.connect(envioMel);
+      envioMel.connect(this.envio);
+      this.piano = piano ? new T.Sampler({ urls: piano, release: 1.1, attack: 0.005 }).connect(this.melodiaBus) : null;
+      this.campana = [];
+      const campanaNivel = new T.Gain(g(-10)); // igualada al piano (medido)
+      campanaNivel.connect(this.melodiaBus);
+      for (let i = 0; i < 6; i++) {
+        this.campana.push(new T.Synth({
+          oscillator: { partials: [1, 0.08, 0.02] },
+          envelope: { attack: 0.006, decay: 1.6, decayCurve: 'exponential', sustain: 0, release: 0.4 },
+        }).connect(campanaNivel));
       }
-      this.siguienteVoz = 0;
+      this.sigCampana = 0;
+      this.instrumento = this.piano && instrumento !== 'campana' ? 'piano' : 'campana';
       return this;
     }
 
-    arrancar(t) {
-      this.vocesRaiz.forEach((v) => v.osc.start(t));
-      this.oscSub.start(t);
-      this.amOsc.start(t);
-      this.deriva.start(t);
+    arrancar(t) { this.fuentes.forEach((f) => f.start(t)); }
+
+    // Balance: cuánto más alto (+) o más bajo (-) suena el mar respecto de la melodía, en dB.
+    nivelMar(db, t) { this.olasBus.gain.rampTo(global.Tone.dbToGain(NIVEL.olasDb + db), 0.08, t); }
+
+    // Una nota de la melodía en el tiempo t. Toque más firme cuando el mar está más activo.
+    nota(temp, t) {
+      const hz = frecuencia(temp), vel = 0.5 + 0.25 * fuerza(temp);
+      if (this.instrumento === 'piano') {
+        this.piano.triggerAttackRelease(hz, 0.55, t, vel);
+      } else {
+        const v = this.campana[this.sigCampana];
+        this.sigCampana = (this.sigCampana + 1) % this.campana.length;
+        v.triggerAttackRelease(hz, 1.6, t, vel * 0.8);
+      }
     }
 
-    // Lleva el sonido a la temperatura `temp` desde el tiempo `t`, deslizándose en ~`desliz` segundos.
-    fijar(temp, t, desliz) {
-      const tc = Math.max(0.004, desliz / 3);
-      if (temp == null || !isFinite(temp)) { aproximar(this.pad.gain, 0, t, tc); return; }
-      const g = global.Tone.dbToGain;
-      const hz = frecuencia(temp);
-      aproximar(this.pad.gain, this.silenciarPad ? 0 : 1, t, tc);
-      this.vocesRaiz.forEach((v) => aproximar(v.osc.frequency, hz + v.dHz, t, tc));
-      aproximar(this.oscSub.frequency, hz / 2, t, tc);
-      aproximar(this.filtroRaiz.frequency, hz * CORTE_X_NOTA, t, tc);
-      aproximar(this.nivelRaiz.gain, g(NIVEL.raizDb + compensacionDb(hz, 440, COMP.raiz)), t, tc);
-      aproximar(this.nivelSub.gain, g(NIVEL.subDb + compensacionDb(hz / 2, 220, COMP.sub)), t, tc);
-      // a y b se eligen para que el volumen medio (RMS) no cambie: solo cambia la aspereza
-      const m = REGLAS.asperezaProfMax * aspereza(temp);
-      const a = 1 - m / 2, b = m / 2, rms = Math.sqrt(a * a + b * b / 2);
-      aproximar(this.am.gain, a / rms, t, tc);
-      aproximar(this.amProf.gain, b / rms, t, tc);
-    }
-
-    // Un pulso en el tiempo `t`.
-    pulso(temp, t) {
-      const hz = frecuencia(temp) * 2;
-      // Pulsos más seguidos = un poco más suaves (-1,5 dB por cada vez que se duplica el ritmo):
-      // sube la densidad, no el volumen. Más compensación de graves para que suene parejo.
-      const db = -3 - 1.5 * Math.log2(pulsosPorSegundo(temp)) + compensacionDb(hz, 880, COMP.pulsos);
-      const vel = Math.min(1, global.Tone.dbToGain(db));
-      const v = this.voces[this.siguienteVoz];
-      this.siguienteVoz = (this.siguienteVoz + 1) % this.voces.length;
-      v.triggerAttackRelease(hz, DUR_PULSO, t, vel);
+    // Una ola que empieza en t. Devuelve cuánto dura hasta la siguiente.
+    ola(temp, t, i) {
+      const P = olaPeriodo(temp) * (0.88 + 0.24 * azar(i, 1));
+      const f = fuerza(temp), e = espuma(temp);
+      const v = this.olas[this.sigOla];
+      this.sigOla = (this.sigOla + 1) % this.olas.length;
+      const pico = (0.65 + 0.35 * f) * (0.85 + 0.3 * azar(i, 2));
+      const brillo = 500 * Math.pow(5, f) * (0.9 + 0.2 * azar(i, 3)); // 500 Hz (mar en calma) → 2500 Hz
+      const cresta = t + 0.42 * P;
+      // la ola crece lento y cada vez más rápido, rompe en la cresta y se retira despacio
+      const n = v.nivel.gain, fr = v.filtro.frequency;
+      const nAhora = n.getValueAtTime(t), frAhora = fr.getValueAtTime(t);
+      n.cancelScheduledValues(t);
+      n.setValueAtTime(nAhora, t);
+      n.linearRampToValueAtTime(Math.max(0.02, nAhora), t + 0.03);  // sin saltos al empezar
+      n.exponentialRampToValueAtTime(pico, cresta);
+      n.setTargetAtTime(0, cresta, 0.36 * P);
+      fr.cancelScheduledValues(t);
+      fr.setValueAtTime(frAhora, t);
+      fr.linearRampToValueAtTime(Math.max(200, frAhora), t + 0.03);
+      fr.exponentialRampToValueAtTime(brillo, cresta);
+      fr.setTargetAtTime(280, cresta, 0.42 * P);
+      // Espuma: solo sobre 27 °C. Rompe en la cresta y deja dos rizos más pequeños. Solo rampas con
+      // principio y fin definidos (se encadenan sin sorpresas).
+      const es = v.espumaNivel.gain, piso = 1e-4;
+      const esAhora = es.getValueAtTime(t);
+      es.cancelScheduledValues(t);
+      es.setValueAtTime(esAhora, t);
+      es.linearRampToValueAtTime(piso, t + 0.06);
+      if (e > 0) {
+        const alto = Math.max(piso * 2, e * pico);
+        es.setValueAtTime(piso, cresta - 0.03);
+        es.linearRampToValueAtTime(alto, cresta + 0.05);
+        let fin = cresta + 0.05 + 0.13 * P;
+        es.exponentialRampToValueAtTime(alto * 0.04, fin);
+        if (P >= 1.6) {
+          [0.64, 0.84].forEach((x, k) => {
+            const tr = Math.max(fin + 0.02, t + P * (x + 0.04 * azar(i, 4 + k)));
+            es.linearRampToValueAtTime(alto * 0.04, tr);
+            es.linearRampToValueAtTime(alto * 0.45, tr + 0.06);
+            fin = tr + 0.06 + 0.09 * P;
+            es.exponentialRampToValueAtTime(alto * 0.02, fin);
+          });
+        }
+        es.linearRampToValueAtTime(0, fin + 0.15);
+      }
+      return P;
     }
 
     // Rampa lineal del volumen general (entradas, salidas, pausas).
     volumen(valor, t, dur) {
-      const p = this.salida.gain;
-      const actual = p.getValueAtTime(t);
+      const p = this.salida.gain, actual = p.getValueAtTime(t);
       p.cancelScheduledValues(t);
       p.setValueAtTime(actual, t);
       p.linearRampToValueAtTime(valor, t + Math.max(0.01, dur));
@@ -284,57 +264,74 @@
   }
 
   // ---------------------------------------------------------------- programación en el tiempo (común a vivo y WAV)
-  // est = { t0, semanaProgramada, proximoPulso, ultimoPulso }
+  // est = { t0, D, semanaProgramada, proximaNota, ultimaNota, pasoSonado, proximaOla, nOla }
+  // Los eventos (cambio de semana, nota, ola) se procesan en orden de tiempo: así da lo mismo programar
+  // de a poco (en vivo) o todo el año de una vez (al exportar).
   function programarDemo(motor, temps, est, hasta) {
-    const n = temps.length, D = est.D || DEMO.semana, fin = est.t0 + n * D;
-    while (est.semanaProgramada + 1 < n) {
-      const i = est.semanaProgramada + 1, ti = est.t0 + i * D;
-      if (ti >= hasta) break;
-      motor.fijar(temps[i], ti, DESLIZ.demo);
-      est.semanaProgramada = i;
-    }
-    const tope = Math.min(hasta, fin);
-    while (est.proximoPulso < tope) {
-      const tp = est.proximoPulso;
-      const i = Math.max(0, Math.min(n - 1, Math.floor((tp - est.t0) / D)));
-      const temp = temps[i];
-      if (temp == null) { est.proximoPulso += 0.05; continue; } // sin dato: sin pulsos
-      if (!est.sinPulsos) motor.pulso(temp, tp);
-      est.ultimoPulso = tp;
-      est.proximoPulso = tp + 1 / pulsosPorSegundo(temp);
+    const n = temps.length, D = est.D || DEMO.semana, fin = est.t0 + n * D, tope = Math.min(hasta, fin);
+    const tempEn = (t) => temps[limitar(Math.floor((t - est.t0) / D + 1e-6), 0, n - 1)];
+    for (;;) {
+      const tSem = est.semanaProgramada + 1 < n ? est.t0 + (est.semanaProgramada + 1) * D : Infinity;
+      const tSig = Math.min(tSem, est.proximaNota, est.proximaOla);
+      if (!(tSig < tope)) break;
+      if (tSig === tSem) {
+        // Empieza una semana: si la temperatura cambió de escalón, la nota nueva suena ya (se oye cada cambio)
+        const temp = temps[++est.semanaProgramada];
+        if (temp != null && paso(temp) !== est.pasoSonado && tSem - est.ultimaNota > 0.12) {
+          motor.nota(temp, tSem);
+          est.ultimaNota = tSem; est.pasoSonado = paso(temp);
+          est.proximaNota = tSem + 1 / notasPorSegundo(temp);
+        }
+      } else if (tSig === est.proximaNota) {
+        const temp = tempEn(tSig);
+        if (temp == null) { est.proximaNota += 0.05; continue; } // sin dato: no suena
+        motor.nota(temp, tSig);
+        est.ultimaNota = tSig; est.pasoSonado = paso(temp);
+        est.proximaNota = tSig + 1 / notasPorSegundo(temp);
+      } else {
+        const temp = tempEn(tSig);
+        if (temp == null) { est.proximaOla += 0.25; continue; }
+        est.proximaOla = tSig + motor.ola(temp, tSig, est.nOla++);
+      }
     }
   }
 
   function programarFijo(motor, temp, est, hasta) {
-    if (temp == null) { est.proximoPulso = hasta; return; }
-    while (est.proximoPulso < hasta) {
-      motor.pulso(temp, est.proximoPulso);
-      est.ultimoPulso = est.proximoPulso;
-      est.proximoPulso += 1 / pulsosPorSegundo(temp);
+    if (temp == null) { est.proximaNota = est.proximaOla = hasta; return; }
+    while (est.proximaNota < hasta) {
+      motor.nota(temp, est.proximaNota);
+      est.ultimaNota = est.proximaNota; est.pasoSonado = paso(temp);
+      est.proximaNota += 1 / notasPorSegundo(temp);
     }
+    while (est.proximaOla < hasta) est.proximaOla += motor.ola(temp, est.proximaOla, est.nOla++);
+  }
+
+  function estadoNuevo(t0, D) {
+    return { t0, D, semanaProgramada: 0, proximaNota: t0, ultimaNota: -1, pasoSonado: null, proximaOla: t0, nOla: 0 };
   }
 
   function duracionDemo(n, semana) { return DEMO.entrada + n * (semana || DEMO.semana) + DEMO.salida; }
 
   // Genera el año completo con el mismo motor, sin sonar (para exportar). Devuelve un AudioBuffer.
-  // opciones.prueba = { semana, sinPulsos, sinPad } solo para medir el motor (no se usa en la página).
   async function renderizar(temps, opciones) {
-    const T = global.Tone;
-    const op = opciones || {}, prueba = op.prueba || {};
-    const sr = op.sampleRate || 48000;
-    const D = prueba.semana || DEMO.semana;
-    const n = temps.length;
-    const buf = await T.Offline(async () => {
-      const m = new Motor().construir();
-      m.silenciarPad = !!prueba.sinPad;
+    const T = global.Tone, op = opciones || {}, prueba = op.prueba || {};
+    const instrumento = op.instrumento || 'piano';
+    let piano = null;
+    if (instrumento === 'piano') { try { piano = await cargarPiano(); } catch (e) { piano = null; } }
+    const D = prueba.semana || DEMO.semana, n = temps.length;
+    const buf = await T.Offline(() => {
+      const m = new Motor().construir(piano, instrumento);
+      m.olasBus.gain.value = T.dbToGain(NIVEL.olasDb + (op.marDb || 0));
+      if (prueba.sinOlas) m.olasBus.gain.value = 0;
+      if (prueba.sinMelodia) m.melodiaBus.gain.value = 0;
       const t0 = DEMO.entrada, fin = t0 + n * D;
       m.arrancar(0);
-      m.fijar(temps[0], 0, 0.01);
-      m.volumen(NIVEL.salida, 0.02, DEMO.subida);
-      const est = { t0, D, sinPulsos: !!prueba.sinPulsos, semanaProgramada: 0, proximoPulso: t0, ultimoPulso: -1 };
+      m.volumen(NIVEL.salida, 0.0, DEMO.subida);
+      const est = estadoNuevo(t0, D);
+      if (temps[0] != null) { m.nota(temps[0], t0); est.ultimaNota = t0; est.pasoSonado = paso(temps[0]); est.proximaNota = t0 + 1 / notasPorSegundo(temps[0]); }
       programarDemo(m, temps, est, fin);
       m.volumen(0, fin, DEMO.salida - 0.06);
-    }, duracionDemo(n, D), 2, sr);
+    }, duracionDemo(n, D), 2, op.sampleRate || 48000);
     return buf.get();
   }
 
@@ -345,57 +342,70 @@
       this.temps = [];
       this.modo = 'explorar';     // 'demo' (avanza solo) o 'explorar' (semana a semana)
       this.sonando = false;
-      this.semana = 0;            // semana actual en modo explorar
-      this.tempManual = null;     // para la leyenda sonora (temperatura de referencia)
-      this.posDemo = 0;           // dónde quedó la demo al pausar (en semanas)
+      this.semana = 0;
+      this.tempManual = null;     // temperatura de referencia (para el bot)
+      this.posDemo = 0;
       this.est = null;
       this.terminando = false;
-      this.agachado = false;
+      this.instrumento = 'piano';
+      this.piano = null;
+      this.marDb = 0;             // balance mar ↔ melodía elegido por oído (también se usa al exportar)
       this.alTerminarDemo = function () {};
-      this._reloj = null;
-      this._accion = 0;           // arranques y pausas: si llega otra mientras arranca el audio, gana la última
-      this._movido = 0;           // cambios de semana a mano
+      this._accion = 0;
+      this._movido = 0;
     }
 
     cargar(temps) {
       this.temps = temps.slice();
       this.semana = Math.min(this.semana, this.temps.length - 1);
-      if (this.sonando) this._aplicar(DESLIZ.explorar);
     }
 
     get ahora() { return global.Tone.getContext().currentTime; }
 
+    // Piano listo (o null). Si el motor ya existe, se le agrega.
+    usarPiano(piano) {
+      this.piano = piano;
+      if (this.motor && piano && !this.motor.piano) {
+        this.motor.piano = new global.Tone.Sampler({ urls: piano, release: 1.1, attack: 0.005 }).connect(this.motor.melodiaBus);
+      }
+      this.elegirInstrumento(this.instrumento);
+    }
+
+    usarMar(db) {
+      this.marDb = db;
+      if (this.motor) this.motor.nivelMar(db, this.ahora);
+    }
+
+    elegirInstrumento(nombre) {
+      this.instrumento = nombre;
+      if (this.motor) this.motor.instrumento = nombre === 'piano' && this.motor.piano ? 'piano' : 'campana';
+    }
+
     async preparar() {
       const T = global.Tone;
       if (!this.motor) {
-        // 'playback': búfer más grande = sin cortes en celulares (a cambio de unos ms de retraso)
         try { T.setContext(new T.Context({ latencyHint: 'playback' })); } catch (e) { /* se usa el de siempre */ }
         await T.start();
-        this.motor = new Motor().construir();
+        this.motor = new Motor().construir(this.piano, this.instrumento);
+        this.motor.olasBus.gain.value = T.dbToGain(NIVEL.olasDb + this.marDb);
         this.motor.arrancar(this.ahora + 0.02);
-        this._reloj = setInterval(() => this._tic(), 25);
+        setInterval(() => this._tic(), 25);
       } else {
         await T.start();
       }
       clearTimeout(this._suspension);
     }
 
-    tempActual() {
-      if (this.tempManual != null) return this.tempManual;
-      return this.temps[this.semana];
-    }
+    tempActual() { return this.tempManual != null ? this.tempManual : this.temps[this.semana]; }
 
-    // Semana que está sonando ahora (en demo avanza sola).
     semanaActual() {
       if (this.modo === 'demo' && this.est) {
         const p = this.sonando ? (this.ahora - this.est.t0) / DEMO.semana : this.posDemo;
-        return Math.max(0, Math.min(this.temps.length - 1, Math.floor(p)));
+        return limitar(Math.floor(p), 0, this.temps.length - 1);
       }
       return this.semana;
     }
 
-    // El audio tarda unos ms en arrancar (await). Si mientras tanto llega una pausa, gana la pausa;
-    // si llega una flecha, se suena esa semana en modo explorar.
     async iniciarDemo() {
       const accion = ++this._accion, movido = this._movido;
       await this.preparar();
@@ -405,9 +415,11 @@
       this.modo = 'demo';
       this.tempManual = null;
       this.terminando = false;
-      this.est = { t0: t + DEMO.entrada, semanaProgramada: 0, proximoPulso: t + DEMO.entrada, ultimoPulso: -1 };
-      this.motor.fijar(this.temps[0], t, this.sonando ? 0.3 : 0.01);
-      this.motor.volumen(this._nivel(), t + 0.02, DEMO.subida);
+      const t0 = t + DEMO.entrada;
+      this.est = estadoNuevo(t0, DEMO.semana);
+      const t0temp = this.temps[0];
+      if (t0temp != null) { this.motor.nota(t0temp, t0); this.est.ultimaNota = t0; this.est.pasoSonado = paso(t0temp); this.est.proximaNota = t0 + 1 / notasPorSegundo(t0temp); }
+      this.motor.volumen(NIVEL.salida, t + 0.01, DEMO.subida);
       this.sonando = true;
     }
 
@@ -423,17 +435,16 @@
       const t = this.ahora;
       if (this.modo === 'demo') {
         if (this.posDemo >= this.temps.length) this.posDemo = 0;
-        const i = Math.floor(this.posDemo);
-        this.est.t0 = t + 0.05 - this.posDemo * DEMO.semana;
+        const i = Math.floor(this.posDemo), anterior = this.est;
+        this.est = estadoNuevo(t + 0.05 - this.posDemo * DEMO.semana, DEMO.semana);
         this.est.semanaProgramada = i;
-        this.est.proximoPulso = Math.max(t + 0.05, this.est.ultimoPulso + 0.12);
+        this.est.pasoSonado = anterior ? anterior.pasoSonado : null;
+        this.est.proximaNota = this.est.proximaOla = t + 0.05;
         this.terminando = false;
-        this.motor.fijar(this.temps[i], t, 0.01);
       } else {
-        this.motor.fijar(this.tempActual(), t, 0.01);
-        this.est = { t0: 0, semanaProgramada: 0, proximoPulso: t + 0.08, ultimoPulso: -1 };
+        this.est = estadoNuevo(t + 0.05, DEMO.semana);
       }
-      this.motor.volumen(this._nivel(), t + 0.02, DEMO.subida); // ataque lento
+      this.motor.volumen(NIVEL.salida, t + 0.01, DEMO.subida);
       this.sonando = true;
     }
 
@@ -443,62 +454,46 @@
       const t = this.ahora;
       if (this.modo === 'demo') this.posDemo = (t - this.est.t0) / DEMO.semana;
       this.sonando = false;
-      this.motor.volumen(0, t + 0.01, 0.6);
-      // Con el sonido ya en silencio, se suspende el audio (ahorra batería en el celular).
+      this.motor.volumen(0, t + 0.01, 0.5);
       clearTimeout(this._suspension);
       this._suspension = setTimeout(() => {
         if (!this.sonando) global.Tone.getContext().rawContext.suspend().catch(() => {});
-      }, 900);
+      }, 2500); // deja que la última nota y la reverb se apaguen
     }
 
     async alternar() { if (this.sonando) this.pausar(); else await this.reproducir(); }
 
-    // Ir a una semana (pasa a modo explorar). Si está sonando, se desliza hacia ella.
+    // Ir a una semana (pasa a modo explorar). Si está sonando, suena enseguida la nota de esa semana.
     irA(i) {
       this._movido++;
-      i = Math.max(0, Math.min(this.temps.length - 1, i));
-      const venia = this.modo === 'demo';
       this.modo = 'explorar';
-      this.semana = i;
+      this.semana = limitar(i, 0, this.temps.length - 1);
       this.tempManual = null;
-      if (this.sonando) this._aplicar(venia ? 0.3 : DESLIZ.explorar);
+      if (this.sonando) this._aplicar();
     }
 
-    // Suena una temperatura de referencia (leyenda); null vuelve a la semana actual.
+    // Suena una temperatura de referencia (para el bot); null vuelve a la semana actual.
     fijarTemperatura(temp) {
       this.modo = 'explorar';
       this.tempManual = temp;
-      if (this.sonando) this._aplicar(DESLIZ.explorar);
+      if (this.sonando) this._aplicar();
     }
 
-    // Baja la música mientras habla la voz (y la devuelve después).
-    agacharse(si) {
-      this.agachado = si;
-      if (this.sonando && this.motor) this.motor.volumen(this._nivel(), this.ahora + 0.01, si ? 0.25 : 0.5);
-    }
-
-    _nivel() { return NIVEL.salida * (this.agachado ? 0.35 : 1); }
-
-    _aplicar(desliz) {
+    _aplicar() {
       const t = this.ahora;
-      if (this.terminando) { this.terminando = false; this.motor.volumen(this._nivel(), t, 0.3); }
-      this.motor.fijar(this.tempActual(), t + 0.02, desliz);
-      // un pulso enseguida con la nota nueva (respuesta inmediata a la tecla), sin ametrallar
-      this.est = this.est || { t0: 0, semanaProgramada: 0, proximoPulso: 0, ultimoPulso: -1 };
-      this.est.proximoPulso = Math.max(t + 0.04, this.est.ultimoPulso + 0.15);
+      if (this.terminando) { this.terminando = false; this.motor.volumen(NIVEL.salida, t, 0.3); }
+      this.est = this.est || estadoNuevo(t, DEMO.semana);
+      this.est.proximaNota = Math.max(t + 0.03, this.est.ultimaNota + 0.15); // respuesta inmediata, sin ametrallar
+      this.est.proximaOla = Math.min(this.est.proximaOla, t + olaPeriodo(this.tempActual() || REGLAS.umbralC) * 0.5);
     }
 
     _tic() {
       if (!this.sonando || !this.motor) return;
-      const t = this.ahora;
-      const hasta = t + (document.hidden ? 1.2 : 0.12);
+      const t = this.ahora, hasta = t + (document.hidden ? 1.2 : 0.12);
       if (this.modo === 'demo') {
         programarDemo(this.motor, this.temps, this.est, hasta);
         const fin = this.est.t0 + this.temps.length * DEMO.semana;
-        if (!this.terminando && hasta >= fin) {
-          this.terminando = true;
-          this.motor.volumen(0, fin, DEMO.salida - 0.06);
-        }
+        if (!this.terminando && hasta >= fin) { this.terminando = true; this.motor.volumen(0, fin, DEMO.salida - 0.06); }
         if (this.terminando && t >= fin + DEMO.salida) {
           this.terminando = false;
           this.sonando = false;
@@ -514,8 +509,8 @@
   }
 
   global.MotorOceano = {
-    REGLAS, DEMO, NIVEL,
-    paso, frecuencia, pulsosPorSegundo, aspereza, zona, describir, duracionDemo,
-    Motor, Reproductor, renderizar,
+    REGLAS, DEMO, NIVEL, PIANO,
+    paso, frecuencia, notasPorSegundo, olaPeriodo, espuma, fuerza, zona, describir, duracionDemo,
+    cargarPiano, Motor, Reproductor, renderizar,
   };
 })(window);
