@@ -7,6 +7,7 @@ Contexto completo del reto (análisis, decisiones, bitácora): carpeta local `C:
 - Nunca inventar ni suavizar datos. Si una semana o zona no se lee bien, queda como `null` y se dice.
 - El 3912 es **una simulación de un año** (ECCO2, mar 2007 – feb 2008): se oye el ciclo de las estaciones, **no** calentamiento global.
 - Las imágenes de la NASA **no van al repo** (`.gitignore`). Al repo van scripts, JSON de resultados y gráficas.
+  Excepción (15/11): copias livianas WebP de la vista del Pacífico (48 semanas, 5 MB) en `sonido/oceano/mapas/`, para mostrar el mapa sincronizado con el sonido.
 
 ## Color → °C (océano 3912) — método decidido
 - Mapa: frames globales planos 2048×1024 (`global_semanal/`, 48 frames, 1 por semana). La vista del Pacífico es un globo: solo para lo visual, no para medir.
@@ -51,4 +52,5 @@ Contexto completo del reto (análisis, decisiones, bitácora): carpeta local `C:
 - Piano: Salamander Grand Piano (Alexander Holm, CC BY 3.0) cargado desde tonejs.github.io; si no carga, suena la campana.
 - El mismo código suena en vivo y genera el WAV (`Tone.Offline`): demo = 48 semanas en 27,8 s, archivo de 30,0 s. Los eventos (semana, nota, ola) se programan en orden de tiempo: si no, el WAV (que se programa de una vez) pierde notas.
 - Medido sobre el WAV: ~−20 LUFS, pico ~−3,5 dBFS, 0 saturación, 0 clics.
+- **Visual sincronizado**: el mapa del Pacífico cambia cada semana, la curva del año se dibuja mientras suena y la marca y el punto brillan en cada nota. Todo con el reloj del audio menos la latencia de salida (se ve cuando se oye). Marca de El Salvador por proyección del globo (centro 480,270, radio 340, lon −132,6°): aproximada ±7 px. `motor.notasVisuales` = momentos de cada nota, para que Josué conecte sus animaciones.
 - El limitador del navegador suma ganancia automática (+2,28 dB con techo −4, medido); se compensa con un recorte justo después.

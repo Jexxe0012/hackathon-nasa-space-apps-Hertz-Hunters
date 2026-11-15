@@ -54,6 +54,15 @@
   .ahora-explica { background: var(--fondo); border-radius: 8px; padding: 10px 12px; }
   footer { color: var(--suave); font-size: 0.85rem; margin-top: 24px; }
   .solo-lector { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+  .visual { margin: 0 0 12px; }
+  .mapa { position: relative; border-radius: 10px; overflow: hidden; background: #000; aspect-ratio: 16 / 9; }
+  .mapa img { width: 100%; height: 100%; display: block; }
+  .marca { position: absolute; width: 24px; height: 24px; margin: -12px 0 0 -12px; border: 2px solid #fff; border-radius: 50%;
+    box-shadow: 0 0 0 2px rgba(0,0,0,.55); transition: transform .12s ease-out; }
+  .marca.pulso { transform: scale(1.5); }
+  .marca span { position: absolute; right: 30px; top: 2px; color: #fff; font-size: 12px; font-weight: 600; text-shadow: 0 1px 3px #000; white-space: nowrap; }
+  #curva { width: 100%; height: auto; display: block; margin-top: 8px; }
+  #curva .punto { transition: r .12s ease-out; }
   @media (max-width: 480px) { .temp { font-size: 2.2rem; } .fila button { flex: 1 1 auto; } }
 </style>
 </head>
@@ -78,6 +87,10 @@
 
   <section class="tarjeta" aria-labelledby="h-semana">
     <h2 id="h-semana" class="solo-lector" data-t="h_semana"></h2>
+    <figure class="visual" aria-hidden="true">
+      <div class="mapa"><img id="mapa" alt="" width="960" height="540"><div class="marca" id="marca"><span id="marca-texto"></span></div></div>
+      <svg id="curva" viewBox="0 0 480 150"></svg>
+    </figure>
     <p class="fecha" id="fecha"></p>
     <p class="temp" id="temp"></p>
     <p class="estado" id="estado"></p>

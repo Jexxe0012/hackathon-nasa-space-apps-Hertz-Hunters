@@ -29,6 +29,10 @@ La página carga un JSON, así que **no funciona con doble clic** (`file://`): n
 | Balance entre el mar y la melodía | — | Mar ↔ Melodía (−12 a +6 dB) |
 | Archivo para el video | — | Exportar el año en WAV (30,0 s, 48 kHz, estéreo; usa el instrumento y el balance elegidos) |
 
+## Lo que se ve
+
+El mapa de la NASA (vista del Pacífico, `mapas/`) cambia semana a semana con el sonido, con una marca en El Salvador (aproximada). Debajo, la curva de temperatura se dibuja mientras suena, con el umbral de 26,5 °C y la zona neutra. La marca y el punto brillan en cada nota. Todo va con el reloj del audio.
+
 ## Qué suena y por qué
 
 | Dato | Sonido |

@@ -195,6 +195,7 @@
 
     // Una nota de la melodía en el tiempo t. Toque más firme cuando el mar está más activo.
     nota(temp, t) {
+      if (this.notasVisuales) { this.notasVisuales.push(t); if (this.notasVisuales.length > 64) this.notasVisuales.shift(); }
       const hz = frecuencia(temp), vel = 0.5 + 0.25 * fuerza(temp);
       if (this.instrumento === 'piano') {
         this.piano.triggerAttackRelease(hz, 0.55, t, vel);
@@ -388,6 +389,7 @@
         await T.start();
         this.motor = new Motor().construir(this.piano, this.instrumento);
         this.motor.olasBus.gain.value = T.dbToGain(NIVEL.olasDb + this.marDb);
+        this.motor.notasVisuales = []; // momentos de cada nota: la pantalla hace brillar el punto justo cuando suena
         this.motor.arrancar(this.ahora + 0.02);
         setInterval(() => this._tic(), 25);
       } else {

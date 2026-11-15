@@ -39,7 +39,7 @@
       exportando: 'Generando el audio…',
       exportado: 'Listo: {archivo} ({seg} s).',
       export_error: 'No se pudo generar el audio: {error}',
-      pie: 'Datos: NASA Scientific Visualization Studio, SVS 3912 (simulación ECCO2). La temperatura se obtiene leyendo el color de las líneas de corriente del mapa (error máximo 0,46 °C). Piano: Salamander Grand Piano (Alexander Holm, CC BY 3.0). Hertz Hunters · NASA Space Apps Challenge 2026 · San Salvador.',
+      pie: 'Datos: NASA Scientific Visualization Studio, SVS 3912 (simulación ECCO2). La temperatura se obtiene leyendo el color de las líneas de corriente del mapa (error máximo 0,46 °C). Imágenes: NASA/SVS 3912. Piano: Salamander Grand Piano (Alexander Holm, CC BY 3.0). Hertz Hunters · NASA Space Apps Challenge 2026 · San Salvador.',
       semana_de: 'Semana {n} de {N}',
       zonas: { sobre: 'Sobre el umbral de 26,5 °C', cerca: 'Cerca del umbral de 26,5 °C (zona neutra)', bajo: 'Bajo el umbral de 26,5 °C', sin_dato: 'Sin dato esta semana' },
       valor: 'Semana {n} de {N}: {fecha}, {temp} grados, {zona}',
@@ -97,7 +97,7 @@
       exportando: 'Rendering audio…',
       exportado: 'Done: {archivo} ({seg} s).',
       export_error: 'Could not render the audio: {error}',
-      pie: 'Data: NASA Scientific Visualization Studio, SVS 3912 (ECCO2 simulation). Temperature is obtained by reading the color of the map\'s current lines (maximum error 0.46 °C). Piano: Salamander Grand Piano (Alexander Holm, CC BY 3.0). Hertz Hunters · NASA Space Apps Challenge 2026 · San Salvador.',
+      pie: 'Data: NASA Scientific Visualization Studio, SVS 3912 (ECCO2 simulation). Temperature is obtained by reading the color of the map\'s current lines (maximum error 0.46 °C). Images: NASA/SVS 3912. Piano: Salamander Grand Piano (Alexander Holm, CC BY 3.0). Hertz Hunters · NASA Space Apps Challenge 2026 · San Salvador.',
       semana_de: 'Week {n} of {N}',
       zonas: { sobre: 'Above the 26.5 °C threshold', cerca: 'Near the 26.5 °C threshold (neutral zone)', bajo: 'Below the 26.5 °C threshold', sin_dato: 'No data this week' },
       valor: 'Week {n} of {N}: {fecha}, {temp} degrees, {zona}',
@@ -212,14 +212,100 @@
 
   function bucle() {
     if (serie.length) {
-      const i = rep.semanaActual();
+      // Un solo reloj (el del audio, menos la latencia de salida) para el texto, el mapa y la curva
+      const ahoraV = relojVisual(), enDemo = rep.modo === 'demo' && !!rep.est;
+      const p = enDemo ? (rep.sonando ? (ahoraV - rep.est.t0) / M.DEMO.semana : rep.posDemo) : rep.semana;
+      const i = Math.max(0, Math.min(serie.length - 1, Math.floor(p)));
       if (i !== ultimaMostrada) {
         mostrar(i, !(rep.modo === 'demo' && rep.sonando)); // en la demo no se toca el valor accesible (no habla 48 veces)
         ultimaMostrada = i;
       }
       actualizarBotonPlay(false);
+      actualizarVisual(p, enDemo);
+      revisarNotas(ahoraV);
     }
     requestAnimationFrame(bucle);
+  }
+
+
+  // ---------------------------------------------------------------- lo visual: mapa de la NASA + curva que se dibuja con el sonido
+  // Vista de globo del SVS 3912 (cámara fija, 960×540): centro (480, 270), radio 340 px, centrada en lon -132,6° y el
+  // ecuador (calculado con la costa de Ecuador como referencia). La marca es aproximada (±7 px).
+  const GLOBO = { cx: 480, cy: 270, r: 340, lon0: -132.6 };
+  const LUGARES = { costa: { lon: -89.1, lat: 13.0, es: 'El Salvador', en: 'El Salvador' }, caribe: { lon: -76, lat: 15, es: 'Caribe', en: 'Caribbean' } };
+  function proyectar(lon, lat) {
+    const r = Math.PI / 180;
+    return { x: GLOBO.cx + GLOBO.r * Math.cos(lat * r) * Math.sin((lon - GLOBO.lon0) * r), y: GLOBO.cy - GLOBO.r * Math.sin(lat * r) };
+  }
+  const mapas = [];
+  const CURVA = { x0: 30, x1: 472, y0: 10, y1: 128, tmin: 25, tmax: 30 };
+  const cxs = (i) => CURVA.x0 + (CURVA.x1 - CURVA.x0) * i / (serie.length - 1);
+  const cys = (T) => CURVA.y1 - (CURVA.y1 - CURVA.y0) * (Math.max(CURVA.tmin, Math.min(CURVA.tmax, T)) - CURVA.tmin) / (CURVA.tmax - CURVA.tmin);
+  let mapaActual = -1, destello = null;
+
+  function construirVisual() {
+    if (!serie.length) return;
+    if (!mapas.length) for (let i = 1; i <= serie.length; i++) { const im = new Image(); im.src = 'mapas/s' + String(i).padStart(2, '0') + '.webp'; mapas.push(im); }
+    const lugar = LUGARES[zonaSel], p = proyectar(lugar.lon, lugar.lat);
+    $('marca').style.left = (100 * p.x / 960) + '%';
+    $('marca').style.top = (100 * p.y / 540) + '%';
+    $('marca-texto').textContent = lugar[idioma];
+    let d = '';
+    serie.forEach((s, i) => { if (s.temperatura_c != null) d += (d ? 'L' : 'M') + cxs(i).toFixed(1) + ' ' + cys(s.temperatura_c).toFixed(1); });
+    const yU = cys(M.REGLAS.umbralC), yN0 = cys(M.REGLAS.neutraMaxC), yN1 = cys(M.REGLAS.neutraMinC);
+    let meses = '';
+    let mesAnterior = -1;
+    serie.forEach((s, i) => {
+      const m = partes(s.fecha)[1];
+      if (m !== mesAnterior && m % 3 === 2) meses += `<text x="${cxs(i).toFixed(1)}" y="146" font-size="9" fill="var(--suave)" text-anchor="middle">${L().meses_corto[m]}</text>`;
+      mesAnterior = m;
+    });
+    $('curva').innerHTML =
+      '<defs><clipPath id="hecho"><rect id="hecho-rect" x="0" y="0" width="0" height="150"/></clipPath></defs>' +
+      `<rect x="${CURVA.x0}" y="${yN0}" width="${CURVA.x1 - CURVA.x0}" height="${yN1 - yN0}" fill="var(--neutra)"/>` +
+      `<line x1="${CURVA.x0}" x2="${CURVA.x1}" y1="${yU}" y2="${yU}" stroke="var(--umbral)" stroke-width="1.2" stroke-dasharray="4 3"/>` +
+      `<text x="0" y="${yU + 3}" font-size="9" fill="var(--umbral)">${num(M.REGLAS.umbralC, 1)}°</text>` +
+      `<text x="0" y="${cys(29) + 3}" font-size="9" fill="var(--suave)">29°</text>` +
+      `<text x="0" y="${cys(25.5) + 3}" font-size="9" fill="var(--suave)">${num(25.5, 1)}°</text>` +
+      meses +
+      `<path d="${d}" fill="none" stroke="var(--borde)" stroke-width="2"/>` +
+      `<path d="${d}" fill="none" stroke="var(--acento)" stroke-width="2.8" stroke-linejoin="round" clip-path="url(#hecho)"/>` +
+      `<line id="cursor" x1="0" x2="0" y1="${CURVA.y0 - 6}" y2="${CURVA.y1 + 4}" stroke="var(--texto)" stroke-width="1" opacity=".45"/>` +
+      '<circle id="punto" class="punto" r="4.5" fill="var(--acento)" stroke="var(--tarjeta)" stroke-width="1.5"/>';
+    mapaActual = -1;
+  }
+
+  // p = posición en semanas (con decimales). En la demo la línea se dibuja hasta el cursor; explorando se ve entera.
+  function actualizarVisual(p, enDemo) {
+    const n = serie.length, i = Math.max(0, Math.min(n - 1, Math.floor(p)));
+    if (i !== mapaActual && mapas[i]) { $('mapa').src = mapas[i].src; mapaActual = i; }
+    const q = Math.max(0, Math.min(n - 1, p)), x = cxs(q);
+    const a = serie[Math.floor(q)].temperatura_c, b = serie[Math.min(n - 1, Math.floor(q) + 1)].temperatura_c;
+    const T = a == null ? b : (b == null ? a : a + (b - a) * (q - Math.floor(q)));
+    const rect = document.getElementById('hecho-rect');
+    if (!rect) return;
+    rect.setAttribute('width', enDemo ? x : 480);
+    $('cursor').setAttribute('x1', x); $('cursor').setAttribute('x2', x);
+    if (T != null) { $('punto').setAttribute('cx', x); $('punto').setAttribute('cy', cys(T)); }
+  }
+
+  // Cada nota que suena hace brillar la marca del mapa y el punto de la curva, en el mismo instante.
+  function revisarNotas(ahoraVisual) {
+    const cola = rep.motor && rep.motor.notasVisuales;
+    if (!cola || !cola.length) return;
+    let suena = false;
+    while (cola.length && cola[0] <= ahoraVisual) { cola.shift(); suena = true; }
+    if (!suena) return;
+    $('marca').classList.add('pulso');
+    $('punto').setAttribute('r', '7');
+    clearTimeout(destello);
+    destello = setTimeout(() => { $('marca').classList.remove('pulso'); const pt = $('punto'); if (pt) pt.setAttribute('r', '4.5'); }, 110);
+  }
+
+  function relojVisual() {
+    if (!rep.motor || !window.Tone) return 0;
+    const raw = Tone.getContext().rawContext; // se descuenta la latencia de salida: se ve cuando se oye
+    return Tone.getContext().currentTime - (raw.outputLatency || raw.baseLatency || 0);
   }
 
   // ---------------------------------------------------------------- acciones
@@ -299,6 +385,7 @@
     serie = datos.series[z];
     rep.cargar(serie.map((s) => s.temperatura_c));
     aplicarIdioma();
+    construirVisual();
     mostrar(rep.semanaActual(), true);
   }
 
@@ -333,7 +420,7 @@
     $('btn-next').addEventListener('click', () => mover(1));
     $('btn-exportar').addEventListener('click', exportar);
     $('semana').addEventListener('input', (e) => irA(Number(e.target.value) - 1));
-    $('idioma').addEventListener('change', (e) => { idioma = e.target.value; aplicarIdioma(); if (serie.length) mostrar(rep.semanaActual(), true); });
+    $('idioma').addEventListener('change', (e) => { idioma = e.target.value; aplicarIdioma(); construirVisual(); if (serie.length) mostrar(rep.semanaActual(), true); });
     $('zona').addEventListener('change', (e) => elegirZona(e.target.value));
     $('instrumento').addEventListener('change', (e) => rep.elegirInstrumento(e.target.value));
     $('mar').addEventListener('input', (e) => {
