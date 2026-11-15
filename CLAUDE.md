@@ -23,8 +23,34 @@ Contexto completo del reto (análisis, decisiones, bitácora): carpeta local `C:
   - `este_el_cuco_fonseca`: lon −88,60 a −87,70
 - Comparación: `lengua_fria_ecuatorial` (lon −110 a −95, lat −2 a 2) y `caribe` (lon −80 a −72, lat 13 a 17).
 
+- **Zona sonora `costa`** (`costa.py`): las 3 zonas se unen en una, nombre en la app **"frente a Surf City · costa salvadoreña"**. Por semana = mediana de las zonas con lectura; si ninguna tiene, `null`. Resultado: 48 de 48 semanas con dato (40 con 3 zonas, 7 con 2, 1 con 1). El Caribe queda solo para comparar.
+
 ## Dónde quedan los resultados
-- `imagen-a-sonido/oceano_3912/resultados/oceano_3912_zonas.json` → **para el motor de sonido**: `registros` = {semana, fecha, zona, temperatura_c, pixeles_leidos, rango_intercuartil_c, se_lee_bien}.
+- `imagen-a-sonido/oceano_3912/resultados/oceano_3912_costa.json` → **el que carga el motor de sonido**: `series.costa` y `series.caribe` = {semana, fecha, temperatura_c}.
+- `resultados/oceano_3912_zonas.json` → lectura por zona: `registros` = {semana, fecha, zona, temperatura_c, pixeles_leidos, rango_intercuartil_c, se_lee_bien}.
 - `resultados/resumen.json` → mínimos/máximos, semanas bajo 26,5 °C, diferencias entre zonas.
 - `resultados/oceano_3912_zonas.png` → gráfica del año.
-- Regenerar: `python leer_zonas.py [carpeta_3912_oceano]` y luego `python analizar.py` (dependencias en `imagen-a-sonido/requirements.txt`).
+- Regenerar: `python leer_zonas.py [carpeta_3912_oceano]`, luego `python analizar.py` y `python costa.py` (dependencias en `imagen-a-sonido/requirements.txt`).
+
+## Principio de sonido (vale para todos los discos)
+- **La emoción sigue al dato, nunca al revés. Si el dato no cambia, la emoción no cambia.**
+- Emoción solo por activación (tempo, densidad, aspereza), por comparación (antes/después, umbrales con fuente) y por significado (cercanía local).
+- Nada de música de fondo, rangos inflados, alarmas sin fuente ni sonidos "tristes" para decir que algo está mal.
+
+## Reglas de sonido del Océano (motor en `sonido/oceano/`)
+- Instrumento: **pad** suave (voces levemente desafinadas, ataque lento, filtro de agudos, chorus y reverb).
+- **Altura = temperatura**, en escala **pentatónica**: un escalón por cada 0,5 °C (≈ el error de lectura). Escala fija para todas las zonas (24 °C = La2), sin estirarla al rango de cada zona.
+- **Ritmo = activación**: más caliente, pulsos más seguidos (1 pulso/s a 26 °C y el doble por cada 2 °C más).
+- **26,5 °C** = umbral que favorece la formación de huracanes (NOAA).
+- **Zona neutra 26–27 °C** (±0,5 °C, del tamaño del error de lectura de 0,46 °C): sonido limpio; la voz dice "cerca del umbral".
+- **Sobre 27 °C**: la aspereza (modulación de amplitud rápida, 45 Hz) crece poco a poco hasta el máximo del año (~29,3 °C, tope fijo).
+- **Bajo 26 °C**: limpio y calmado.
+- **Voz**: números redondos ("unos 29 grados").
+- Calidad: todo cambio con rampas suaves (cero clics), limitador al final, volumen parejo entre graves y agudos, máximo 3–4 notas a la vez. El WAV exportado usa el mismo motor.
+
+## Motor de sonido (`sonido/oceano/`, detalle en su `LEEME.md`)
+- `motor-oceano.js` (reglas + instrumento + reproductor, Tone.js 14.8.49), `app.js` (interfaz mínima accesible, voz ES/EN, teclado, exportar WAV), `index.html`. La interfaz bonita es de Josué.
+- El mismo código suena en vivo y genera el WAV (`Tone.Offline`): demo = 48 semanas en 27,8 s, archivo de 30,0 s.
+- Medido sobre el WAV: −19 LUFS, pico −5 dBFS (el limitador, techo −4 dBFS, no actúa), 0 saturación, 0 clics; volumen ±0,7 dB entre notas de la costa; aspereza 0 hasta 27 °C.
+- Desafinación del pad fija en Hz (no en cents) y capa grave sin desafinar: si no, aparecen latidos cuyo ritmo depende de la nota y compiten con los pulsos (el dato).
+- El limitador del navegador suma ganancia automática (+2,28 dB con techo −4, medido); se compensa con un recorte justo después.

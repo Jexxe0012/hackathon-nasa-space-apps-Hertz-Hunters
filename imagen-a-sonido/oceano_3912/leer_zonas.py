@@ -9,7 +9,7 @@ Por defecto usa la carpeta de contexto de Diego en el escritorio.
 Método (color -> °C):
   1. De la barra de color se toma el TONO (hue) de cada columna: baja ordenado de ~228° (0 °C)
      a ~354° (32 °C). Para que sea una sola subida continua, los tonos > 300° se cuentan como negativos.
-  2. En cada mapa solo cuentan los pixeles de las líneas de corriente (saturación > 0.35 y brillo > 0.45).
+  2. En cada mapa solo cuentan los pixeles de las líneas de corriente (croma max−min > 0.15 y brillo > 0.25).
      El fondo negro y la tierra gris quedan fuera.
   3. El tono de cada pixel se convierte a °C interpolando contra la barra.
   4. La temperatura de una zona es la MEDIANA de sus pixeles de línea. También se guarda cuántos pixeles
