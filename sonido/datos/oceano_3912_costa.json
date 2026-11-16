@@ -1,0 +1,593 @@
+{
+ "fuente": "NASA SVS 3912 · ECCO2 (simulación), mapa global 2048x1024, 48 frames (1 por semana)",
+ "aviso_es": "Es UNA simulación de un año (mar 2007 – feb 2008): muestra el ciclo de las estaciones, no una tendencia de calentamiento.",
+ "aviso_en": "This is ONE simulated year (Mar 2007 – Feb 2008): it shows the seasonal cycle, not a warming trend.",
+ "metodo_costa": "Mediana por semana de las zonas oeste (Acajutla), centro (La Libertad / Surf City) y este (El Cuco / Golfo de Fonseca) que tengan lectura; si ninguna tiene, null. Sin suavizar ni rellenar.",
+ "umbral_huracanes_c": 26.5,
+ "error_lectura_max_c": 0.46,
+ "zonas": {
+  "costa": {
+   "nombre_es": "frente a Surf City · costa salvadoreña",
+   "nombre_en": "off Surf City · El Salvador's coast",
+   "detalle_es": "Franja de mar de ~20 a ~176 km mar adentro, de Acajutla al Golfo de Fonseca",
+   "detalle_en": "Sea strip ~20 to ~176 km offshore, from Acajutla to the Gulf of Fonseca",
+   "lon": [
+    -90.15,
+    -87.7
+   ],
+   "zonas_unidas": [
+    "oeste_acajutla",
+    "centro_la_libertad",
+    "este_el_cuco_fonseca"
+   ],
+   "semanas_con_dato": 48,
+   "semanas_sin_dato": [],
+   "min_c": 25.66,
+   "fecha_min": "2007-11-18",
+   "max_c": 29.23,
+   "fecha_max": "2007-08-24",
+   "semanas_bajo_umbral": [
+    33,
+    34,
+    35,
+    36,
+    40,
+    41,
+    44
+   ]
+  },
+  "caribe": {
+   "nombre_es": "Mar Caribe (centro) · para comparar",
+   "nombre_en": "Caribbean Sea (central) · for comparison",
+   "lon": [
+    -80.0,
+    -72.0
+   ],
+   "lat": [
+    13.0,
+    17.0
+   ],
+   "semanas_con_dato": 48,
+   "semanas_sin_dato": [],
+   "min_c": 26.81,
+   "fecha_min": "2008-02-28",
+   "max_c": 28.92,
+   "fecha_max": "2007-10-06",
+   "semanas_bajo_umbral": []
+  }
+ },
+ "series": {
+  "costa": [
+   {
+    "semana": 1,
+    "fecha": "2007-03-25",
+    "temperatura_c": 27.78,
+    "zonas_con_lectura": 3
+   },
+   {
+    "semana": 2,
+    "fecha": "2007-04-01",
+    "temperatura_c": 27.99,
+    "zonas_con_lectura": 3
+   },
+   {
+    "semana": 3,
+    "fecha": "2007-04-08",
+    "temperatura_c": 28.37,
+    "zonas_con_lectura": 3
+   },
+   {
+    "semana": 4,
+    "fecha": "2007-04-16",
+    "temperatura_c": 28.5,
+    "zonas_con_lectura": 3
+   },
+   {
+    "semana": 5,
+    "fecha": "2007-04-23",
+    "temperatura_c": 28.73,
+    "zonas_con_lectura": 3
+   },
+   {
+    "semana": 6,
+    "fecha": "2007-04-30",
+    "temperatura_c": 28.88,
+    "zonas_con_lectura": 3
+   },
+   {
+    "semana": 7,
+    "fecha": "2007-05-07",
+    "temperatura_c": 28.89,
+    "zonas_con_lectura": 3
+   },
+   {
+    "semana": 8,
+    "fecha": "2007-05-15",
+    "temperatura_c": 29.18,
+    "zonas_con_lectura": 3
+   },
+   {
+    "semana": 9,
+    "fecha": "2007-05-22",
+    "temperatura_c": 28.99,
+    "zonas_con_lectura": 2
+   },
+   {
+    "semana": 10,
+    "fecha": "2007-05-29",
+    "temperatura_c": 28.93,
+    "zonas_con_lectura": 3
+   },
+   {
+    "semana": 11,
+    "fecha": "2007-06-05",
+    "temperatura_c": 28.25,
+    "zonas_con_lectura": 3
+   },
+   {
+    "semana": 12,
+    "fecha": "2007-06-12",
+    "temperatura_c": 28.55,
+    "zonas_con_lectura": 3
+   },
+   {
+    "semana": 13,
+    "fecha": "2007-06-20",
+    "temperatura_c": 28.39,
+    "zonas_con_lectura": 1
+   },
+   {
+    "semana": 14,
+    "fecha": "2007-06-27",
+    "temperatura_c": 28.48,
+    "zonas_con_lectura": 2
+   },
+   {
+    "semana": 15,
+    "fecha": "2007-07-04",
+    "temperatura_c": 28.9,
+    "zonas_con_lectura": 3
+   },
+   {
+    "semana": 16,
+    "fecha": "2007-07-11",
+    "temperatura_c": 28.86,
+    "zonas_con_lectura": 3
+   },
+   {
+    "semana": 17,
+    "fecha": "2007-07-19",
+    "temperatura_c": 28.87,
+    "zonas_con_lectura": 3
+   },
+   {
+    "semana": 18,
+    "fecha": "2007-07-26",
+    "temperatura_c": 28.63,
+    "zonas_con_lectura": 3
+   },
+   {
+    "semana": 19,
+    "fecha": "2007-08-02",
+    "temperatura_c": 28.68,
+    "zonas_con_lectura": 3
+   },
+   {
+    "semana": 20,
+    "fecha": "2007-08-09",
+    "temperatura_c": 28.92,
+    "zonas_con_lectura": 3
+   },
+   {
+    "semana": 21,
+    "fecha": "2007-08-16",
+    "temperatura_c": 28.96,
+    "zonas_con_lectura": 3
+   },
+   {
+    "semana": 22,
+    "fecha": "2007-08-24",
+    "temperatura_c": 29.23,
+    "zonas_con_lectura": 3
+   },
+   {
+    "semana": 23,
+    "fecha": "2007-08-31",
+    "temperatura_c": 29.19,
+    "zonas_con_lectura": 3
+   },
+   {
+    "semana": 24,
+    "fecha": "2007-09-07",
+    "temperatura_c": 29.1,
+    "zonas_con_lectura": 2
+   },
+   {
+    "semana": 25,
+    "fecha": "2007-09-14",
+    "temperatura_c": 28.91,
+    "zonas_con_lectura": 3
+   },
+   {
+    "semana": 26,
+    "fecha": "2007-09-22",
+    "temperatura_c": 28.82,
+    "zonas_con_lectura": 3
+   },
+   {
+    "semana": 27,
+    "fecha": "2007-09-29",
+    "temperatura_c": 28.93,
+    "zonas_con_lectura": 3
+   },
+   {
+    "semana": 28,
+    "fecha": "2007-10-06",
+    "temperatura_c": 29.02,
+    "zonas_con_lectura": 3
+   },
+   {
+    "semana": 29,
+    "fecha": "2007-10-13",
+    "temperatura_c": 28.27,
+    "zonas_con_lectura": 3
+   },
+   {
+    "semana": 30,
+    "fecha": "2007-10-20",
+    "temperatura_c": 27.68,
+    "zonas_con_lectura": 3
+   },
+   {
+    "semana": 31,
+    "fecha": "2007-10-28",
+    "temperatura_c": 26.99,
+    "zonas_con_lectura": 2
+   },
+   {
+    "semana": 32,
+    "fecha": "2007-11-04",
+    "temperatura_c": 27.1,
+    "zonas_con_lectura": 2
+   },
+   {
+    "semana": 33,
+    "fecha": "2007-11-11",
+    "temperatura_c": 25.79,
+    "zonas_con_lectura": 3
+   },
+   {
+    "semana": 34,
+    "fecha": "2007-11-18",
+    "temperatura_c": 25.66,
+    "zonas_con_lectura": 3
+   },
+   {
+    "semana": 35,
+    "fecha": "2007-11-26",
+    "temperatura_c": 26.26,
+    "zonas_con_lectura": 3
+   },
+   {
+    "semana": 36,
+    "fecha": "2007-12-03",
+    "temperatura_c": 26.41,
+    "zonas_con_lectura": 3
+   },
+   {
+    "semana": 37,
+    "fecha": "2007-12-10",
+    "temperatura_c": 26.52,
+    "zonas_con_lectura": 2
+   },
+   {
+    "semana": 38,
+    "fecha": "2007-12-17",
+    "temperatura_c": 26.58,
+    "zonas_con_lectura": 2
+   },
+   {
+    "semana": 39,
+    "fecha": "2007-12-25",
+    "temperatura_c": 26.5,
+    "zonas_con_lectura": 3
+   },
+   {
+    "semana": 40,
+    "fecha": "2008-01-01",
+    "temperatura_c": 26.49,
+    "zonas_con_lectura": 3
+   },
+   {
+    "semana": 41,
+    "fecha": "2008-01-08",
+    "temperatura_c": 26.3,
+    "zonas_con_lectura": 3
+   },
+   {
+    "semana": 42,
+    "fecha": "2008-01-15",
+    "temperatura_c": 26.54,
+    "zonas_con_lectura": 3
+   },
+   {
+    "semana": 43,
+    "fecha": "2008-01-22",
+    "temperatura_c": 26.58,
+    "zonas_con_lectura": 3
+   },
+   {
+    "semana": 44,
+    "fecha": "2008-01-30",
+    "temperatura_c": 26.37,
+    "zonas_con_lectura": 3
+   },
+   {
+    "semana": 45,
+    "fecha": "2008-02-06",
+    "temperatura_c": 26.53,
+    "zonas_con_lectura": 3
+   },
+   {
+    "semana": 46,
+    "fecha": "2008-02-13",
+    "temperatura_c": 26.84,
+    "zonas_con_lectura": 3
+   },
+   {
+    "semana": 47,
+    "fecha": "2008-02-20",
+    "temperatura_c": 26.97,
+    "zonas_con_lectura": 3
+   },
+   {
+    "semana": 48,
+    "fecha": "2008-02-28",
+    "temperatura_c": 27.03,
+    "zonas_con_lectura": 3
+   }
+  ],
+  "caribe": [
+   {
+    "semana": 1,
+    "fecha": "2007-03-25",
+    "temperatura_c": 27.37
+   },
+   {
+    "semana": 2,
+    "fecha": "2007-04-01",
+    "temperatura_c": 27.47
+   },
+   {
+    "semana": 3,
+    "fecha": "2007-04-08",
+    "temperatura_c": 27.52
+   },
+   {
+    "semana": 4,
+    "fecha": "2007-04-16",
+    "temperatura_c": 27.52
+   },
+   {
+    "semana": 5,
+    "fecha": "2007-04-23",
+    "temperatura_c": 28.04
+   },
+   {
+    "semana": 6,
+    "fecha": "2007-04-30",
+    "temperatura_c": 27.9
+   },
+   {
+    "semana": 7,
+    "fecha": "2007-05-07",
+    "temperatura_c": 27.96
+   },
+   {
+    "semana": 8,
+    "fecha": "2007-05-15",
+    "temperatura_c": 28.14
+   },
+   {
+    "semana": 9,
+    "fecha": "2007-05-22",
+    "temperatura_c": 28.27
+   },
+   {
+    "semana": 10,
+    "fecha": "2007-05-29",
+    "temperatura_c": 28.4
+   },
+   {
+    "semana": 11,
+    "fecha": "2007-06-05",
+    "temperatura_c": 28.54
+   },
+   {
+    "semana": 12,
+    "fecha": "2007-06-12",
+    "temperatura_c": 28.45
+   },
+   {
+    "semana": 13,
+    "fecha": "2007-06-20",
+    "temperatura_c": 28.47
+   },
+   {
+    "semana": 14,
+    "fecha": "2007-06-27",
+    "temperatura_c": 28.41
+   },
+   {
+    "semana": 15,
+    "fecha": "2007-07-04",
+    "temperatura_c": 28.43
+   },
+   {
+    "semana": 16,
+    "fecha": "2007-07-11",
+    "temperatura_c": 28.35
+   },
+   {
+    "semana": 17,
+    "fecha": "2007-07-19",
+    "temperatura_c": 28.17
+   },
+   {
+    "semana": 18,
+    "fecha": "2007-07-26",
+    "temperatura_c": 28.44
+   },
+   {
+    "semana": 19,
+    "fecha": "2007-08-02",
+    "temperatura_c": 28.51
+   },
+   {
+    "semana": 20,
+    "fecha": "2007-08-09",
+    "temperatura_c": 28.63
+   },
+   {
+    "semana": 21,
+    "fecha": "2007-08-16",
+    "temperatura_c": 28.64
+   },
+   {
+    "semana": 22,
+    "fecha": "2007-08-24",
+    "temperatura_c": 28.7
+   },
+   {
+    "semana": 23,
+    "fecha": "2007-08-31",
+    "temperatura_c": 28.74
+   },
+   {
+    "semana": 24,
+    "fecha": "2007-09-07",
+    "temperatura_c": 28.71
+   },
+   {
+    "semana": 25,
+    "fecha": "2007-09-14",
+    "temperatura_c": 28.63
+   },
+   {
+    "semana": 26,
+    "fecha": "2007-09-22",
+    "temperatura_c": 28.73
+   },
+   {
+    "semana": 27,
+    "fecha": "2007-09-29",
+    "temperatura_c": 28.88
+   },
+   {
+    "semana": 28,
+    "fecha": "2007-10-06",
+    "temperatura_c": 28.92
+   },
+   {
+    "semana": 29,
+    "fecha": "2007-10-13",
+    "temperatura_c": 28.91
+   },
+   {
+    "semana": 30,
+    "fecha": "2007-10-20",
+    "temperatura_c": 28.81
+   },
+   {
+    "semana": 31,
+    "fecha": "2007-10-28",
+    "temperatura_c": 28.77
+   },
+   {
+    "semana": 32,
+    "fecha": "2007-11-04",
+    "temperatura_c": 28.66
+   },
+   {
+    "semana": 33,
+    "fecha": "2007-11-11",
+    "temperatura_c": 28.57
+   },
+   {
+    "semana": 34,
+    "fecha": "2007-11-18",
+    "temperatura_c": 28.45
+   },
+   {
+    "semana": 35,
+    "fecha": "2007-11-26",
+    "temperatura_c": 28.23
+   },
+   {
+    "semana": 36,
+    "fecha": "2007-12-03",
+    "temperatura_c": 28.07
+   },
+   {
+    "semana": 37,
+    "fecha": "2007-12-10",
+    "temperatura_c": 27.97
+   },
+   {
+    "semana": 38,
+    "fecha": "2007-12-17",
+    "temperatura_c": 27.87
+   },
+   {
+    "semana": 39,
+    "fecha": "2007-12-25",
+    "temperatura_c": 27.78
+   },
+   {
+    "semana": 40,
+    "fecha": "2008-01-01",
+    "temperatura_c": 27.68
+   },
+   {
+    "semana": 41,
+    "fecha": "2008-01-08",
+    "temperatura_c": 27.48
+   },
+   {
+    "semana": 42,
+    "fecha": "2008-01-15",
+    "temperatura_c": 27.41
+   },
+   {
+    "semana": 43,
+    "fecha": "2008-01-22",
+    "temperatura_c": 27.27
+   },
+   {
+    "semana": 44,
+    "fecha": "2008-01-30",
+    "temperatura_c": 27.18
+   },
+   {
+    "semana": 45,
+    "fecha": "2008-02-06",
+    "temperatura_c": 27.03
+   },
+   {
+    "semana": 46,
+    "fecha": "2008-02-13",
+    "temperatura_c": 26.96
+   },
+   {
+    "semana": 47,
+    "fecha": "2008-02-20",
+    "temperatura_c": 26.89
+   },
+   {
+    "semana": 48,
+    "fecha": "2008-02-28",
+    "temperatura_c": 26.81
+   }
+  ]
+ }
+}
