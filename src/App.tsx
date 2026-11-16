@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
-import { tracks, listeningLegend } from './data'
+import { tracks, getTracks, listeningLegend } from './data'
+import { LanguageSwitcher, useLanguage } from './i18n'
 import { Icon, Sprite } from './Art'
 import Player from './Player'
 import MapStage from './MapStage'
@@ -7,14 +8,14 @@ import { WelcomeGlobe } from './WelcomeGlobe'
 import GuidedExperience from './GuidedExperience'
 
 const families = [
-  'Océanos',
-  'Bosques',
-  'Atmósfera',
-  'Huella humana',
+  "Oceans",
+  "Forests",
+  "Atmosphere",
+  "Human footprint",
 ]
 const spriteIndexes = [1, 8, 3, 0]
 const voiceNotice =
-  'Puedes usar TalkBack u otro lector de pantalla. Earthbeat también ofrece una experiencia guiada con voz opcional.'
+  "You can use TalkBack or another screen reader. Earthbeat also offers a guided experience with optional narration."
 const number = (i: number) => String(i + 1).padStart(2, '0')
 const trackHref = (index: number) => '#pista/' + tracks[index].id
 function readLocation() {
@@ -60,6 +61,9 @@ export default function App() {
 }
 
 function VisualExperience({ onGuidedMode }: { onGuidedMode: () => void }) {
+  const { language, t } = useLanguage()
+  const tracks = getTracks(language)
+  const localizedVoiceNotice = t(voiceNotice)
   const [view, setView] = useState(readLocation)
   const [selected, select] = useState(view.index)
   const [hasSelected, setHasSelected] = useState(!view.welcome && !view.library)
@@ -84,9 +88,10 @@ function VisualExperience({ onGuidedMode }: { onGuidedMode: () => void }) {
       setNoticeAnnouncement('')
       return
     }
-    const timer = window.setTimeout(() => setNoticeAnnouncement(voiceNotice), 600)
+    setNoticeAnnouncement('')
+    const timer = window.setTimeout(() => setNoticeAnnouncement(localizedVoiceNotice), 600)
     return () => window.clearTimeout(timer)
-  }, [noticeVisible])
+  }, [noticeVisible, localizedVoiceNotice])
 
   useEffect(() => {
     const update = () => {
@@ -103,13 +108,13 @@ function VisualExperience({ onGuidedMode }: { onGuidedMode: () => void }) {
   }, [])
   useEffect(() => {
     document.title =
-      (view.welcome ? 'Bienvenida' : view.library ? 'Colección' : track.title) + ' · Earthbeat'
+      (view.welcome ? t("Welcome") : view.library ? t("Collection") : track.title) + ' · Earthbeat'
     main.current?.scrollTo(0, 0)
     const route = view.welcome ? 'welcome' : view.library ? 'collection' : track.id
     if (previousRoute.current !== route && !document.activeElement?.closest('#reproductor'))
       heading.current?.focus({ preventScroll: true })
     previousRoute.current = route
-  }, [view.welcome, view.library, track.id, track.title])
+  }, [view.welcome, view.library, track.id, track.title, t])
   useEffect(() => {
     if (modal && !dialog.current?.open) dialog.current?.showModal()
     if (!modal && dialog.current?.open) dialog.current.close()
@@ -131,9 +136,7 @@ function VisualExperience({ onGuidedMode }: { onGuidedMode: () => void }) {
           e.preventDefault()
           main.current?.focus()
         }}
-      >
-        Saltar al contenido
-      </a>
+      >{t("Skip to content")}</a>
       <a
         className="skip"
         href="#ajustes"
@@ -142,9 +145,7 @@ function VisualExperience({ onGuidedMode }: { onGuidedMode: () => void }) {
           event.preventDefault()
           setModal('settings')
         }}
-      >
-        Ir a opciones de accesibilidad
-      </a>
+      >{t("Go to accessibility options")}</a>
       {showPlayer && <a
         className="skip"
         href="#reproductor"
@@ -152,44 +153,43 @@ function VisualExperience({ onGuidedMode }: { onGuidedMode: () => void }) {
           e.preventDefault()
           document.getElementById('reproductor')?.focus()
         }}
-      >
-        Saltar al reproductor
-      </a>}
+      >{t("Skip to player")}</a>}
       <header className="masthead">
         <a
           className="brand"
           href="#inicio"
-          aria-label="Earthbeat, ir al inicio"
+          aria-label={t("Earthbeat, go to home")}
         >
           <Sprite className="brand-planet" />
           <span>Earthbeat</span>
         </a>
-        <nav className="primary-nav" aria-label="Principal">
+        <nav className="primary-nav" aria-label={t("Main navigation")}>
           <a
             href={trackHref(selected)}
             aria-current={!view.library && !view.welcome ? 'page' : undefined}
           >
             <Icon name="signal" />
-            <span>Reproductor</span>
+            <span>{t("Player")}</span>
           </a>
           <a href="#coleccion" aria-current={view.library ? 'page' : undefined}>
             <Icon name="grid" />
-            <span>Colección</span>
+            <span>{t("Collection")}</span>
           </a>
         </nav>
         <div className="utilities">
-          <button type="button" aria-label="Activar experiencia guiada" onClick={onGuidedMode}><Icon name="headset" /><span>Experiencia guiada</span></button>
+          <LanguageSwitcher />
+          <button type="button" aria-label={t("Open guided experience")} onClick={onGuidedMode}><Icon name="headset" /><span>{t("Guided experience")}</span></button>
           <button
-            aria-label="Ajustes de accesibilidad"
+            aria-label={t("Accessibility settings")}
             onClick={() => setModal('settings')}
           >
             <Icon name="sliders" />
-            <span>Ajustes</span>
+            <span>{t("Settings")}</span>
           </button>
           <button
             className="help-btn"
-            aria-label="Ayuda"
-            title="Ayuda"
+            aria-label={t("Help")}
+            title={t("Help")}
             onClick={() => setModal('help')}
           >
             <Icon name="help" />
@@ -197,12 +197,12 @@ function VisualExperience({ onGuidedMode }: { onGuidedMode: () => void }) {
         </div>
       </header>
       <div className={view.welcome ? 'workarea workarea--welcome' : 'workarea'}>
-        {!view.welcome && <aside className="library" aria-label="Biblioteca de pistas">
+        {!view.welcome && <aside className="library" aria-label={t("Track library")}>
           <div className="library-title">
-            <h2>Biblioteca</h2>
+            <h2>{t("Library")}</h2>
             <span>{number(tracks.length - 1)}</span>
           </div>
-          <nav aria-label="Seleccionar pista">
+          <nav aria-label={t("Choose a track")}>
             <ol>
               {tracks.map((item, i) => (
                 <li key={item.id}>
@@ -223,12 +223,12 @@ function VisualExperience({ onGuidedMode }: { onGuidedMode: () => void }) {
                     </span>
                     <span className="list-copy">
                       <strong>{item.shortTitle}</strong>
-                      <small>{families[i]}</small>
+                      <small>{t(families[i])}</small>
                     </span>
                     {hasSelected && selected === i && (
                       <span
                         className="selected-light"
-                        aria-label="Pista seleccionada"
+                        aria-label={t("Selected track")}
                       />
                     )}
                   </a>
@@ -237,9 +237,7 @@ function VisualExperience({ onGuidedMode }: { onGuidedMode: () => void }) {
             </ol>
           </nav>
           <button className="listen-help" onClick={() => setModal('help')}>
-            <Icon name="headset" />
-            Cómo escuchar
-          </button>
+            <Icon name="headset" />{t("How to listen")}</button>
         </aside>}
         <main
           id="workspace"
@@ -251,12 +249,12 @@ function VisualExperience({ onGuidedMode }: { onGuidedMode: () => void }) {
             <div className="access-notice">
               <Icon name="headset" />
               <p>
-                <span aria-hidden="true"><strong>Aviso de accesibilidad.</strong> {voiceNotice}</span>
+                <span aria-hidden="true"><strong>{t("Accessibility notice.")}</strong> {localizedVoiceNotice}</span>
                 <span className="screen-reader-only" role="status" aria-live="polite" aria-atomic="true">
-                  {noticeAnnouncement ? 'Aviso de accesibilidad. ' + noticeAnnouncement : ''}
+                  {noticeAnnouncement ? t("Accessibility notice. ") + noticeAnnouncement : ''}
                 </span>
               </p>
-              <button type="button" aria-label="Cerrar aviso de accesibilidad" onClick={() => {
+              <button type="button" aria-label={t("Dismiss accessibility notice")} onClick={() => {
                 setNoticeVisible(false)
                 heading.current?.focus({ preventScroll: true })
               }}>
@@ -268,18 +266,13 @@ function VisualExperience({ onGuidedMode }: { onGuidedMode: () => void }) {
             <div className="welcome">
               <div className="welcome__hero">
                 <div className="welcome__copy">
-                  <h1 ref={heading} tabIndex={-1}>La Tierra también se puede escuchar.</h1>
-                  <p className="welcome__lead">
-                    Descubre historias de nuestro planeta a través de datos de la NASA.
-                    Escucha el mar, recorre un bosque y vuelve a un año que recuerdas.
-                  </p>
-                  <a className="welcome__action" href="#coleccion">
-                    Explorar la colección <Icon name="right" />
+                  <h1 ref={heading} tabIndex={-1}>{t("You can hear the Earth, too.")}</h1>
+                  <p className="welcome__lead">{t("Discover stories of our planet through NASA data. Listen to the ocean, explore a forest, and revisit a year you remember.")}</p>
+                  <a className="welcome__action" href="#coleccion">{t("Explore the collection")}<Icon name="right" />
                   </a>
                   <button className="welcome__accessibility" type="button" aria-haspopup="dialog" onClick={() => setModal('settings')}>
-                    <Icon name="sliders" /> Opciones de accesibilidad
-                  </button>
-                  <p className="welcome__note">Puedes navegar con teclado y usar un lector de pantalla.</p>
+                    <Icon name="sliders" />{t("Accessibility options")}</button>
+                  <p className="welcome__note">{t("You can navigate with a keyboard and use a screen reader.")}</p>
                 </div>
                 <WelcomeGlobe reducedMotion={reduced} forestImage={tracks[1].image} />
               </div>
@@ -287,29 +280,24 @@ function VisualExperience({ onGuidedMode }: { onGuidedMode: () => void }) {
                 <img src={tracks[3].image} alt="" loading="lazy" />
                 <div>
                   <h2 id="welcome-story-title">{tracks[3].story.title}</h2>
-                  <p>{tracks[3].story.teaser} Compara sus luces nocturnas con las de 2019.</p>
+                  <p>{tracks[3].story.teaser} {t("Compare its night lights with those of 2019.")}</p>
                   <a href={trackHref(3)}>{tracks[3].story.action} <Icon name="right" /></a>
                 </div>
               </section>
               <section className="welcome__guide" aria-labelledby="welcome-guide-title">
-                <h2 id="welcome-guide-title">¿Cómo funciona?</h2>
+                <h2 id="welcome-guide-title">{t("How does it work?")}</h2>
                 <ol className="welcome__steps">
-                  <li><Icon name="grid"/><div><h3>Elige una historia</h3><p>Empieza por una pregunta que te dé curiosidad sobre la Tierra.</p></div></li>
-                  <li><Icon name="book"/><div><h3>Aprende a escucharla</h3><p>Conoce qué representa cada sonido y qué permiten concluir los datos.</p></div></li>
-                  <li><Icon name="headset"/><div><h3>Explora a tu ritmo</h3><p>Reproduce, pausa y usa los controles del visor para recorrer la historia.</p></div></li>
+                  <li><Icon name="grid"/><div><h3>{t("Choose a story")}</h3><p>{t("Start with a question that makes you curious about Earth.")}</p></div></li>
+                  <li><Icon name="book"/><div><h3>{t("Learn how to listen")}</h3><p>{t("Learn what each sound represents and what the data can tell you.")}</p></div></li>
+                  <li><Icon name="headset"/><div><h3>{t("Explore at your own pace")}</h3><p>{t("Play, pause, and use the scene controls to explore the story.")}</p></div></li>
                 </ol>
-                <p className="welcome__disclaimer">Lo que escuchas es una sonificación: los instrumentos representan datos. Las descripciones te acompañan en cada recorrido.</p>
+                <p className="welcome__disclaimer">{t("What you hear is a sonification: instruments represent data. Descriptions guide you through each journey.")}</p>
               </section>
             </div>
           ) : view.library ? (
             <div className="page-content">
-              <h1 ref={heading} tabIndex={-1}>
-                Colección
-              </h1>
-              <p className="intro">
-                Cuatro historias para acercarte a la Tierra. Elige una pregunta y
-                explora los datos que la acompañan.
-              </p>
+              <h1 ref={heading} tabIndex={-1}>{t("Collection")}</h1>
+              <p className="intro">{t("Four stories to bring you closer to Earth. Choose a question and explore the data behind it.")}</p>
               <div className="album-grid">
                 {tracks.map((item, i) => (
                   <a className="album" key={item.id} href={trackHref(i)}>
@@ -328,7 +316,7 @@ function VisualExperience({ onGuidedMode }: { onGuidedMode: () => void }) {
           ) : (
             <article className="page-content">
               <div className="breadcrumb">
-                <a href="#coleccion">Colección</a>
+                <a href="#coleccion">{t("Collection")}</a>
                 <Icon name="right" />
                 <span>{track.title}</span>
               </div>
@@ -337,44 +325,39 @@ function VisualExperience({ onGuidedMode }: { onGuidedMode: () => void }) {
                   {track.story.title}
                 </h1>
                 <p className="intro">{track.story.introduction}</p>
-                <p className="listening-prompt"><Icon name="headset" /><span><strong>Al escuchar. </strong>{track.story.listenFor}</span></p>
+                <p className="listening-prompt"><Icon name="headset" /><span><strong>{t("Listen for:")} </strong>{track.story.listenFor}</span></p>
               </div>
               <MapStage key={track.id} track={track} />
               <section
                 className="track-info"
-                aria-label="Información de la pista"
+                aria-label={t("Track information")}
               >
                 <div className="info-nav">
-                  <div role="group" aria-label="Contenido de la ficha">
+                  <div role="group" aria-label={t("Information sections")}>
                     <button
                       aria-pressed={info === 'track'}
                       onClick={() => setInfo('track')}
                     >
-                      <Icon name="book" />
-                      Sobre la pista
-                    </button>
+                      <Icon name="book" />{t("About this track")}</button>
                     <button
                       aria-pressed={info === 'audio'}
                       onClick={() => setInfo('audio')}
                     >
-                      <Icon name="signal" />
-                      Guía sonora
-                    </button>
+                      <Icon name="signal" />{t("Sound guide")}</button>
                   </div>
-                  <a href={track.source} target="_blank" rel="noreferrer">
-                    Fuente NASA <Icon name="external" />
+                  <a href={track.source} target="_blank" rel="noreferrer">{t("NASA source")}<Icon name="external" />
                   </a>
                 </div>
                 {info === 'track' ? (
                   <div className="info-body">
-                    <h2>Qué muestra la imagen</h2>
+                    <h2>{t("What the image shows")}</h2>
                     <p>{track.pattern}</p>
                     <dl className="facts">
                       {[
-                        ['Periodo', track.period],
-                        ['Tipo de fuente', track.kind],
-                        ['Variable', track.variable],
-                        ['Unidad', track.unit],
+                        [t("Period"), track.period],
+                        [t("Source type"), track.kind],
+                        [t("Variable"), track.variable],
+                        [t("Unit"), track.unit],
                       ].map(([label, value]) => (
                         <div key={label}>
                           <dt>{label}</dt>
@@ -383,14 +366,14 @@ function VisualExperience({ onGuidedMode }: { onGuidedMode: () => void }) {
                       ))}
                     </dl>
                     <p>
-                      <strong>Límite de interpretación. </strong>
+                      <strong>{t("Interpretation limit.")} </strong>
                       {track.limit}
                     </p>
                     <small>{track.credit}</small>
                   </div>
                 ) : (
                   <div className="info-body">
-                    <h2>Cómo se convierte en sonido</h2>
+                    <h2>{t("How the data becomes sound")}</h2>
                     {track.guide.map((paragraph) => (
                       <p key={paragraph}>{paragraph}</p>
                     ))}
@@ -415,11 +398,11 @@ function VisualExperience({ onGuidedMode }: { onGuidedMode: () => void }) {
       >
         <div className="dialog-head">
           <h2 id="dialog-title">
-            {modal === 'settings' ? 'Accesibilidad' : 'Cómo escuchar'}
+            {modal === 'settings' ? t("Accessibility") : t("How to listen")}
           </h2>
           <button
             autoFocus
-            aria-label="Cerrar"
+            aria-label={t("Close")}
             onClick={() => dialog.current?.close()}
           >
             <Icon name="close" />
@@ -427,40 +410,27 @@ function VisualExperience({ onGuidedMode }: { onGuidedMode: () => void }) {
         </div>
         {modal === 'settings' ? (
           <div className="settings">
-            <p className="settings__help">
-              Puedes usar TalkBack en Android u otro lector de pantalla. La experiencia guiada ofrece un recorrido por pasos y una voz opcional de Earthbeat.
-            </p>
-            <button type="button" onClick={onGuidedMode}>Activar experiencia guiada</button>
+            <p className="settings__help">{t("You can use TalkBack on Android or another screen reader. The guided experience offers a step-by-step journey and optional Earthbeat narration.")}</p>
+            <button type="button" onClick={onGuidedMode}>{t("Open guided experience")}</button>
             <label>
               <input
                 type="checkbox"
                 checked={contrast}
                 onChange={(e) => setContrast(e.target.checked)}
-              />
-              Alto contraste
-            </label>
+              />{t("High contrast")}</label>
             <label>
               <input
                 type="checkbox"
                 checked={reduced}
                 onChange={(e) => setReduced(e.target.checked)}
-              />
-              Reducir movimiento
-            </label>
+              />{t("Reduce motion")}</label>
           </div>
         ) : (
           <div className="help-text">
-            <p>
-              Elige una de las cuatro pistas en la colección. Puedes leer la
-              descripción antes de pulsar Reproducir.
-            </p>
-            <p>{listeningLegend}</p>
-            <h3>Con teclado</h3>
-            <p>
-              Recorre los controles con Tab y Mayús + Tab. Activa los botones
-              con Intro o Espacio. En las barras de avance y volumen, usa las
-              flechas, Inicio y Fin. Escape cierra esta ventana.
-            </p>
+            <p>{t("Choose one of the four tracks in the collection. You can read its description before pressing Play.")}</p>
+            <p>{t(listeningLegend)}</p>
+            <h3>{t("Using a keyboard")}</h3>
+            <p>{t("Move through controls with Tab and Shift + Tab. Activate buttons with Enter or Space. Use the arrow keys, Home, and End on the progress and volume sliders. Escape closes this window.")}</p>
           </div>
         )}
       </dialog>

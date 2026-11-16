@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="es">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Aerosoles · Earth Jukebox</title>
-<meta name="description" content="Escucha las partículas del aire del planeta el 19 de agosto de 2025: polvo, sal marina, sulfatos y humo. NASA SVS 5669 · Hertz Hunters.">
+<title>Aerosols · Earthbeat</title>
+<meta name="description" content="Hear airborne particles on August 19, 2025: dust, sea salt, sulfates, and smoke. NASA SVS 5669 · Hertz Hunters.">
 <style>
   :root { --fondo: #f6f8fa; --tarjeta: #ffffff; --texto: #12202e; --suave: #4a5b6c; --borde: #c9d3dd; --acento: #2f8f2f; --acento-texto: #ffffff; --foco: #f59e0b; }
   @media (prefers-color-scheme: dark) {
@@ -56,7 +56,7 @@
     <p class="aviso" data-t="aviso"></p>
     <div class="fila">
       <label class="solo-pagina"><span data-t="idioma"></span>
-        <select id="idioma"><option value="es">Español</option><option value="en">English</option></select></label>
+        <select id="idioma"><option value="en" lang="en">English</option><option value="es" lang="es">Español</option></select></label>
       <label><span data-t="historia_lbl"></span><select id="historia-sel"></select></label>
     </div>
   </header>
@@ -92,8 +92,8 @@
 </main>
 <script src="https://cdn.jsdelivr.net/npm/tone@14.8.49/build/Tone.js"></script>
 <script>window.Tone || document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"><\/script>');</script>
-<script src="../comun/incrustado.js?v=6"></script>
+<script src="../comun/incrustado.js?v=7"></script>
 <script src="motor-aerosoles.js"></script>
-<script src="app.js?v=6"></script>
+<script src="app.js?v=7"></script>
 </body>
 </html>

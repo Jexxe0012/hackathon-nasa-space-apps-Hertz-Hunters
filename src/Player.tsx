@@ -7,6 +7,7 @@ import {
 } from 'react'
 import type { Track } from './data'
 import './player.css'
+import { useLanguage } from './i18n'
 
 type PlayerProps = {
   track: Track
@@ -76,6 +77,7 @@ export function Player({
   onNext,
   onBeforePlay,
 }: PlayerProps) {
+  const { t } = useLanguage()
   const audioRef = useRef<HTMLAudioElement>(null)
   const [media, setMedia] = useState(() => initialMediaState(track.id))
   const [volume, setVolume] = useState(65)
@@ -142,7 +144,7 @@ export function Player({
       duration: Number.isFinite(audio.duration) ? audio.duration : 0,
       playing: !audio.paused && !audio.ended,
       error: audio.error
-        ? 'No se pudo cargar esta pista. Pulsa Reintentar.'
+        ? t("This track could not load. Press Retry.")
         : '',
     })
   }
@@ -171,7 +173,7 @@ export function Player({
       setMedia((previous) => ({
         ...(previous.id === track.id ? previous : initialMediaState(track.id)),
         playing: false,
-        error: 'No se pudo reproducir el audio. Pulsa Reintentar.',
+        error: "The audio could not play. Press Retry.",
       }))
     }
   }
@@ -193,13 +195,13 @@ export function Player({
     setMuted(!silent)
   }
 
-  const playLabel = error ? 'Reintentar' : playing ? 'Pausar' : 'Reproducir'
+  const playLabel = error ? t("Retry") : playing ? t("Pause") : t("Play")
   const digits = (value: number) => String(value).padStart(2, '0')
 
   return (
     <section
       className="hh-player"
-      aria-label="Reproductor de sonificaciones"
+      aria-label={t("Sonification player")}
       id="reproductor"
       tabIndex={-1}
     >
@@ -220,7 +222,7 @@ export function Player({
         <img src={track.image} alt="" width="52" height="52" />
         <div>
           <span className="hh-player__track-number">
-            Pista {digits(index + 1)} / {digits(total)} · {scene ? 'Motor de sonido' : 'Audio de prueba'}
+            {t('Track {current} of {total} · {kind}', { current: digits(index + 1), total: digits(total), kind: t(scene ? 'Sound engine' : 'Sample audio') })}
           </span>
           <strong>{track.shortTitle}</strong>
         </div>
@@ -229,8 +231,8 @@ export function Player({
         <div className="hh-player__buttons">
           <button
             type="button"
-            aria-label="Pista anterior"
-            title="Pista anterior"
+            aria-label={t("Previous track")}
+            title={t("Previous track")}
             onClick={onPrevious}
           >
             <PixelIcon icon="previous" />
@@ -239,15 +241,15 @@ export function Player({
             type="button"
             className="hh-player__play"
             onClick={togglePlayback}
-            aria-label={playLabel + ' ' + track.title}
+            aria-label={t('{action} {title}', { action: playLabel, title: track.title })}
           >
             <PixelIcon icon={playing ? 'pause' : 'play'} />
             <span>{playLabel}</span>
           </button>
           <button
             type="button"
-            aria-label="Pista siguiente"
-            title="Pista siguiente"
+            aria-label={t("Next track")}
+            title={t("Next track")}
             onClick={onNext}
           >
             <PixelIcon icon="next" />
@@ -255,8 +257,8 @@ export function Player({
           <button
             type="button"
             className="hh-player__skip"
-            aria-label="Avanzar 15 segundos"
-            title="Avanzar 15 segundos"
+            aria-label={t("Skip forward 15 seconds")}
+            title={t("Skip forward 15 seconds")}
             disabled={!duration || current >= duration}
             onClick={() => seek(current + 15)}
           >
@@ -267,12 +269,12 @@ export function Player({
           <span aria-hidden="true">{clock(current)}</span>
           <input
             type="range"
-            aria-label="Posición de escucha"
+            aria-label={t("Playback position")}
             min={0}
             max={duration || 1}
             step={1}
             value={current}
-            aria-valuetext={`${Math.floor(current)} de ${Math.round(duration)} segundos`}
+            aria-valuetext={t('{current} of {duration} seconds', { current: Math.floor(current), duration: Math.round(duration) })}
             disabled={!duration}
             style={rangeStyle(current, duration)}
             onChange={(event) => seek(event.currentTarget.valueAsNumber)}
@@ -284,20 +286,20 @@ export function Player({
         <div className="hh-player__volume">
           <button
             type="button"
-            aria-label={silent ? 'Activar sonido' : 'Silenciar'}
-            title={silent ? 'Activar sonido' : 'Silenciar'}
+            aria-label={silent ? t("Unmute") : t("Mute")}
+            title={silent ? t("Unmute") : t("Mute")}
             onClick={toggleMute}
           >
             <PixelIcon icon={silent ? 'muted' : 'speaker'} />
           </button>
           <input
             type="range"
-            aria-label="Volumen"
+            aria-label={t("Volume")}
             min={0}
             max={100}
             step={1}
             value={muted ? 0 : volume}
-            aria-valuetext={`${muted ? 0 : volume} por ciento`}
+            aria-valuetext={t('{volume} percent', { volume: muted ? 0 : volume })}
             style={rangeStyle(muted ? 0 : volume, 100)}
             onChange={(event) => {
               setVolume(event.currentTarget.valueAsNumber)
@@ -306,24 +308,24 @@ export function Player({
           />
         </div>
         <select
-          aria-label="Velocidad de reproducción"
-          title={scene ? 'La escena sonora tiene su propio tiempo' : 'Velocidad de reproducción'}
+          aria-label={t("Playback speed")}
+          title={scene ? t("The sound scene runs at its own speed") : t("Playback speed")}
           disabled={scene}
           value={rate}
           onChange={(event) => setRate(Number(event.currentTarget.value))}
         >
-          <option value={0.75}>0,75×</option>
+          <option value={0.75}>{t('0.75×')}</option>
           <option value={1}>1×</option>
-          <option value={1.25}>1,25×</option>
-          <option value={1.5}>1,5×</option>
+          <option value={1.25}>{t('1.25×')}</option>
+          <option value={1.5}>{t('1.5×')}</option>
         </select>
       </div>
       <span className="hh-player__announcement" role="status">
-        {playing ? 'Reproduciendo' : 'En pausa'} · {track.title}
+        {t('{state} · {title}', { state: t(playing ? 'Playing' : 'Paused'), title: track.title })}
       </span>
       {error && (
         <p className="hh-player__error" role="alert">
-          {error}
+          {t(error)}
         </p>
       )}
     </section>

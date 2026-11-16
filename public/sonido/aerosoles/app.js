@@ -58,7 +58,7 @@
       disco: 'Disco 3 · Aerosoles · NASA SVS 5669',
       titulo: 'Un día en el aire del planeta',
       aviso: 'Las partículas del aire de todo el mundo el 19 de agosto de 2025, a las 2 p.m. de El Salvador (modelo GEOS de la NASA). Elige una historia: cada tipo de partícula suena con su propio instrumento.',
-      idioma: 'Idioma · Language', historia_lbl: 'Historia', fecha_mapa: '19 ago 2025 · 2:00 p.m. hora de El Salvador', leyenda: 'Tipos de partícula (prende o apaga cada uno)',
+      idioma: 'Idioma', historia_lbl: 'Historia', fecha_mapa: '19 ago 2025 · 2:00 p.m. hora de El Salvador', leyenda: 'Tipos de partícula (prende o apaga cada uno)',
       tipos: {
         polvo: ['Polvo', 'desiertos · flauta (viento)'], sal_marina: ['Sal marina', 'el mar · campanitas'],
         sulfatos: ['Sulfatos', 'industria y volcanes · marimba'], carbono_negro: ['Carbono negro', 'humo de incendios · piano grave'],
@@ -85,7 +85,7 @@
       disco: 'Disc 3 · Aerosols · NASA SVS 5669',
       titulo: 'One day in the planet\'s air',
       aviso: 'Airborne particles over the whole world on August 19, 2025, at 2 p.m. El Salvador time (NASA GEOS model). Pick a story: each particle type plays its own instrument.',
-      idioma: 'Idioma · Language', historia_lbl: 'Story', fecha_mapa: 'Aug 19, 2025 · 2:00 p.m. El Salvador time', leyenda: 'Particle types (turn each on or off)',
+      idioma: 'Language', historia_lbl: 'Story', fecha_mapa: 'Aug 19, 2025 · 2:00 p.m. El Salvador time', leyenda: 'Particle types (turn each on or off)',
       tipos: {
         polvo: ['Dust', 'deserts · flute (wind)'], sal_marina: ['Sea salt', 'the sea · little bells'],
         sulfatos: ['Sulfate', 'industry and volcanoes · marimba'], carbono_negro: ['Black carbon', 'wildfire smoke · low piano'],
@@ -112,7 +112,7 @@
 
   const $ = (id) => document.getElementById(id);
   const rep = new M.Reproductor();
-  let idioma = 'es', datos = null, hist = HISTORIAS[0], terminado = false;
+  let idioma = window.EIJ ? EIJ.idiomaInicial() : 'en', datos = null, hist = HISTORIAS[0], terminado = false;
   const recorridos = {};
   const L = () => TXT[idioma];
   function t(clave, vars) { let s = L()[clave]; if (vars) for (const k in vars) s = s.split('{' + k + '}').join(vars[k]); return s; }
@@ -139,8 +139,17 @@
     return rec;
   }
 
+  function cambiarIdioma(nuevo) {
+    if ((nuevo !== 'en' && nuevo !== 'es') || nuevo === idioma) return;
+    idioma = nuevo;
+    aplicarIdioma();
+    textoActual = null;
+  }
+
   function aplicarIdioma() {
     document.documentElement.lang = idioma;
+    document.title = L().titulo + ' · Earthbeat';
+    $('idioma').value = idioma;
     document.querySelectorAll('[data-t]').forEach((el) => { el.textContent = t(el.dataset.t); });
     $('teclas').innerHTML = t('teclas');
     $('btn-exportar').textContent = t('exportar');
@@ -271,7 +280,7 @@
   async function iniciar() {
     aplicarIdioma();
     $('historia').textContent = t('cargando');
-    $('idioma').addEventListener('change', (e) => { idioma = e.target.value; aplicarIdioma(); textoActual = null; });
+    $('idioma').addEventListener('change', (e) => { cambiarIdioma(e.target.value); if (window.EIJ) EIJ.guardarIdioma(idioma); });
     $('historia-sel').addEventListener('change', (e) => elegir(e.target.value));
     $('btn-escuchar').addEventListener('click', () => escuchar(null));
     $('btn-play').addEventListener('click', alternar);
@@ -283,7 +292,7 @@
       escuchar({ tramo: l.tramo, fraccion: tr.dir < 0 ? 1 - f : f });
     });
     rep.alTerminar = () => { terminado = true; $('estado').textContent = t('fin'); };
-    if (!window.Tone) { $('historia').textContent = 'Tone.js no cargó (¿sin internet?)'; return; }
+    if (!window.Tone) { $('historia').textContent = (idioma === 'es' ? 'No se pudo cargar el audio. Comprueba tu conexión e inténtalo de nuevo.' : 'Audio could not load. Check your connection and try again.'); return; }
     M.cargarPiano().then((p) => rep.usarPiano(p)).catch(() => { /* suena la campana grave */ });
     try {
       const r = await fetch(RUTA, { cache: 'no-cache' });
@@ -297,6 +306,7 @@
 
   // Modo incrustado (Earthbeat): el reproductor de la app manda
   if (window.EIJ) EIJ.conectar({
+    idioma: cambiarIdioma,
     pausar: () => rep.pausar(),
     alternar: () => alternar(),
     ir: (f) => { if (datos && recorridoDe(hist).tramos.length === 1) escuchar({ tramo: 0, fraccion: f }); },

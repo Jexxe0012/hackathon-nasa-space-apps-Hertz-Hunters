@@ -28,7 +28,7 @@
       disco: 'Disco 2 · Luces nocturnas · NASA SVS 5276',
       titulo: 'Escucha cómo se veía el mundo de noche',
       aviso: 'Elige una fecha importante y escucha las luces del planeta ese año, vistas desde el espacio (satélite VIIRS de la NASA y la NOAA). Cada mapa es el promedio de todo el año, no de ese día.',
-      idioma: 'Idioma · Language', fecha: 'Año que quieres escuchar', referencia: 'Año de referencia',
+      idioma: 'Idioma', fecha: 'Año que quieres escuchar', referencia: 'Año de referencia',
       leyenda_mapa: 'La línea recorre el mundo de oeste a este (de América a Asia) y suena lo que toca: más luz, más notas; norte agudo, sur grave.',
       escuchar: 'Escuchar {anio} (12 s)', comparar: 'Comparar {base} → {anio} (25 s)',
       reproducir: 'Reproducir', pausar: 'Pausar',
@@ -53,7 +53,7 @@
       disco: 'Disc 2 · Night lights · NASA SVS 5276',
       titulo: 'Listen to how the world looked at night',
       aviso: 'Pick an important date and listen to the planet\'s lights that year, seen from space (NASA–NOAA VIIRS satellite). Each map is the average of the whole year, not of that day.',
-      idioma: 'Idioma · Language', fecha: 'Year to listen to', referencia: 'Reference year',
+      idioma: 'Language', fecha: 'Year to listen to', referencia: 'Reference year',
       leyenda_mapa: 'The line sweeps the world from west to east (from the Americas to Asia) and plays what it touches: more light, more notes; north high, south low.',
       escuchar: 'Listen to {anio} (12 s)', comparar: 'Compare {base} → {anio} (25 s)',
       reproducir: 'Play', pausar: 'Pause',
@@ -82,15 +82,24 @@
   const anioValido = (a) => Number.isInteger(a) && a >= 2012 && a <= 2023;
   const solicitado = Number(parametros.get('anio'));
   const baseSolicitada = Number(parametros.get('comparar'));
-  let idioma = 'es', datos = null, anio = anioValido(solicitado) ? solicitado : 2023;
+  let idioma = window.EIJ ? EIJ.idiomaInicial() : 'en', datos = null, anio = anioValido(solicitado) ? solicitado : 2023;
   let referencia = anioValido(baseSolicitada) ? baseSolicitada : 2012;
   const L = () => TXT[idioma];
   function t(clave, vars) { let s = L()[clave]; if (vars) for (const k in vars) s = s.split('{' + k + '}').join(vars[k]); return s; }
   const num = (x, d) => x.toFixed(d).replace('.', L().decimal);
   const imgs = {};
 
+  function cambiarIdioma(nuevo) {
+    if ((nuevo !== 'en' && nuevo !== 'es') || nuevo === idioma) return;
+    idioma = nuevo;
+    aplicarIdioma();
+
+  }
+
   function aplicarIdioma() {
     document.documentElement.lang = idioma;
+    document.title = L().titulo + ' · Earthbeat';
+    $('idioma').value = idioma;
     document.querySelectorAll('[data-t]').forEach((el) => { el.textContent = t(el.dataset.t, { base: referencia }); });
     $('teclas').innerHTML = t('teclas');
     $('btn-exportar').textContent = t('exportar');
@@ -203,7 +212,7 @@
   async function iniciar() {
     aplicarIdioma();
     $('evento').textContent = t('cargando');
-    $('idioma').addEventListener('change', (e) => { idioma = e.target.value; aplicarIdioma(); });
+    $('idioma').addEventListener('change', (e) => { cambiarIdioma(e.target.value); if (window.EIJ) EIJ.guardarIdioma(idioma); });
     $('fecha').addEventListener('change', (e) => elegir(Number(e.target.value)));
     $('referencia').addEventListener('change', (e) => {
       referencia = Number(e.target.value);
@@ -216,7 +225,7 @@
     $('btn-play').addEventListener('click', alternar);
     $('btn-exportar').addEventListener('click', exportar);
     rep.alTerminar = () => { terminado = true; $('estado').textContent = t('fin'); };
-    if (!window.Tone) { $('evento').textContent = 'Tone.js no cargó (¿sin internet?)'; return; }
+    if (!window.Tone) { $('evento').textContent = (idioma === 'es' ? 'No se pudo cargar el audio. Comprueba tu conexión e inténtalo de nuevo.' : 'Audio could not load. Check your connection and try again.'); return; }
     M.cargarPiano().then((p) => rep.usarPiano(p)).catch(() => { /* suena la campana */ });
     try {
       const r = await fetch(RUTA, { cache: 'no-cache' });
@@ -231,6 +240,7 @@
 
   // Modo incrustado (Earthbeat): el reproductor de la app manda
   if (window.EIJ) EIJ.conectar({
+    idioma: cambiarIdioma,
     pausar: () => rep.pausar(),
     alternar: () => alternar(),
     ir: () => { /* el radar no salta: se reinicia con Reproducir */ },
