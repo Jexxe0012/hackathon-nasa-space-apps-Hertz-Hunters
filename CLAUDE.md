@@ -71,3 +71,8 @@ Contexto completo del reto (análisis, decisiones, bitácora): carpeta local `C:
 - Motor por **recorridos de tramos** (zona, sentido, tipos, barrido) sobre la malla fina 384×34; ganancia por historia para igualar volumen (medido).
 - Visual: **siempre el mapa completo, sin zooms** (Diego: los recortes ampliados se veían feos); zona de la historia con recuadro y el resto oscurecido; fecha visible arriba del mapa; nada de etiquetas grandes encima de la imagen.
 - 15/11 noche (Diego): **historias pocas y grandes** (mínimo del tamaño del viaje del Sahara): polvo del Sahara, África (polvo norte / humo sur), nuestro continente (América), mares del sur, todo el planeta. Erin, volcanes e incendios quedan solo como textos en "todo el planeta". **Polvo = flauta suave con vibrato** (el ruido filtrado sonaba a aplausos). Volumen por historia −20,2 a −21 LUFS.
+
+## Disco Bosques (4950) — `sonido/bosques/`, datos en `imagen-a-sonido/bosques_4950/`
+- Solo existe como globo 3D de América con sombras. **Viaje de norte a sur**: línea horizontal de Alaska a la Patagonia (16 s); **marimba** (madera, tradición centroamericana) más aguda = árboles más altos; más bosque = más fuerte; paneo fijo por columna (cambiar el paneo de una voz que aún suena hacía clics).
+- Lectura (`leer_bosques.mjs`, Node): la luz tiñe y sombrea el globo → se corrige con el brillo del mar cercano (malla 24×24 interpolada; sin interpolar salían bloques) y se busca el color más parecido de la barra (menos peso al azul). Patrón creíble (Amazonas alto, llanuras/Patagonia bajos), **metros no confiables: se dice más alto / más bajo**.
+- Registro Mi3–Si5 (con La2 retumbaba). ~−20 LUFS.
