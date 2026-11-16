@@ -49,8 +49,8 @@ dd {
   outline: 3px solid #ffdf83;
   outline-offset: 3px;
 }
-h1:focus,
-main:focus {
+h1:focus:not(:focus-visible),
+main:focus:not(:focus-visible) {
   outline: none;
 }
 .console {
@@ -378,23 +378,7 @@ main[data-scene='luces-nocturnas'] {
   text-underline-offset: 3px;
 }
 .track-heading {
-  display: flex;
-  align-items: center;
-  gap: 18px;
   margin: 16px 0 23px;
-}
-.track-index {
-  align-self: stretch;
-  display: grid;
-  place-items: center;
-  flex: none;
-  min-width: 60px;
-  padding: 0 8px;
-  color: var(--gold);
-  background: var(--surface);
-  border: 1px solid var(--line);
-  font: 400 clamp(24px, 2.5vw, 38px) / 1 var(--display);
-  letter-spacing: -0.02em;
 }
 h1 {
   font: 700 clamp(29px, 3vw, 46px) / 1.14 var(--body);
@@ -487,12 +471,18 @@ h1 {
   margin-top: 24px;
 }
 .album {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
   overflow: hidden;
   border: 1px solid var(--line);
   background: var(--surface);
 }
 .album:hover {
   border-color: var(--mint);
+}
+.album:focus-visible {
+  outline-offset: 3px;
 }
 .album > img {
   display: block;
@@ -502,9 +492,12 @@ h1 {
   background: #070c16;
 }
 .album-copy {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
   padding: 14px;
 }
-.album-copy span {
+.album-category {
   color: var(--mint);
   font-size: 13px;
 }
@@ -512,6 +505,28 @@ h1 {
   font-size: 20px;
   margin-top: 6px;
 }
+.album-description {
+  margin-top: 9px;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.4;
+}
+.album-period {
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 14px;
+}
+.album-action {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: auto;
+  padding-top: 18px;
+  color: var(--mint);
+  font-size: 16px;
+  font-weight: 700;
+}
+.album-action .ui-icon { width: 12px; height: 12px; }
 dialog {
   max-width: min(92vw, 500px);
   max-height: 85dvh;
@@ -572,9 +587,6 @@ dialog::backdrop {
   .page-content {
     padding-inline: 22px;
   }
-  .track-heading {
-    gap: 13px;
-  }
 }
 @media (max-width: 760px) {
   .masthead {
@@ -627,14 +639,6 @@ dialog::backdrop {
   }
   .track-heading {
     margin: 12px 0 15px;
-    gap: 10px;
-  }
-  .track-index {
-    min-width: 43px;
-    padding: 0 4px;
-    font-size: 25px;
-    align-self: flex-start;
-    min-height: 39px;
   }
   h1 {
     font-size: clamp(23px, 4.9vw, 32px);

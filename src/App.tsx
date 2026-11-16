@@ -53,6 +53,7 @@ function usePreference(key: string, fallback: boolean) {
 export default function App() {
   const [view, setView] = useState(readLocation)
   const [selected, select] = useState(view.index)
+  const [hasSelected, setHasSelected] = useState(!view.welcome && !view.library)
   const [modal, setModal] = useState<'help' | 'settings' | null>(null)
   const [noticeVisible, setNoticeVisible] = useState(true)
   const [noticeAnnouncement, setNoticeAnnouncement] = useState('')
@@ -80,7 +81,10 @@ export default function App() {
   useEffect(() => {
     const update = () => {
       const next = readLocation()
-      if (!next.welcome && !next.library) select(next.index)
+      if (!next.welcome && !next.library) {
+        select(next.index)
+        setHasSelected(true)
+      }
       setView(next)
       setInfo('track')
     }
@@ -110,9 +114,6 @@ export default function App() {
       data-contrast={contrast}
       data-reduced-motion={reduced}
     >
-      <p className="screen-reader-only" role="status" aria-live="polite" aria-atomic="true">
-        {noticeAnnouncement}
-      </p>
       <a
         className="skip"
         href="#workspace"
@@ -134,7 +135,7 @@ export default function App() {
       >
         Ir a opciones de accesibilidad
       </a>
-      {!view.welcome && <a
+      {!view.welcome && hasSelected && <a
         className="skip"
         href="#reproductor"
         onClick={(e) => {
@@ -197,10 +198,10 @@ export default function App() {
                   <a
                     href={trackHref(i)}
                     className={
-                      'track-link ' + (selected === i ? 'selected' : '')
+                      'track-link ' + (hasSelected && selected === i ? 'selected' : '')
                     }
                     aria-current={
-                      selected === i && !view.library ? 'true' : undefined
+                      hasSelected && selected === i && !view.library ? 'page' : undefined
                     }
                   >
                     <span aria-hidden="true" className="list-num">
@@ -213,7 +214,7 @@ export default function App() {
                       <strong>{item.shortTitle}</strong>
                       <small>{families[i]}</small>
                     </span>
-                    {selected === i && (
+                    {hasSelected && selected === i && (
                       <span
                         className="selected-light"
                         aria-label="Pista seleccionada"
@@ -238,7 +239,12 @@ export default function App() {
           {noticeVisible && (
             <div className="access-notice">
               <Icon name="headset" />
-              <p><strong>Aviso de accesibilidad.</strong> {voiceNotice}</p>
+              <p>
+                <span aria-hidden="true"><strong>Aviso de accesibilidad.</strong> {voiceNotice}</span>
+                <span className="screen-reader-only" role="status" aria-live="polite" aria-atomic="true">
+                  {noticeAnnouncement ? 'Aviso de accesibilidad. ' + noticeAnnouncement : ''}
+                </span>
+              </p>
               <button type="button" aria-label="Cerrar aviso de accesibilidad" onClick={() => {
                 setNoticeVisible(false)
                 heading.current?.focus({ preventScroll: true })
@@ -293,10 +299,13 @@ export default function App() {
                   <a className="album" key={item.id} href={trackHref(i)}>
                     <img src={item.image} alt="" loading="lazy" />
                     <div className="album-copy">
-                      <span>
+                      <span className="album-category">
                         {number(i)} / {families[i]}
                       </span>
                       <h2>{item.title}</h2>
+                      <p className="album-description">{introductions[i]}</p>
+                      <span className="album-period">{item.period}</span>
+                      <span className="album-action">Explorar <Icon name="right" /></span>
                     </div>
                   </a>
                 ))}
@@ -310,17 +319,12 @@ export default function App() {
                 <span>{families[selected]}</span>
               </div>
               <div className="track-heading">
-                <div className="track-index" aria-hidden="true">
-                  {number(selected)}
-                </div>
-                <div>
-                  <h1 ref={heading} tabIndex={-1}>
-                    {track.title}
-                  </h1>
-                  <p className="intro">{introductions[selected]}</p>
-                </div>
+                <h1 ref={heading} tabIndex={-1}>
+                  {track.title}
+                </h1>
+                <p className="intro">{introductions[selected]}</p>
               </div>
-                <MapStage key={track.id} track={track} />
+              <MapStage key={track.id} track={track} />
               <section
                 className="track-info"
                 aria-label="Información de la pista"
@@ -384,7 +388,7 @@ export default function App() {
           )}
         </main>
       </div>
-      {!view.welcome && <Player
+      {!view.welcome && hasSelected && <Player
         track={track}
         index={selected}
         total={tracks.length}
