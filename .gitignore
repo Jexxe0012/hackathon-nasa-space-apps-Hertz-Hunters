@@ -1,14 +1,25 @@
-# Imágenes y videos de la NASA: pesados, viven fuera del repo (carpeta de contexto de cada quien)
+# --- App (Josué): dependencias y compilados
+node_modules/
+dist/
+.vite/
+.tmp/
+*.local
+.env
+.env.*
+!.env.example
+*.tsbuildinfo
+
+# --- Imágenes y videos de la NASA pesados: viven fuera del repo (carpeta de contexto de cada quien)
 *.tif
 *.tiff
 *.exr
 *.mp4
 *.webm
-datos/
+/datos/
 imagen-a-sonido/**/frames/
 imagen-a-sonido/**/datos/
 
-# Python
+# --- Python
 __pycache__/
 *.pyc
 .venv/
