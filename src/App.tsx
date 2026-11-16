@@ -4,6 +4,7 @@ import { Icon, Sprite } from './Art'
 import Player from './Player'
 import MapStage from './MapStage'
 import { WelcomeGlobe } from './WelcomeGlobe'
+import GuidedExperience from './GuidedExperience'
 
 const families = [
   'Océanos',
@@ -11,15 +12,9 @@ const families = [
   'Atmósfera',
   'Huella humana',
 ]
-const introductions = [
-  'Sigue las corrientes que transportan calor por la superficie del océano.',
-  'Compara la altura del dosel forestal que observa la misión GEDI.',
-  'Distingue el polvo, el humo y las partículas que viajan por el aire.',
-  'La luz de pueblos y ciudades dibuja la huella humana sobre el planeta.',
-]
 const spriteIndexes = [1, 8, 3, 0]
 const voiceNotice =
-  'Puedes navegar con teclado y un lector de pantalla como TalkBack. La voz integrada de Earthbeat está en desarrollo.'
+  'Puedes usar TalkBack u otro lector de pantalla. Earthbeat también ofrece una experiencia guiada con voz opcional.'
 const number = (i: number) => String(i + 1).padStart(2, '0')
 const trackHref = (index: number) => '#pista/' + tracks[index].id
 function readLocation() {
@@ -52,6 +47,19 @@ function usePreference(key: string, fallback: boolean) {
 }
 
 export default function App() {
+  const [experience, setExperience] = useState<'guided' | 'visual'>(() => {
+    try { return localStorage.getItem('earthbeat.experience') === 'visual' ? 'visual' : 'guided' } catch { return 'guided' }
+  })
+  function changeExperience(next: 'guided' | 'visual') {
+    try { localStorage.setItem('earthbeat.experience', next) } catch { /* Available for this visit. */ }
+    setExperience(next)
+  }
+  return experience === 'guided'
+    ? <GuidedExperience onVisualMode={() => changeExperience('visual')} />
+    : <VisualExperience onGuidedMode={() => changeExperience('guided')} />
+}
+
+function VisualExperience({ onGuidedMode }: { onGuidedMode: () => void }) {
   const [view, setView] = useState(readLocation)
   const [selected, select] = useState(view.index)
   const [hasSelected, setHasSelected] = useState(!view.welcome && !view.library)
@@ -169,6 +177,7 @@ export default function App() {
           </a>
         </nav>
         <div className="utilities">
+          <button type="button" aria-label="Activar experiencia guiada" onClick={onGuidedMode}><Icon name="headset" /><span>Experiencia guiada</span></button>
           <button
             aria-label="Ajustes de accesibilidad"
             onClick={() => setModal('settings')}
@@ -260,8 +269,8 @@ export default function App() {
                 <div className="welcome__copy">
                   <h1 ref={heading} tabIndex={-1}>La Tierra también se puede escuchar.</h1>
                   <p className="welcome__lead">
-                    Explora imágenes de la Tierra de la NASA con descripciones claras y sonido.
-                    Descubre el océano, los bosques, los aerosoles y las luces nocturnas.
+                    Descubre historias de nuestro planeta a través de datos de la NASA.
+                    Escucha el mar, recorre un bosque y vuelve a un año que recuerdas.
                   </p>
                   <a className="welcome__action" href="#coleccion">
                     Explorar la colección <Icon name="right" />
@@ -273,14 +282,22 @@ export default function App() {
                 </div>
                 <WelcomeGlobe reducedMotion={reduced} forestImage={tracks[1].image} />
               </div>
+              <section className="welcome__story" aria-labelledby="welcome-story-title">
+                <img src={tracks[3].image} alt="" loading="lazy" />
+                <div>
+                  <h2 id="welcome-story-title">{tracks[3].story.title}</h2>
+                  <p>{tracks[3].story.teaser} Compara sus luces nocturnas con las de 2019.</p>
+                  <a href={trackHref(3)}>{tracks[3].story.action} <Icon name="right" /></a>
+                </div>
+              </section>
               <section className="welcome__guide" aria-labelledby="welcome-guide-title">
                 <h2 id="welcome-guide-title">¿Cómo funciona?</h2>
                 <ol className="welcome__steps">
-                  <li><Icon name="grid"/><div><h3>Elige un tema</h3><p>Abre la colección y selecciona una de las cuatro visualizaciones.</p></div></li>
-                  <li><Icon name="book"/><div><h3>Lee la descripción</h3><p>Conoce qué muestra la imagen, su fuente y sus límites.</p></div></li>
-                  <li><Icon name="headset"/><div><h3>Escucha la imagen</h3><p>Usa los controles para reproducir y recorrer una muestra sonora.</p></div></li>
+                  <li><Icon name="grid"/><div><h3>Elige una historia</h3><p>Empieza por una pregunta que te dé curiosidad sobre la Tierra.</p></div></li>
+                  <li><Icon name="book"/><div><h3>Aprende a escucharla</h3><p>Conoce qué representa cada sonido y qué permiten concluir los datos.</p></div></li>
+                  <li><Icon name="headset"/><div><h3>Explora a tu ritmo</h3><p>Reproduce, pausa y usa los controles del visor para recorrer la historia.</p></div></li>
                 </ol>
-                <p className="welcome__disclaimer">Los audios actuales son muestras basadas en el brillo de cada imagen.</p>
+                <p className="welcome__disclaimer">Lo que escuchas es una sonificación: los instrumentos representan datos. Las descripciones te acompañan en cada recorrido.</p>
               </section>
             </div>
           ) : view.library ? (
@@ -289,21 +306,19 @@ export default function App() {
                 Colección
               </h1>
               <p className="intro">
-                Cuatro formas de explorar la Tierra. Elige una pista para
-                explorar su imagen y su sonido.
+                Cuatro historias para acercarte a la Tierra. Elige una pregunta y
+                explora los datos que la acompañan.
               </p>
               <div className="album-grid">
                 {tracks.map((item, i) => (
                   <a className="album" key={item.id} href={trackHref(i)}>
                     <img src={item.image} alt="" loading="lazy" />
                     <div className="album-copy">
-                      <span className="album-category">
-                        {number(i)} / {families[i]}
-                      </span>
-                      <h2>{item.title}</h2>
-                      <p className="album-description">{introductions[i]}</p>
+                      <h2>{item.story.title}</h2>
+                      <span className="album-category">{item.title}</span>
+                      <p className="album-description">{item.story.teaser}</p>
                       <span className="album-period">{item.period}</span>
-                      <span className="album-action">Explorar <Icon name="right" /></span>
+                      <span className="album-action">{item.story.action} <Icon name="right" /></span>
                     </div>
                   </a>
                 ))}
@@ -314,13 +329,14 @@ export default function App() {
               <div className="breadcrumb">
                 <a href="#coleccion">Colección</a>
                 <Icon name="right" />
-                <span>{families[selected]}</span>
+                <span>{track.title}</span>
               </div>
               <div className="track-heading">
                 <h1 ref={heading} tabIndex={-1}>
-                  {track.title}
+                  {track.story.title}
                 </h1>
-                <p className="intro">{introductions[selected]}</p>
+                <p className="intro">{track.story.introduction}</p>
+                <p className="listening-prompt"><Icon name="headset" /><span><strong>Al escuchar. </strong>{track.story.listenFor}</span></p>
               </div>
               <MapStage key={track.id} track={track} />
               <section
@@ -374,11 +390,9 @@ export default function App() {
                 ) : (
                   <div className="info-body">
                     <h2>Cómo se convierte en sonido</h2>
-                    <p>{listeningLegend}</p>
-                    <p>
-                      Usa el control de avance para volver a escuchar una zona
-                      de la imagen.
-                    </p>
+                    {track.guide.map((paragraph) => (
+                      <p key={paragraph}>{paragraph}</p>
+                    ))}
                   </div>
                 )}
               </section>
@@ -413,9 +427,9 @@ export default function App() {
         {modal === 'settings' ? (
           <div className="settings">
             <p className="settings__help">
-              Usa el lector de pantalla de tu dispositivo, como TalkBack en Android, para escuchar la interfaz.
-              La voz integrada de Earthbeat está en desarrollo.
+              Puedes usar TalkBack en Android u otro lector de pantalla. La experiencia guiada ofrece un recorrido por pasos y una voz opcional de Earthbeat.
             </p>
+            <button type="button" onClick={onGuidedMode}>Activar experiencia guiada</button>
             <label>
               <input
                 type="checkbox"

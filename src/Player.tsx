@@ -14,6 +14,7 @@ type PlayerProps = {
   total: number
   onPrevious: () => void
   onNext: () => void
+  onBeforePlay?: () => void
 }
 
 type Icon = 'previous' | 'play' | 'pause' | 'next' | 'speaker' | 'muted'
@@ -73,6 +74,7 @@ export function Player({
   total,
   onPrevious,
   onNext,
+  onBeforePlay,
 }: PlayerProps) {
   const audioRef = useRef<HTMLAudioElement>(null)
   const [media, setMedia] = useState(() => initialMediaState(track.id))
@@ -81,6 +83,40 @@ export function Player({
   const [rate, setRate] = useState(1)
   const { current, duration, playing, error } =
     media.id === track.id ? media : initialMediaState(track.id)
+
+  // Pistas con escena sonora: el reproductor controla el motor de sonido del visor (iframe) por mensajes
+  const scene = Boolean(track.scene)
+  const volumeNow = useRef(volume / 100)
+  volumeNow.current = muted ? 0 : volume / 100
+  const sceneWindow = () =>
+    document.querySelector<HTMLIFrameElement>('iframe.escena-sonora')?.contentWindow ?? null
+  const sendScene = (message: Record<string, unknown>) => sceneWindow()?.postMessage(message, '*')
+
+  useEffect(() => {
+    if (!scene) return
+    let volumeSent = false
+    const onMessage = (event: MessageEvent) => {
+      const data = event.data
+      if (!data || data.eij !== 'estado' || event.source !== sceneWindow()) return
+      if (!volumeSent) {
+        volumeSent = true
+        sendScene({ eij: 'volumen', valor: volumeNow.current })
+      }
+      setMedia({
+        id: track.id,
+        current: Number(data.pos) || 0,
+        duration: Number(data.dur) || 0,
+        playing: Boolean(data.sonando),
+        error: '',
+      })
+    }
+    window.addEventListener('message', onMessage)
+    return () => window.removeEventListener('message', onMessage)
+  }, [scene, track.id])
+
+  useEffect(() => {
+    if (scene) sendScene({ eij: 'volumen', valor: muted ? 0 : volume / 100 })
+  }, [scene, volume, muted, track.id])
 
   useEffect(() => {
     const audio = audioRef.current
@@ -112,6 +148,11 @@ export function Player({
   }
 
   async function togglePlayback() {
+    onBeforePlay?.()
+    if (scene) {
+      sendScene({ eij: 'alternar' })
+      return
+    }
     const audio = audioRef.current
     if (!audio) return
     if (!audio.paused) {
@@ -136,6 +177,10 @@ export function Player({
   }
 
   function seek(to: number) {
+    if (scene) {
+      if (duration) sendScene({ eij: 'ir', fraccion: Math.min(duration, Math.max(0, to)) / duration })
+      return
+    }
     const audio = audioRef.current
     if (!audio || !duration) return
     audio.currentTime = Math.min(duration, Math.max(0, to))
@@ -158,7 +203,7 @@ export function Player({
       id="reproductor"
       tabIndex={-1}
     >
-      <audio
+      {!scene && <audio
         key={track.id}
         ref={audioRef}
         src={track.audio}
@@ -170,12 +215,12 @@ export function Player({
         onPause={syncMedia}
         onEnded={syncMedia}
         onError={syncMedia}
-      />
+      />}
       <div className="hh-player__track">
         <img src={track.image} alt="" width="52" height="52" />
         <div>
           <span className="hh-player__track-number">
-            Pista {digits(index + 1)} / {digits(total)} · Audio de prueba
+            Pista {digits(index + 1)} / {digits(total)} · {scene ? 'Motor de sonido' : 'Audio de prueba'}
           </span>
           <strong>{track.shortTitle}</strong>
         </div>
@@ -262,7 +307,8 @@ export function Player({
         </div>
         <select
           aria-label="Velocidad de reproducción"
-          title="Velocidad de reproducción"
+          title={scene ? 'La escena sonora tiene su propio tiempo' : 'Velocidad de reproducción'}
+          disabled={scene}
           value={rate}
           onChange={(event) => setRate(Number(event.currentTarget.value))}
         >

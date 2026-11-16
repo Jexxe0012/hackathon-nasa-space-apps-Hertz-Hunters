@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Océano · Earth Jukebox</title>
+<meta name="description" content="El mar frente a El Salvador durante un año, convertido en sonido. NASA SVS 3912 · Hertz Hunters.">
+<style>
+  :root {
+    --fondo: #f6f8fa; --tarjeta: #ffffff; --texto: #12202e; --suave: #4a5b6c; --borde: #c9d3dd;
+    --acento: #0b5cad; --acento-texto: #ffffff; --neutra: rgba(11, 92, 173, 0.14); --umbral: #b42318;
+    --foco: #f59e0b;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --fondo: #0d1520; --tarjeta: #152232; --texto: #e8eef5; --suave: #a7b6c6; --borde: #2c3e52;
+      --acento: #5aa9f0; --acento-texto: #0d1520; --neutra: rgba(90, 169, 240, 0.18); --umbral: #ff7b6e;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--fondo); color: var(--texto);
+    font: 17px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  main { max-width: 720px; margin: 0 auto; padding: 20px 16px 48px; }
+  h1 { font-size: 1.55rem; line-height: 1.25; margin: 4px 0 6px; }
+  h2 { font-size: 1.1rem; margin: 0 0 8px; }
+  p { margin: 0 0 10px; }
+  .disco { color: var(--suave); font-size: 0.9rem; margin: 0; letter-spacing: 0.02em; }
+  .zona-nombre { font-weight: 600; }
+  .aviso { color: var(--suave); font-size: 0.95rem; }
+  .tarjeta { background: var(--tarjeta); border: 1px solid var(--borde); border-radius: 12px; padding: 16px; margin: 14px 0; }
+  .fila { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+  .fila label { display: inline-flex; flex-wrap: wrap; gap: 8px; align-items: center; max-width: 100%; }
+  select { max-width: 100%; text-overflow: ellipsis; }
+  .fecha { font-size: 1.15rem; margin: 0; }
+  .temp { font-size: 2.6rem; font-weight: 700; line-height: 1.1; margin: 2px 0 4px; font-variant-numeric: tabular-nums; }
+  .estado { font-weight: 600; margin-bottom: 12px; }
+  .barra { position: relative; height: 22px; border-radius: 11px; background: var(--fondo); border: 1px solid var(--borde); margin: 6px 0 22px; }
+  .barra .neutra { position: absolute; top: 0; bottom: 0; background: var(--neutra); }
+  .barra .umbral { position: absolute; top: -4px; bottom: -4px; width: 2px; background: var(--umbral); }
+  .barra .relleno { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 11px 0 0 11px; background: var(--acento); opacity: 0.85; transition: width 0.15s linear; }
+  .barra .et { position: absolute; top: 24px; font-size: 0.78rem; color: var(--suave); transform: translateX(-50%); white-space: nowrap; }
+  input[type=range] { width: 100%; accent-color: var(--acento); height: 32px; }
+  button, select { font: inherit; min-height: 44px; border-radius: 10px; border: 1px solid var(--borde);
+    background: var(--tarjeta); color: var(--texto); padding: 8px 14px; cursor: pointer; }
+  button.principal { background: var(--acento); color: var(--acento-texto); border-color: var(--acento); font-weight: 600; }
+  button:disabled { opacity: 0.55; cursor: progress; }
+  :focus-visible { outline: 3px solid var(--foco); outline-offset: 2px; }
+  input[type=checkbox] { width: 22px; height: 22px; accent-color: var(--acento); }
+  .teclas { color: var(--suave); font-size: 0.95rem; margin-top: 10px; }
+  kbd { font: 0.85rem ui-monospace, monospace; border: 1px solid var(--borde); border-bottom-width: 2px; border-radius: 5px; padding: 1px 6px; background: var(--fondo); }
+  details summary { cursor: pointer; font-weight: 600; font-size: 1.05rem; min-height: 32px; }
+  details ul { padding-left: 1.2em; }
+  details li { margin-bottom: 8px; }
+  .ahora-explica { background: var(--fondo); border-radius: 8px; padding: 10px 12px; }
+  footer { color: var(--suave); font-size: 0.85rem; margin-top: 24px; }
+  .solo-lector { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+  .visual { margin: 0 0 12px; }
+  .paneles { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media (max-width: 560px) { .paneles { grid-template-columns: 1fr; } }
+  .globo { position: relative; aspect-ratio: 680 / 540; background: #000 center / 141.18% auto no-repeat; border-radius: 10px; overflow: hidden; }
+  .zoom { position: relative; aspect-ratio: 150 / 119; background-color: #000; background-repeat: no-repeat; border-radius: 10px; overflow: hidden;
+    outline: 2px solid rgba(255,255,255,.85); outline-offset: -2px; transition: box-shadow .12s ease-out; }
+  .zoom.pulso { box-shadow: inset 0 0 18px rgba(255,255,255,.55); }
+  .recuadro { position: absolute; border: 2px solid #fff; border-radius: 3px; box-shadow: 0 0 0 1px rgba(0,0,0,.6); }
+  .zona-medida { position: absolute; border: 2px dashed #fff; border-radius: 4px; box-shadow: 0 0 0 1px rgba(0,0,0,.45); transition: transform .12s ease-out; }
+  .zona-medida.pulso { transform: scale(1.18); }
+  .leyenda-mapa { font-size: .82rem; color: var(--suave); margin: 4px 0 0; line-height: 1.35; }
+  #curva { width: 100%; height: auto; display: block; margin-top: 8px; }
+  #curva .punto { transition: r .12s ease-out; }
+  @media (max-width: 480px) { .temp { font-size: 2.2rem; } .fila button { flex: 1 1 auto; } }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <p class="disco" data-t="disco"></p>
+    <h1 data-t="titulo"></h1>
+    <p><span data-t="zona_prefijo"></span> <span class="zona-nombre" id="zona-nombre"></span></p>
+    <p class="aviso" data-t="aviso"></p>
+    <div class="fila">
+      <label class="solo-pagina"><span data-t="idioma"></span>
+        <select id="idioma"><option value="es">Español</option><option value="en">English</option></select></label>
+      <label><span data-t="zona"></span>
+        <select id="zona"><option value="costa"></option><option value="caribe"></option></select></label>
+      <label><span data-t="instrumento"></span>
+        <select id="instrumento"><option value="piano"></option><option value="campana"></option></select></label>
+      <label><span data-t="mar"></span>
+        <input type="range" id="mar" min="-12" max="6" step="1" value="0" style="width:140px;height:28px"> <span id="mar-valor" aria-hidden="true">0 dB</span></label>
+    </div>
+  </header>
+
+  <section class="tarjeta" aria-labelledby="h-semana">
+    <h2 id="h-semana" class="solo-lector" data-t="h_semana"></h2>
+    <figure class="visual" aria-hidden="true">
+      <div class="paneles">
+        <div><div class="globo" id="globo"><div class="recuadro" id="recuadro"></div></div><p class="leyenda-mapa" data-t="mapa_globo"></p></div>
+        <div><div class="zoom" id="zoom"><div class="zona-medida" id="zona-medida"></div></div><p class="leyenda-mapa" id="leyenda-zoom"></p></div>
+      </div>
+      <svg id="curva" viewBox="0 0 480 150"></svg>
+    </figure>
+    <p class="fecha" id="fecha"></p>
+    <p class="temp" id="temp"></p>
+    <p class="estado" id="estado"></p>
+    <div class="barra" aria-hidden="true">
+      <div class="neutra" id="barra-neutra"></div>
+      <div class="relleno" id="barra-relleno"></div>
+      <div class="umbral" id="barra-umbral"></div>
+      <span class="et" id="et-min"></span><span class="et" id="et-umbral"></span><span class="et" id="et-max"></span>
+    </div>
+    <label for="semana" data-t="semana_control"></label>
+    <input type="range" id="semana" min="1" max="48" step="1" value="1">
+  </section>
+
+  <section class="tarjeta" aria-labelledby="h-controles">
+    <h2 class="solo-pagina" id="h-controles" data-t="h_controles"></h2>
+    <div class="fila">
+      <button type="button" class="solo-pagina principal" id="btn-demo"></button>
+      <button type="button" class="solo-pagina" id="btn-play"></button>
+      <button type="button" id="btn-prev"></button>
+      <button type="button" id="btn-next"></button>
+    </div>
+    <p class="solo-pagina teclas" id="teclas"></p>
+  </section>
+
+  <section class="tarjeta solo-pagina">
+    <details id="porque">
+      <summary data-t="porque"></summary>
+      <div id="porque-texto"></div>
+      <p class="ahora-explica" id="ahora-explica"></p>
+    </details>
+  </section>
+
+  <section class="tarjeta solo-pagina" aria-labelledby="h-exportar">
+    <h2 id="h-exportar" data-t="h_exportar"></h2>
+    <p data-t="exportar_texto"></p>
+    <button type="button" id="btn-exportar"></button>
+    <p id="estado-export" role="status"></p>
+  </section>
+
+  <div id="anuncio" class="solo-lector" aria-live="polite"></div>
+  <footer data-t="pie"></footer>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/tone@14.8.49/build/Tone.js"></script>
+<script>window.Tone || document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"><\/script>');</script>
+<script src="../comun/incrustado.js?v=6"></script>
+<script src="motor-oceano.js"></script>
+<script src="app.js?v=6"></script>
+</body>
+</html>

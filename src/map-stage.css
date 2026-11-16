@@ -124,3 +124,18 @@
     inset: 8px;
   }
 }
+
+/* Escena sonora interactiva (motor de sonido): alto automático según su contenido */
+.map-stage__field--escena {
+  height: auto;
+  padding: 14px 16px 12px;
+}
+.escena-sonora {
+  display: block;
+  width: 100%;
+  border: 0;
+  background: transparent;
+}
+@media (max-width: 600px) {
+  .map-stage__field--escena { height: auto; padding: 10px 8px; }
+}
