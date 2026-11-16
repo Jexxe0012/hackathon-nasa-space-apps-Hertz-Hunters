@@ -7,21 +7,16 @@
   const M = window.MotorLuces;
   const RUTA = '../datos/luces_radar.json';
 
-  // Fechas importantes (una por año). El mapa es el promedio del año: no muestra ese día.
+  // Fechas importantes. El mapa es el promedio del año: no muestra ese día.
+  // Solo 3 años: simulando las notas del radar, casi todos los años suenan como su vecino.
+  // Frente a 2020 (la fecha protagonista) solo 2012 y 2023 suenan claramente distintos
+  // (diferencia nota a nota 0,23 y 0,29; el siguiente, 2015, apenas 0,16). Entre 2012 y 2023: 0,42.
   const FECHAS = {
     2012: { es: ['El rover Curiosity llega a Marte', '6 de agosto de 2012 · y es el primer año de este mapa de luces'], en: ['The Curiosity rover lands on Mars', 'August 6, 2012 · and the first year of this night-lights map'] },
-    2013: { es: ['La NASA confirma que la Voyager 1 salió al espacio interestelar', 'septiembre de 2013'], en: ['NASA confirms Voyager 1 reached interstellar space', 'September 2013'] },
-    2014: { es: ['Philae, de la misión Rosetta, se posa sobre un cometa', '12 de noviembre de 2014'], en: ['Philae, from the Rosetta mission, lands on a comet', 'November 12, 2014'] },
-    2015: { es: ['New Horizons pasa junto a Plutón', '14 de julio de 2015'], en: ['New Horizons flies past Pluto', 'July 14, 2015'] },
-    2016: { es: ['La sonda Juno llega a Júpiter', '4 de julio de 2016'], en: ['The Juno probe arrives at Jupiter', 'July 4, 2016'] },
-    2017: { es: ['Gran eclipse total de Sol en Estados Unidos', '21 de agosto de 2017'], en: ['Great total solar eclipse across the United States', 'August 21, 2017'] },
-    2018: { es: ['Despega la sonda solar Parker', '12 de agosto de 2018'], en: ['The Parker Solar Probe launches', 'August 12, 2018'] },
-    2019: { es: ['Primera imagen de un agujero negro', '10 de abril de 2019'], en: ['First image of a black hole', 'April 10, 2019'] },
     2020: { es: ['Pandemia de COVID-19', 'la OMS la declara el 11 de marzo de 2020'], en: ['COVID-19 pandemic', 'declared by the WHO on March 11, 2020'] },
-    2021: { es: ['El rover Perseverance llega a Marte', '18 de febrero de 2021'], en: ['The Perseverance rover lands on Mars', 'February 18, 2021'] },
-    2022: { es: ['Primeras imágenes del telescopio James Webb', '12 de julio de 2022'], en: ['First images from the James Webb Space Telescope', 'July 12, 2022'] },
     2023: { es: ['OSIRIS-REx trae a la Tierra muestras del asteroide Bennu', '24 de septiembre de 2023'], en: ['OSIRIS-REx brings samples of asteroid Bennu to Earth', 'September 24, 2023'] },
   };
+  const LISTA = Object.keys(FECHAS).map(Number);
 
   const TXT = {
     es: {
@@ -188,7 +183,9 @@
       e.preventDefault(); alternar();
     } else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
       if (tag === 'SELECT') return;
-      e.preventDefault(); elegir(Math.max(2012, Math.min(2023, anio + (e.key === 'ArrowLeft' ? -1 : 1))));
+      e.preventDefault();
+      const i = LISTA.indexOf(anio) + (e.key === 'ArrowLeft' ? -1 : 1);
+      elegir(LISTA[Math.max(0, Math.min(LISTA.length - 1, i))]);
     }
   });
 
