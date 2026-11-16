@@ -4,6 +4,8 @@
 
 A Hertz Hunters project for the NASA Space Apps Challenge.
 
+[Open Earthbeat](https://jexxe0012.github.io/hackathon-nasa-space-apps-Hertz-Hunters/)
+
 Earthbeat turns four NASA Earth visualizations into stories you can explore through sound, clear descriptions, and keyboard controls. Designed primarily for blind and low-vision people, it starts with a guided experience and also offers a visual collection and interactive maps. The **Enfoque** design is implemented with React, TypeScript, and Vite, with restrained pixel art details and playback controls at the bottom. [Enfoque design in Figma](https://www.figma.com/design/4q6sU5VYc8qZHcr2rmdSLO?node-id=6-11720)
 
 Each track has a background inspired by its subject. High contrast uses a clean background, and reduced motion removes decorative animation.
@@ -25,6 +27,14 @@ npm run preview
 ```
 
 Images, fonts, sample MP3 files, and sound scenes are served by the project. The scenes load Tone.js and piano samples from the web. No API key is required. Python, Pillow, and FFmpeg are only needed to regenerate sample MP3 files with `python scripts/sonify.py`.
+
+## Automatic deployment to GitHub Pages
+
+Every push or merge to `main` runs [the Pages workflow](.github/workflows/pages.yml): it installs the locked dependencies, runs the localization tests, builds the app, and publishes `dist` to GitHub Pages. A failed test or build prevents deployment. The workflow can also be started manually from the Actions tab with `main` selected.
+
+The workflow reads the site's base path from GitHub Pages and passes it to Vite, so scripts, fonts, maps, and sound scenes load under the repository's URL. Local builds keep the relative base in `vite.config.ts`.
+
+Repository Settings → Pages must use **GitHub Actions** as its publishing source. Deployment uses the workflow's `GITHUB_TOKEN`; no personal access token or external hosting account is required. To publish a change, merge it into `main` and wait for both workflow jobs to pass. The public URL stays the same.
 
 ## Language and accessibility
 

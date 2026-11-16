@@ -30,6 +30,12 @@ npm run preview
 
 Las imágenes, las fuentes, los MP3 de prueba y las escenas sonoras se sirven desde el proyecto (las escenas cargan Tone.js y las muestras de piano desde la web). La aplicación funciona sin claves API. Python, Pillow y FFmpeg solo intervienen al regenerar los MP3 con `python scripts/sonify.py`.
 
+## Despliegue automático en GitHub Pages
+
+La página se publica en [Earthbeat](https://jexxe0012.github.io/hackathon-nasa-space-apps-Hertz-Hunters/). Cada push o merge a `main` ejecuta [el flujo de Pages](../.github/workflows/pages.yml): instala las dependencias, corre las pruebas de idiomas, compila Vite y publica `dist`. Si las pruebas o la compilación fallan, no se publica esa versión.
+
+En Settings → Pages, la fuente debe ser **GitHub Actions**. El flujo obtiene la ruta del sitio desde Pages para que fuentes, mapas, datos y escenas sonoras funcionen dentro de la URL del repositorio. No requiere tokens personales ni otra cuenta de hosting. También se puede iniciar manualmente desde Actions seleccionando `main`.
+
 ## Escuchar una imagen
 
 La primera visita abre la **experiencia guiada**, orientada a personas ciegas y con baja visión. Permite elegir entre el lector de pantalla del dispositivo y la voz opcional de Earthbeat. El recorrido lleva de la selección de historia a su contexto, escucha y límites de interpretación. El botón **Experiencia visual** abre la interfaz con colección y globo; desde esa vista se puede volver con **Experiencia guiada**. Se recuerda la experiencia elegida en este navegador.
