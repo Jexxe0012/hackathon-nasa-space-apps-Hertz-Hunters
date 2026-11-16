@@ -38,7 +38,7 @@ En el área de lectura de la experiencia guiada, después de comenzar, clic dere
 
 En **Colección** puedes elegir cualquiera de las cuatro pistas. **Sobre la pista** incluye su periodo, variable, procedencia y límites de interpretación. El visor muestra la imagen fuente de NASA.
 
-El reproductor aparece al seleccionar una pista y permanece disponible al regresar a la colección durante la misma visita.
+El reproductor aparece únicamente dentro de una experiencia sonora: al abrir una pista en la experiencia visual o al llegar al paso de escucha en la experiencia guiada. Al regresar al inicio o a la colección, sus controles y el enlace de salto al reproductor se ocultan.
 
 La bienvenida destaca una pregunta: «¿Cómo sonaban las luces del mundo durante la pandemia?». Al abrirla, la escena prepara el promedio de 2020 y ofrece comparar 2019 → 2020. La escucha empieza solo al pulsar Reproducir o Comparar. Se pueden cambiar tanto el año escuchado como el de referencia. El relato aporta contexto humano; los mapas anuales no permiten atribuir por sí solos una diferencia a la pandemia ni describen un día de confinamiento.
 

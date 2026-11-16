@@ -76,6 +76,7 @@ function VisualExperience({ onGuidedMode }: { onGuidedMode: () => void }) {
   const heading = useRef<HTMLHeadingElement>(null)
   const main = useRef<HTMLElement>(null)
   const track = tracks[selected]
+  const showPlayer = !view.welcome && !view.library && hasSelected
   const previousRoute = useRef(view.welcome ? 'welcome' : view.library ? 'collection' : track.id)
 
   useEffect(() => {
@@ -144,7 +145,7 @@ function VisualExperience({ onGuidedMode }: { onGuidedMode: () => void }) {
       >
         Ir a opciones de accesibilidad
       </a>
-      {!view.welcome && hasSelected && <a
+      {showPlayer && <a
         className="skip"
         href="#reproductor"
         onClick={(e) => {
@@ -400,7 +401,7 @@ function VisualExperience({ onGuidedMode }: { onGuidedMode: () => void }) {
           )}
         </main>
       </div>
-      {!view.welcome && hasSelected && <Player
+      {showPlayer && <Player
         track={track}
         index={selected}
         total={tracks.length}
