@@ -4,7 +4,7 @@
 (function () {
   'use strict';
   const M = window.MotorBosques;
-  const RUTA = '../../imagen-a-sonido/bosques_4950/resultados/bosques_radar.json';
+  const RUTA = '../datos/bosques_radar.json';
   const TXT = {
     es: {
       disco: 'Disco 4 · Bosques · NASA SVS 4950 (GEDI)',
@@ -190,6 +190,16 @@
     $('lugar').textContent = ''; lugarActual = '';
     requestAnimationFrame(bucle);
   }
+
+  // Modo incrustado (Earthbeat): el reproductor de la app manda
+  if (window.EIJ) EIJ.conectar({
+    alternar: () => alternar(),
+    ir: (f) => { const i = Math.floor(f * puntos.length); rep.pos = i; terminado = false; if (rep.sonando) escuchar(i); },
+    estado: () => {
+      const P = M.ARBOL.paso, n = puntos.length;
+      return { sonando: rep.sonando, pos: Math.min(n, rep.posicionEn(relojVisual())) * P, dur: n * P };
+    },
+  });
 
   window.BosquesApp = { generarWav, reproductor: rep };
   iniciar();

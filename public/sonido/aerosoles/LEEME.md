@@ -35,7 +35,7 @@ La leyenda **no tiene números**: el tipo sale del color más parecido y la cant
 
 ## Abrir
 
-`python -m http.server 8000` en la raíz del repo → `http://localhost:8000/sonido/aerosoles/`. Celular: `https://raw.githack.com/diegonoetorresvillatoro-netizen/hackathon-nasa-space-apps-Hertz-Hunters/fuentes/sonido/aerosoles/index.html`.
+`npm run dev` en la raíz del repo (app Earthbeat) → `http://localhost:5173/sonido/aerosoles/`. Celular: `https://raw.githack.com/diegonoetorresvillatoro-netizen/hackathon-nasa-space-apps-Hertz-Hunters/fuentes/public/sonido/aerosoles/index.html`.
 Teclado: Espacio reproducir/pausar, ← → cambiar de historia; tocar el mapa empieza ahí. Exportar WAV de la historia elegida.
 
 ## Datos y calidad

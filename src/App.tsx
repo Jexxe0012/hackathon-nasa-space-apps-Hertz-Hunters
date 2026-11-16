@@ -280,7 +280,7 @@ export default function App() {
                   <li><Icon name="book"/><div><h3>Lee la descripción</h3><p>Conoce qué muestra la imagen, su fuente y sus límites.</p></div></li>
                   <li><Icon name="headset"/><div><h3>Escucha la imagen</h3><p>Usa los controles para reproducir y recorrer una muestra sonora.</p></div></li>
                 </ol>
-                <p className="welcome__disclaimer">Los audios actuales son muestras basadas en el brillo de cada imagen.</p>
+                <p className="welcome__disclaimer">Cada disco suena con un motor que lee los datos de su imagen de la NASA. Si el dato no cambia, el sonido no cambia.</p>
               </section>
             </div>
           ) : view.library ? (
@@ -374,11 +374,9 @@ export default function App() {
                 ) : (
                   <div className="info-body">
                     <h2>Cómo se convierte en sonido</h2>
-                    <p>{listeningLegend}</p>
-                    <p>
-                      Usa el control de avance para volver a escuchar una zona
-                      de la imagen.
-                    </p>
+                    {track.guide.map((paragraph) => (
+                      <p key={paragraph}>{paragraph}</p>
+                    ))}
                   </div>
                 )}
               </section>

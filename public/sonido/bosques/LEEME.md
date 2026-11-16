@@ -20,4 +20,4 @@ El globo completo con el camino punteado y el punto actual; debajo, 16 barras qu
 
 `imagen-a-sonido/bosques_4950/leer_bosques.mjs` → `resultados/bosques_radar.json` → `transecto` (16 puntos: posición en la imagen, vegetación, altura aproximada). Luz del globo corregida con el brillo del mar cercano; alturas aproximadas: se dice "más alto / más bajo", sin metros. Medido sobre el WAV: ~−20 LUFS, 0 clics, sin saturación.
 
-Abrir: `python -m http.server 8000` → `http://localhost:8000/sonido/bosques/` · Teclado: Espacio, ← →. Imagen: NASA/SVS 4950. Piano: Salamander Grand Piano (CC BY 3.0).
+Abrir: `npm run dev` en la raíz del repo (app Earthbeat) → `http://localhost:5173/sonido/bosques/` · Teclado: Espacio, ← →. Imagen: NASA/SVS 4950. Piano: Salamander Grand Piano (CC BY 3.0).

@@ -5,7 +5,7 @@
 (function () {
   'use strict';
   const M = window.MotorLuces;
-  const RUTA = '../../imagen-a-sonido/luces_5276/resultados/luces_radar.json';
+  const RUTA = '../datos/luces_radar.json';
 
   // Fechas importantes (una por año). El mapa es el promedio del año: no muestra ese día.
   const FECHAS = {
@@ -214,6 +214,17 @@
     aplicarIdioma();
     requestAnimationFrame(bucle);
   }
+
+  // Modo incrustado (Earthbeat): el reproductor de la app manda
+  if (window.EIJ) EIJ.conectar({
+    alternar: () => alternar(),
+    ir: () => { /* el radar no salta: se reinicia con Reproducir */ },
+    estado: () => {
+      const segs = rep.est ? rep.est.segs.length : 1, dur = segs * M.RADAR.barrido + (segs - 1) * M.DEMO.pausa;
+      const pos = rep.est ? (rep.sonando ? rep.ahora - rep.est.segs[0].t0 : rep.posicion) : 0;
+      return { sonando: rep.sonando, pos: Math.max(0, Math.min(dur, pos)), dur };
+    },
+  });
 
   window.LucesApp = { generarWav, reproductor: rep };
   iniciar();

@@ -8,14 +8,10 @@ El mar frente a la costa salvadoreña ("frente a Surf City") durante un año sim
 
 La página carga un JSON, así que **no funciona con doble clic** (`file://`): necesita un servidor web, aunque sea local.
 
-- **En la computadora**, desde la raíz del repo:
-  ```bash
-  python -m http.server 8000
-  ```
-  y abrir `http://localhost:8000/sonido/oceano/`
-- **En el celular (misma red Wi‑Fi)**: `python -m http.server 8000 --bind 0.0.0.0` en la computadora, ver su IP con `ipconfig` y abrir `http://<IP>:8000/sonido/oceano/` (Windows puede pedir permiso de firewall: aceptar en redes privadas).
+- **En la computadora**, desde la raíz del repo: `npm ci` y `npm run dev`, y abrir `http://localhost:5173/sonido/oceano/` (sola) o la pista en la app Earthbeat (`#pista/corrientes-temperatura`)
+- **En el celular (misma red Wi‑Fi)**: `npm run dev -- --host` en la computadora, ver su IP con `ipconfig` y abrir `http://<IP>:5173/sonido/oceano/` (Windows puede pedir permiso de firewall: aceptar en redes privadas).
 - **En el celular, sin servidor** (repo público, rama `fuentes`):
-  `https://raw.githack.com/diegonoetorresvillatoro-netizen/hackathon-nasa-space-apps-Hertz-Hunters/fuentes/sonido/oceano/index.html`
+  `https://raw.githack.com/diegonoetorresvillatoro-netizen/hackathon-nasa-space-apps-Hertz-Hunters/fuentes/public/sonido/oceano/index.html`
 - Necesita internet (Tone.js y las muestras del piano vienen de la web). En iPhone, quitar el modo silencio.
 
 ## Uso

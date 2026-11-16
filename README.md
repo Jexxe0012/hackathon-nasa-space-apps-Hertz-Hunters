@@ -24,7 +24,7 @@ npm run build
 npm run preview
 ```
 
-Las imágenes, las fuentes y los MP3 se sirven desde el proyecto. La aplicación funciona sin claves API. Python, Pillow y FFmpeg solo intervienen al regenerar los MP3 con `python scripts/sonify.py`.
+Las imágenes, las fuentes, los MP3 de prueba y las escenas sonoras se sirven desde el proyecto (las escenas cargan Tone.js y las muestras de piano desde la web). La aplicación funciona sin claves API. Python, Pillow y FFmpeg solo intervienen al regenerar los MP3 con `python scripts/sonify.py`.
 
 ## Escuchar una imagen
 
@@ -38,9 +38,16 @@ En **Colección** puedes elegir cualquiera de las cuatro pistas. **Sobre la pist
 
 El reproductor aparece al seleccionar una pista y permanece disponible al regresar a la colección durante la misma visita.
 
-Al pulsar **Reproducir** se escucha una muestra provisional de 48 segundos. El generador divide la imagen fuente en 96 franjas verticales y calcula el brillo medio de cada una. Dentro de esa imagen, una franja más clara produce una nota más aguda. Cada nota dura medio segundo. El fondo y los rótulos también afectan al cálculo. Los tonos expresan brillo relativo y el contador indica tiempo de escucha. Diego Fuentes se encargará del diseño y la validación de los sonidos del proyecto.
+Cada pista muestra en el visor su **escena sonora**: el mapa de la NASA con una línea de escucha, sus historias y su curva o barras, todo sincronizado con el sonido. El reproductor del pie controla esa escena: **Reproducir**, la barra de avance y el volumen mueven el motor de sonido de la pista. Las escenas viven en `public/sonido/` (motor de Diego Fuentes, Tone.js) y leen datos ya extraídos de las imágenes (`public/sonido/datos/`, generados en `imagen-a-sonido/`).
 
-La propuesta del equipo distingue los discos temporales de océano y luces nocturnas de las imágenes estáticas de bosques y aerosoles. El reproductor actual reproduce muestras de audio y muestra una imagen por pista; la selección de fechas, la exploración espacial con teclado, el asistente y la interfaz bilingüe están pendientes de desarrollo. El mapa nocturno actual es la imagen Black Marble de 2016, usada como referencia visual mientras se integra la serie 2012–2023.
+| Pista | Qué se escucha |
+| --- | --- |
+| Corrientes y temperatura | El mar frente a El Salvador durante un año: olas y melodía de piano; más agudo = más caliente; espuma sobre 27 °C. |
+| Luces nocturnas | Una fecha importante de 2012–2023: un radar recorre el mundo de noche; donde hay luz suena el piano. Comparación con 2012. |
+| Aerosoles | Historias de un solo día (19 ago 2025): un instrumento por partícula (polvo, sal marina, sulfatos, carbono negro). |
+| Altura de bosques | Del corazón del Amazonas al borde donde se acaba el bosque alto: el piano «sube el árbol» en cada punto. |
+
+El principio de diseño: la emoción sigue al dato; si el dato no cambia, el sonido no cambia. Los límites de cada dato (modelo de un año, mapas promediados, alturas aproximadas) se explican en «Sobre la pista». Cada escena también se puede abrir sola en `sonido/<disco>/` (por ejemplo `sonido/oceano/`) con su opción para exportar el audio en WAV.
 
 Con **Tab** y **Mayús + Tab** se recorren los controles. Los primeros enlaces de salto llevan al contenido o al reproductor. Las flechas ajustan el avance y el volumen. **Ajustes** conserva las preferencias de contraste y movimiento en el navegador.
 
@@ -59,6 +66,6 @@ El catálogo y las descripciones están en [src/data.ts](src/data.ts). El genera
 
 ## Desarrollo en equipo
 
-Josué trabaja en el diseño y la interfaz accesible. Diego Fuentes se encarga de los sonidos y Diego del bot guía. El backend lo desarrollará el integrante asignado por el equipo. Las sonificaciones actuales son una base de prueba pendiente de revisión por Diego Fuentes.
+Josué trabaja en el diseño y la interfaz accesible. Diego Fuentes se encarga de los sonidos y Diego del bot guía. El backend lo desarrollará el integrante asignado por el equipo. Los sonidos de las cuatro pistas son los motores de Diego Fuentes (rama `fuentes`).
 
 Agrupamos los cambios por tarea en ramas de trabajo. Usamos mensajes como `feat(datos)`, `feat(reproductor)`, `fix(accesibilidad)` y `docs(readme)`. Cuando una tarea cambia lo que puede hacer la aplicación o cómo ejecutarla, actualizamos este README.

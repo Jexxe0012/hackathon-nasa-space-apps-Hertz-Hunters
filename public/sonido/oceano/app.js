@@ -5,7 +5,7 @@
 (function () {
   'use strict';
   const M = window.MotorOceano;
-  const RUTA_DATOS = '../../imagen-a-sonido/oceano_3912/resultados/oceano_3912_costa.json';
+  const RUTA_DATOS = '../datos/oceano_3912_costa.json';
   const BARRA = { min: 25, max: 30 }; // escala de la barra visual (°C)
 
   const TXT = {
@@ -484,6 +484,27 @@
   }
 
   // Para pruebas y para el video: genera el WAV sin descargarlo.
+  // Modo incrustado (Earthbeat): el reproductor de la app manda; sin mover el foco del teclado
+  if (window.EIJ) EIJ.conectar({
+    alternar: async () => {
+      if (rep.sonando) { rep.pausar(); return; }
+      if (!rep.motor) { await rep.iniciarDemo(); return; }
+      if (rep.modo !== 'demo') { rep.modo = 'demo'; rep.posDemo = rep.semana >= serie.length - 1 ? 0 : rep.semana; }
+      await rep.reproducir();
+    },
+    ir: (f) => {
+      const n = serie.length, estaba = rep.sonando;
+      if (estaba) rep.pausar();
+      rep.modo = 'demo'; rep.posDemo = f * n; rep.semana = Math.min(n - 1, Math.floor(f * n));
+      if (estaba) rep.reproducir(); else mostrar(rep.semana, true);
+    },
+    estado: () => {
+      const n = serie.length, D = M.DEMO.semana;
+      const p = rep.modo === 'demo' && rep.est ? (rep.sonando ? (rep.ahora - rep.est.t0) / D : rep.posDemo) : rep.semana;
+      return { sonando: rep.sonando, pos: Math.max(0, Math.min(n, p)) * D, dur: n * D };
+    },
+  });
+
   window.OceanoApp = { generarWav, reproductor: rep };
 
   iniciar();

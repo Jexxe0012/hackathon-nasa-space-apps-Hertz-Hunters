@@ -78,7 +78,7 @@
     <p><span data-t="zona_prefijo"></span> <span class="zona-nombre" id="zona-nombre"></span></p>
     <p class="aviso" data-t="aviso"></p>
     <div class="fila">
-      <label><span data-t="idioma"></span>
+      <label class="solo-pagina"><span data-t="idioma"></span>
         <select id="idioma"><option value="es">Español</option><option value="en">English</option></select></label>
       <label><span data-t="zona"></span>
         <select id="zona"><option value="costa"></option><option value="caribe"></option></select></label>
@@ -112,17 +112,17 @@
   </section>
 
   <section class="tarjeta" aria-labelledby="h-controles">
-    <h2 id="h-controles" data-t="h_controles"></h2>
+    <h2 class="solo-pagina" id="h-controles" data-t="h_controles"></h2>
     <div class="fila">
-      <button type="button" class="principal" id="btn-demo"></button>
-      <button type="button" id="btn-play"></button>
+      <button type="button" class="solo-pagina principal" id="btn-demo"></button>
+      <button type="button" class="solo-pagina" id="btn-play"></button>
       <button type="button" id="btn-prev"></button>
       <button type="button" id="btn-next"></button>
     </div>
-    <p class="teclas" id="teclas"></p>
+    <p class="solo-pagina teclas" id="teclas"></p>
   </section>
 
-  <section class="tarjeta">
+  <section class="tarjeta solo-pagina">
     <details id="porque">
       <summary data-t="porque"></summary>
       <div id="porque-texto"></div>
@@ -130,7 +130,7 @@
     </details>
   </section>
 
-  <section class="tarjeta" aria-labelledby="h-exportar">
+  <section class="tarjeta solo-pagina" aria-labelledby="h-exportar">
     <h2 id="h-exportar" data-t="h_exportar"></h2>
     <p data-t="exportar_texto"></p>
     <button type="button" id="btn-exportar"></button>
@@ -142,6 +142,7 @@
 </main>
 <script src="https://cdn.jsdelivr.net/npm/tone@14.8.49/build/Tone.js"></script>
 <script>window.Tone || document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"><\/script>');</script>
+<script src="../comun/incrustado.js?v=4"></script>
 <script src="motor-oceano.js"></script>
 <script src="app.js"></script>
 </body>

@@ -21,7 +21,7 @@ Una línea recorre el mapa de oeste a este (de América a Asia) en 12 segundos y
 
 ## Cómo abrirla
 
-Desde la raíz del repo `python -m http.server 8000` → `http://localhost:8000/sonido/luces/`. Celular: `https://raw.githack.com/diegonoetorresvillatoro-netizen/hackathon-nasa-space-apps-Hertz-Hunters/fuentes/sonido/luces/index.html`.
+Desde la raíz del repo `npm run dev` en la raíz del repo (app Earthbeat) → `http://localhost:5173/sonido/luces/`. Celular: `https://raw.githack.com/diegonoetorresvillatoro-netizen/hackathon-nasa-space-apps-Hertz-Hunters/fuentes/public/sonido/luces/index.html`.
 Teclado: Espacio reproducir/pausar, ← → cambiar de fecha. Exportar WAV (2012 + año elegido).
 
 ## Datos

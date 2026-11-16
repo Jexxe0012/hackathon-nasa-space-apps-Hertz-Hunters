@@ -6,7 +6,7 @@
 (function () {
   'use strict';
   const M = window.MotorAerosoles;
-  const RUTA = '../../imagen-a-sonido/aerosoles_5669/resultados/aerosoles_radar.json';
+  const RUTA = '../datos/aerosoles_radar.json';
   const COLOR = { carbono_negro: '#d2614a', polvo: '#c29bda', sal_marina: '#85aaa8', sulfatos: '#52dc34' };
   const EL_SALVADOR = { lon: -89.1, lat: 13.7 };
 
@@ -294,6 +294,20 @@
     mostrarHistoria();
     requestAnimationFrame(bucle);
   }
+
+  // Modo incrustado (Earthbeat): el reproductor de la app manda
+  if (window.EIJ) EIJ.conectar({
+    alternar: () => alternar(),
+    ir: (f) => { if (datos && recorridoDe(hist).tramos.length === 1) escuchar({ tramo: 0, fraccion: f }); },
+    estado: () => {
+      if (!datos) return { sonando: false, pos: 0, dur: 0 };
+      const rec = recorridoDe(hist), dur = rec.tramos.reduce((s, tr) => s + tr.barrido, 0) + 0.8 * (rec.tramos.length - 1);
+      const l = rep.linea(relojVisual()), tr = rec.tramos[l.tramo] || rec.tramos[0];
+      let pos = l.fraccion * tr.barrido;
+      for (let i = 0; i < l.tramo; i++) pos += rec.tramos[i].barrido + 0.8;
+      return { sonando: rep.sonando, pos: Math.min(dur, pos), dur };
+    },
+  });
 
   window.AerosolesApp = { generarWav, reproductor: rep, HISTORIAS };
   iniciar();
