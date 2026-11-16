@@ -1,77 +1,114 @@
 /*
- * Disco Aerosoles: un radar recorre el mapa de partículas del aire del 19/08/2025 y cada tipo suena con su
- * instrumento (motor-aerosoles.js). Sin voz (la pone el bot).
+ * Disco Aerosoles: "Un día en el aire del planeta · 19 de agosto de 2025", contado en historias.
+ * Cada historia recorre una zona del mapa con el radar y su instrumento al frente (motor-aerosoles.js).
+ * Sin voz (la pone el bot).
  */
 (function () {
   'use strict';
   const M = window.MotorAerosoles;
   const RUTA = '../../imagen-a-sonido/aerosoles_5669/resultados/aerosoles_radar.json';
   const COLOR = { carbono_negro: '#d2614a', polvo: '#c29bda', sal_marina: '#85aaa8', sulfatos: '#52dc34' };
+  const EL_SALVADOR = { lon: -89.1, lat: 13.7 };
 
-  // Historias que destaca la NASA en esta imagen, por longitud (la línea las va mostrando al pasar)
+  // zona = [lon oeste, lon este, lat sur, lat norte]; dir −1 = la línea va de este a oeste (como el viento)
   const HISTORIAS = [
-    { lon: [-160, -148], es: 'Hilo verde: gases del volcán Kilauea (Hawái) → marimba', en: 'Green thread: gases from Kilauea volcano (Hawaii) → marimba' },
-    { lon: [-82, -64], es: 'Remolino: el huracán Erin levanta sal marina → campanitas', en: 'Swirl: Hurricane Erin lifts sea salt → little bells' },
-    { lon: [-62, -18], es: 'Franja lila: polvo del Sahara cruzando el Atlántico hacia el Caribe → arena', en: 'Lilac band: Saharan dust crossing the Atlantic toward the Caribbean → sand' },
-    { lon: [-10, 0], es: 'Manchas rojas: incendios en España → piano grave', en: 'Red patches: wildfires in Spain → low piano' },
-    { lon: [0, 12], es: 'El polvo sale del Sahara, sobre África → arena', en: 'Dust leaves the Sahara, over Africa → sand' },
-    { lon: [12, 18], es: 'Hilo verde: volcán Etna (Italia) · más al sur, humo de quemas en África', en: 'Green thread: Etna volcano (Italy) · further south, smoke from fires in Africa' },
-    { lon: [18, 36], es: 'Rojo-naranja: quemas en el sur de África → piano grave', en: 'Red-orange: fires in southern Africa → low piano' },
-    { lon: [40, 62], es: 'Lila: polvo de Arabia y Medio Oriente → arena', en: 'Lilac: dust over Arabia and the Middle East → sand' },
-    { lon: [110, 150], es: 'Remolinos azules al sur: sal marina del océano Austral → campanitas', en: 'Blue swirls in the south: sea salt over the Southern Ocean → little bells' },
+    { id: 'polvo', ganancia: 3.5, tramos: [{ zona: [-100, 25, -2, 38], dir: -1, tipos: ['polvo'], barrido: 14, img: 'polvo', pin: true }],
+      es: ['El viaje del polvo del Sahara', 'El radar sigue al viento: de África hacia nosotros (de derecha a izquierda). Solo suena el polvo: soplido de arena.'],
+      en: ['The journey of Saharan dust', 'The radar follows the wind: from Africa toward us (right to left). Only dust plays: a sand breath.'],
+      textos: [
+        { lon: [-15, 25], es: 'El polvo se levanta del Sahara', en: 'Dust rises from the Sahara' },
+        { lon: [-58, -15], es: 'Cruza el Atlántico empujado por los vientos alisios', en: 'It crosses the Atlantic, pushed by the trade winds' },
+        { lon: [-70, -58], es: 'Llega al Caribe oriental: unos 5.000 km de viaje', en: 'It reaches the eastern Caribbean: a ~5,000 km journey' },
+        { lon: [-100, -70], es: 'Aquí ya no hay polvo: ese día se detuvo a unos 2.700 km de El Salvador', en: 'No more dust here: that day it stopped ~2,700 km from El Salvador' },
+      ] },
+    { id: 'local', ganancia: 6, tramos: [{ zona: [-96, -78, 6, 22], dir: 1, tipos: null, barrido: 8, img: 'centroamerica', pin: true }],
+      es: ['El aire sobre El Salvador ese día', 'Suenan los 4 tipos. Sobre Centroamérica había sulfatos (marimba) y nada de polvo del Sahara.'],
+      en: ['The air over El Salvador that day', 'All 4 types play. Over Central America there was sulfate (marimba) and no Saharan dust.'],
+      textos: [{ lon: [-96, -78], es: 'Sobre Centroamérica: sulfatos (marimba); sin polvo del Sahara', en: 'Over Central America: sulfate (marimba); no Saharan dust' }] },
+    { id: 'erin', ganancia: 4.5, tramos: [{ zona: [-88, -58, 12, 40], dir: 1, tipos: ['sal_marina', 'polvo'], barrido: 9, img: 'erin' }],
+      es: ['El huracán Erin', 'El remolino levanta sal marina (campanitas) y jala polvo del Sahara (arena).'],
+      en: ['Hurricane Erin', 'The swirl lifts sea salt (little bells) and pulls in Saharan dust (sand).'],
+      textos: [{ lon: [-88, -58], es: 'Huracán Erin: sal marina y polvo girando juntos', en: 'Hurricane Erin: sea salt and dust swirling together' }] },
+    { id: 'volcanes', ganancia: 4, tramos: [
+        { zona: [-172, -138, 4, 34], dir: 1, tipos: ['sulfatos'], barrido: 6, img: 'kilauea' },
+        { zona: [0, 32, 26, 52], dir: 1, tipos: ['sulfatos'], barrido: 6, img: 'etna' }],
+      es: ['Volcanes que respiran: Kilauea y Etna', 'Hilos de sulfatos (marimba). Primero Hawái, después Italia.'],
+      en: ['Breathing volcanoes: Kilauea and Etna', 'Threads of sulfate (marimba). First Hawaii, then Italy.'],
+      textos: [
+        { tramo: 0, es: 'Kilauea (Hawái): sus gases se vuelven sulfatos', en: 'Kilauea (Hawaii): its gases become sulfate' },
+        { tramo: 1, es: 'Etna (Italia) y, alrededor, sulfatos de la industria de Europa', en: 'Etna (Italy) and, around it, sulfate from European industry' }] },
+    { id: 'incendios', ganancia: 1.5, tramos: [
+        { zona: [-12, 6, 34, 46], dir: 1, tipos: ['carbono_negro'], barrido: 5, img: 'espana' },
+        { zona: [8, 40, -22, 4], dir: 1, tipos: ['carbono_negro'], barrido: 7, img: 'africa' }],
+      es: ['Incendios: España y el sur de África', 'Humo con carbono negro (piano grave).'],
+      en: ['Fires: Spain and southern Africa', 'Smoke with black carbon (low piano).'],
+      textos: [{ tramo: 0, es: 'Incendios en España', en: 'Wildfires in Spain' }, { tramo: 1, es: 'Quemas en el sur de África', en: 'Fires in southern Africa' }] },
+    { id: 'todo', global: true,
+      es: ['Todo el planeta', 'El radar recorre el mundo completo con los 4 instrumentos (de izquierda a derecha).'],
+      en: ['The whole planet', 'The radar sweeps the whole world with all 4 instruments (left to right).'],
+      textos: [
+        { lon: [-160, -148], es: 'Hilo verde: volcán Kilauea (Hawái) → marimba', en: 'Green thread: Kilauea volcano (Hawaii) → marimba' },
+        { lon: [-82, -64], es: 'Remolino: huracán Erin → campanitas y arena', en: 'Swirl: Hurricane Erin → bells and sand' },
+        { lon: [-62, -18], es: 'Franja lila: polvo del Sahara sobre el Atlántico → arena', en: 'Lilac band: Saharan dust over the Atlantic → sand' },
+        { lon: [-10, 0], es: 'Rojo: incendios en España → piano grave', en: 'Red: wildfires in Spain → low piano' },
+        { lon: [12, 18], es: 'Verde: volcán Etna (Italia) → marimba', en: 'Green: Etna volcano (Italy) → marimba' },
+        { lon: [18, 36], es: 'Rojo-naranja: quemas en el sur de África → piano grave', en: 'Red-orange: fires in southern Africa → low piano' },
+        { lon: [40, 62], es: 'Lila: polvo de Arabia y Medio Oriente → arena', en: 'Lilac: dust over Arabia and the Middle East → sand' },
+        { lon: [110, 150], es: 'Remolinos azules: sal marina del océano Austral → campanitas', en: 'Blue swirls: sea salt over the Southern Ocean → bells' },
+      ] },
   ];
 
   const TXT = {
     es: {
       disco: 'Disco 3 · Aerosoles · NASA SVS 5669',
-      titulo: 'Escucha lo que flota en el aire del planeta',
-      aviso: 'Las partículas del aire de todo el mundo el 19 de agosto de 2025, a las 2 p.m. de El Salvador (modelo GEOS de la NASA). Cada tipo de partícula suena con su propio instrumento.',
-      idioma: 'Idioma · Language', h_mapa: 'El radar', leyenda: 'Tipos de partícula (prende o apaga cada uno)',
+      titulo: 'Un día en el aire del planeta',
+      aviso: 'Las partículas del aire de todo el mundo el 19 de agosto de 2025, a las 2 p.m. de El Salvador (modelo GEOS de la NASA). Elige una historia: cada tipo de partícula suena con su propio instrumento.',
+      idioma: 'Idioma · Language', historia_lbl: 'Historia', leyenda: 'Tipos de partícula (prende o apaga cada uno)',
       tipos: {
         polvo: ['Polvo', 'desiertos · soplido de arena'], sal_marina: ['Sal marina', 'el mar · campanitas'],
         sulfatos: ['Sulfatos', 'industria y volcanes · marimba'], carbono_negro: ['Carbono negro', 'humo de incendios · piano grave'],
       },
-      escuchar: 'Escuchar el planeta (15 s)', reproducir: 'Reproducir', pausar: 'Pausar',
-      teclas: 'Teclado: <kbd>Espacio</kbd> reproducir o pausar · <kbd>←</kbd> <kbd>→</kbd> mover el radar · también puedes tocar el mapa para empezar ahí',
+      escuchar: 'Escuchar la historia ({seg} s)', reproducir: 'Reproducir', pausar: 'Pausar',
+      teclas: 'Teclado: <kbd>Espacio</kbd> reproducir o pausar · <kbd>←</kbd> <kbd>→</kbd> cambiar de historia · también puedes tocar el mapa para empezar ahí',
       porque: '¿Por qué suena así?',
-      h_exportar: 'Exportar audio', exportar_texto: 'Genera el recorrido completo (con los tipos que tengas prendidos) como WAV, con el mismo motor que escuchas aquí.',
+      h_exportar: 'Exportar audio', exportar_texto: 'Genera la historia elegida como WAV, con el mismo motor que escuchas aquí.',
       exportar: 'Exportar en WAV', exportando: 'Generando el audio…', exportado: 'Listo: {archivo} ({seg} s).', export_error: 'No se pudo generar el audio: {error}',
-      fin: 'Fin del recorrido.', cargando: 'Cargando datos…', error_datos: 'No se pudieron cargar los datos. Abre la página desde un servidor web (ver LEEME.md).',
+      fin: 'Fin de la historia.', cargando: 'Cargando datos…', error_datos: 'No se pudieron cargar los datos. Abre la página desde un servidor web (ver LEEME.md).',
       pie: 'Datos e imagen: NASA Scientific Visualization Studio, SVS 5669 (modelo GEOS FP, NASA GMAO). Piano: Salamander Grand Piano (Alexander Holm, CC BY 3.0). Hertz Hunters · NASA Space Apps Challenge 2026 · San Salvador.',
       porque_lista: [
-        '<strong>Qué escuchas.</strong> Las partículas que flotan en el aire de todo el planeta el 19 de agosto de 2025 a las 2 p.m. de El Salvador, según el modelo GEOS de la NASA (combina satélites, estaciones y observaciones del clima). Es un modelo, no una foto.',
-        '<strong>El radar.</strong> La línea recorre el mapa de oeste a este en 15 segundos y suena lo que toca. El sonido viaja de izquierda a derecha con ella.',
-        '<strong>Cada tipo, su instrumento:</strong> polvo = soplido de arena; sal marina = campanitas de agua; sulfatos = marimba; carbono negro (hollín de incendios) = piano grave. Puedes prender y apagar cada uno para escucharlo solo.',
-        '<strong>Norte agudo, sur grave</strong>, cada instrumento en su registro.',
-        '<strong>Más intenso el color = más fuerte y más seguido.</strong> Donde no hay ese tipo, su instrumento calla.',
-        '<strong>Sin números, a propósito.</strong> La leyenda de la NASA solo dice qué tipo es; la cantidad se nota en lo brillante del color. Cada tipo tiene su propia escala: no comparamos cuánto polvo con cuánta sal.',
+        '<strong>Qué escuchas.</strong> Las partículas que flotan en el aire el 19 de agosto de 2025 a las 2 p.m. de El Salvador, según el modelo GEOS de la NASA (combina satélites, estaciones y observaciones del clima). Es un modelo de un solo momento, no una foto ni un promedio.',
+        '<strong>El radar.</strong> Una línea recorre la zona de la historia y suena lo que toca. El sonido viaja con ella (izquierda/derecha). En el viaje del polvo, la línea va de este a oeste, como el viento.',
+        '<strong>Cada tipo, su instrumento:</strong> polvo = soplido de arena; sal marina = campanitas; sulfatos = marimba; carbono negro (hollín de incendios) = piano grave.',
+        '<strong>Norte agudo, sur grave.</strong> Más intenso el color = más fuerte y más seguido. Donde no hay ese tipo, su instrumento calla: el silencio también es dato.',
+        '<strong>Sin números, a propósito.</strong> La leyenda de la NASA solo dice qué tipo es; la cantidad se nota en lo brillante del color. Cada tipo tiene su propia escala.',
+        '<strong>Lo que dicen los datos sobre nosotros:</strong> ese día el polvo del Sahara llegó al Caribe oriental y se detuvo a unos 2.700 km de El Salvador; sobre el país había sulfatos. Otros días del verano el polvo sí puede llegar a Centroamérica, pero esta imagen no lo muestra.',
         '<strong>Aproximaciones:</strong> donde se mezclan dos tipos, cuenta el color que domina; las luces de las ciudades y la tierra gris se descartan.',
       ],
       decimal: ',',
     },
     en: {
       disco: 'Disc 3 · Aerosols · NASA SVS 5669',
-      titulo: 'Listen to what floats in the planet\'s air',
-      aviso: 'Airborne particles over the whole world on August 19, 2025, at 2 p.m. El Salvador time (NASA GEOS model). Each particle type plays its own instrument.',
-      idioma: 'Idioma · Language', h_mapa: 'The radar', leyenda: 'Particle types (turn each on or off)',
+      titulo: 'One day in the planet\'s air',
+      aviso: 'Airborne particles over the whole world on August 19, 2025, at 2 p.m. El Salvador time (NASA GEOS model). Pick a story: each particle type plays its own instrument.',
+      idioma: 'Idioma · Language', historia_lbl: 'Story', leyenda: 'Particle types (turn each on or off)',
       tipos: {
         polvo: ['Dust', 'deserts · sand breath'], sal_marina: ['Sea salt', 'the sea · little bells'],
         sulfatos: ['Sulfate', 'industry and volcanoes · marimba'], carbono_negro: ['Black carbon', 'wildfire smoke · low piano'],
       },
-      escuchar: 'Listen to the planet (15 s)', reproducir: 'Play', pausar: 'Pause',
-      teclas: 'Keyboard: <kbd>Space</kbd> play or pause · <kbd>←</kbd> <kbd>→</kbd> move the radar · you can also tap the map to start there',
+      escuchar: 'Listen to the story ({seg} s)', reproducir: 'Play', pausar: 'Pause',
+      teclas: 'Keyboard: <kbd>Space</kbd> play or pause · <kbd>←</kbd> <kbd>→</kbd> change story · you can also tap the map to start there',
       porque: 'Why does it sound like this?',
-      h_exportar: 'Export audio', exportar_texto: 'Renders the full sweep (with the types you have on) as a WAV file, with the same engine you hear here.',
+      h_exportar: 'Export audio', exportar_texto: 'Renders the chosen story as a WAV file, with the same engine you hear here.',
       exportar: 'Export as WAV', exportando: 'Rendering audio…', exportado: 'Done: {archivo} ({seg} s).', export_error: 'Could not render the audio: {error}',
-      fin: 'End of the sweep.', cargando: 'Loading data…', error_datos: 'Could not load the data. Open the page from a web server (see LEEME.md).',
+      fin: 'End of the story.', cargando: 'Loading data…', error_datos: 'Could not load the data. Open the page from a web server (see LEEME.md).',
       pie: 'Data and image: NASA Scientific Visualization Studio, SVS 5669 (GEOS FP model, NASA GMAO). Piano: Salamander Grand Piano (Alexander Holm, CC BY 3.0). Hertz Hunters · NASA Space Apps Challenge 2026 · San Salvador.',
       porque_lista: [
-        '<strong>What you hear.</strong> The particles floating in the air over the whole planet on August 19, 2025 at 2 p.m. El Salvador time, according to NASA\'s GEOS model (it combines satellites, ground stations and weather observations). It is a model, not a photo.',
-        '<strong>The radar.</strong> The line sweeps the map from west to east in 15 seconds and plays what it touches. The sound travels left to right with it.',
-        '<strong>Each type, its instrument:</strong> dust = sand breath; sea salt = little water bells; sulfate = marimba; black carbon (wildfire soot) = low piano. Turn each one on or off to hear it alone.',
-        '<strong>North high, south low</strong>, each instrument in its own register.',
-        '<strong>More intense color = louder and more frequent.</strong> Where a type is absent, its instrument is silent.',
-        '<strong>No numbers, on purpose.</strong> NASA\'s legend only says which type it is; the amount shows in how bright the color is. Each type has its own scale: we don\'t compare how much dust with how much salt.',
+        '<strong>What you hear.</strong> The particles floating in the air on August 19, 2025 at 2 p.m. El Salvador time, according to NASA\'s GEOS model (it combines satellites, ground stations and weather observations). It is a model of a single moment, not a photo or an average.',
+        '<strong>The radar.</strong> A line sweeps the story\'s area and plays what it touches. The sound moves with it (left/right). In the dust journey, the line goes east to west, like the wind.',
+        '<strong>Each type, its instrument:</strong> dust = sand breath; sea salt = little bells; sulfate = marimba; black carbon (wildfire soot) = low piano.',
+        '<strong>North high, south low.</strong> More intense color = louder and more frequent. Where a type is absent, its instrument is silent: silence is data too.',
+        '<strong>No numbers, on purpose.</strong> NASA\'s legend only says which type it is; the amount shows in how bright the color is. Each type has its own scale.',
+        '<strong>What the data says about us:</strong> that day Saharan dust reached the eastern Caribbean and stopped ~2,700 km from El Salvador; over the country there was sulfate. On other summer days dust can reach Central America, but this image does not show it.',
         '<strong>Approximations:</strong> where two types mix, the dominant color counts; city lights and gray land are discarded.',
       ],
       decimal: '.',
@@ -80,18 +117,42 @@
 
   const $ = (id) => document.getElementById(id);
   const rep = new M.Reproductor();
-  let idioma = 'es', datos = null, posicion = 0, terminado = false;
+  let idioma = 'es', datos = null, hist = HISTORIAS[0], terminado = false;
+  const recorridos = {};
   const L = () => TXT[idioma];
   function t(clave, vars) { let s = L()[clave]; if (vars) for (const k in vars) s = s.split('{' + k + '}').join(vars[k]); return s; }
   const num = (x, d) => x.toFixed(d).replace('.', L().decimal);
+
+  // Recorte de la malla fina para la zona de un tramo (columnas en el sentido del recorrido)
+  function subMalla(zona, dir) {
+    const fn = datos.fina, C = fn.columnas, F = fn.filas, dLon = 360 / C, dLat = (datos.lat_norte - datos.lat_sur) / F;
+    const cols = [], filas = [];
+    for (let c = 0; c < C; c++) { const lo = -180 + (c + 0.5) * dLon; if (lo >= zona[0] && lo <= zona[1]) cols.push(c); }
+    for (let f = 0; f < F; f++) { const la = datos.lat_norte - (f + 0.5) * dLat; if (la >= zona[2] && la <= zona[3]) filas.push(f); }
+    if (dir < 0) cols.reverse();
+    const out = {};
+    M.TIPOS.forEach((tp) => { out[tp] = cols.map((c) => filas.map((f) => fn.tipos[tp][c][f])); });
+    return out;
+  }
+  function recorridoDe(h) {
+    if (recorridos[h.id]) return recorridos[h.id];
+    const rec = h.global
+      ? { tramos: [{ mallas: datos.tipos, cpp: 2, barrido: 15, dir: 1, estirar: false, tipos: null, zona: [-180, 180, datos.lat_sur, datos.lat_norte], img: null }] }
+      : { tramos: h.tramos.map((tr) => Object.assign({}, tr, { mallas: subMalla(tr.zona, tr.dir), cpp: 1, estirar: true })) };
+    rec.ganancia = h.ganancia || 0; // dB: iguala el volumen de las historias con pocos instrumentos (medido)
+    recorridos[h.id] = rec;
+    return rec;
+  }
 
   function aplicarIdioma() {
     document.documentElement.lang = idioma;
     document.querySelectorAll('[data-t]').forEach((el) => { el.textContent = t(el.dataset.t); });
     $('teclas').innerHTML = t('teclas');
-    $('btn-escuchar').textContent = t('escuchar');
     $('btn-exportar').textContent = t('exportar');
     $('porque-texto').innerHTML = '<ul>' + L().porque_lista.map((x) => '<li>' + x + '</li>').join('') + '</ul>';
+    const sel = $('historia-sel');
+    sel.innerHTML = HISTORIAS.map((h) => `<option value="${h.id}">${h[idioma][0]}</option>`).join('');
+    sel.value = hist.id;
     const ley = $('leyenda'), leg = ley.querySelector('legend');
     ley.innerHTML = ''; ley.appendChild(leg);
     M.TIPOS.forEach((tipo) => {
@@ -101,7 +162,40 @@
       lab.querySelector('input').addEventListener('change', (e) => rep.activar(tipo, e.target.checked));
       ley.appendChild(lab);
     });
+    mostrarHistoria();
+  }
+
+  function mostrarHistoria() {
+    $('h-mapa').textContent = hist[idioma][0];
+    $('sub').textContent = hist[idioma][1];
+    if (datos) $('btn-escuchar').textContent = t('escuchar', { seg: Math.round(M.duracionRecorrido(recorridoDe(hist)) - M.DEMO.entrada - M.DEMO.salida) });
+    tramoMostrado = -1;
+    if (datos && !rep.sonando) ponerVisual({ tramo: 0, fraccion: 0 });
     actualizarBotonPlay(true);
+  }
+
+  let tramoMostrado = -1, textoActual = null;
+  function ponerVisual(l) {
+    const rec = recorridoDe(hist), tr = rec.tramos[l.tramo] || rec.tramos[0];
+    if (l.tramo !== tramoMostrado) {
+      const z = tr.zona, mapa = $('mapa');
+      mapa.style.backgroundImage = 'url(' + (tr.img ? 'recortes/' + tr.img + '.webp' : 'mapa.webp') + ')';
+      mapa.style.aspectRatio = tr.img ? ((z[1] - z[0]) * 3840 / 360) + ' / ' + ((z[3] - z[2]) * 2160 / 180) : '16 / 9';
+      const pin = $('pin');
+      if (tr.pin) {
+        pin.style.display = 'block';
+        pin.style.left = (100 * (EL_SALVADOR.lon - z[0]) / (z[1] - z[0])) + '%';
+        pin.style.top = (100 * (z[3] - EL_SALVADOR.lat) / (z[3] - z[2])) + '%';
+        $('pin-texto').textContent = 'El Salvador';
+      } else pin.style.display = 'none';
+      tramoMostrado = l.tramo;
+    }
+    const x = tr.dir < 0 ? 1 - l.fraccion : l.fraccion;
+    $('radar').style.left = (100 * x) + '%';
+    const lon = tr.zona[0] + x * (tr.zona[1] - tr.zona[0]);
+    const h = hist.textos.find((q) => (q.tramo != null ? q.tramo === l.tramo : lon >= q.lon[0] && lon <= q.lon[1]));
+    const texto = h ? h[idioma] : '';
+    if (texto !== textoActual) { $('historia').textContent = texto; textoActual = texto; }
   }
 
   let textoPlay = '';
@@ -114,27 +208,24 @@
     const raw = Tone.getContext().rawContext;
     return Tone.getContext().currentTime - (raw.outputLatency || raw.baseLatency || 0);
   }
-  let historiaActual = null;
   function bucle() {
-    if (datos) {
-      const f = rep.sonando ? rep.lineaEn(relojVisual()) : posicion;
-      $('radar').style.left = (100 * f) + '%';
-      const lon = -180 + 360 * f, h = HISTORIAS.find((x) => lon >= x.lon[0] && lon < x.lon[1]);
-      const texto = h ? h[idioma] : '';
-      if (texto !== historiaActual) { $('historia').textContent = texto; historiaActual = texto; }
-      actualizarBotonPlay(false);
-    }
+    if (datos) { ponerVisual(rep.linea(relojVisual())); actualizarBotonPlay(false); }
     requestAnimationFrame(bucle);
   }
 
-  async function escuchar(desde) { terminado = false; await rep.iniciar(desde); }
+  async function escuchar(desde) { terminado = false; await rep.iniciar(recorridoDe(hist), desde); }
   async function alternar() {
-    if (rep.sonando) { rep.pausar(); posicion = rep.fraccion; }
-    else await escuchar(terminado || posicion >= 0.999 ? 0 : posicion);
+    if (rep.sonando) rep.pausar();
+    else await escuchar(terminado ? null : rep.pos);
   }
-  function mover(d) {
-    posicion = Math.max(0, Math.min(0.999, (rep.sonando ? rep.lineaEn(relojVisual()) : posicion) + d));
-    if (rep.sonando) escuchar(posicion);
+  function elegir(id) {
+    const sonaba = rep.sonando;
+    if (sonaba) rep.pausar();
+    hist = HISTORIAS.find((h) => h.id === id) || HISTORIAS[0];
+    $('historia-sel').value = hist.id;
+    rep.pos = { tramo: 0, fraccion: 0 }; terminado = false;
+    mostrarHistoria();
+    if (sonaba) escuchar(null);
   }
 
   function aWav(buffer) {
@@ -148,11 +239,10 @@
     for (let i = 0; i < n; i++) for (let k = 0; k < nc; k++) { dv.setInt16(o, Math.max(-32768, Math.min(32767, Math.round(c[k][i] * 32767 + Math.random() - Math.random()))), true); o += 2; }
     return new Blob([dv], { type: 'audio/wav' });
   }
-  async function generarWav(apagados) {
-    const ap = apagados || Object.assign({}, rep.apagados);
-    const buffer = await M.renderizar(datos.tipos, { sampleRate: 48000, apagados: ap });
-    const activos = M.TIPOS.filter((x) => !ap[x]);
-    return { blob: aWav(buffer), buffer, segundos: buffer.duration, nombre: 'aerosoles_radar_' + (activos.length === 4 ? 'todos' : activos.join('_')) + '.wav' };
+  async function generarWav(id, apagados) {
+    const h = HISTORIAS.find((x) => x.id === (id || hist.id));
+    const buffer = await M.renderizar(recorridoDe(h), { sampleRate: 48000, apagados: apagados || Object.assign({}, rep.apagados) });
+    return { blob: aWav(buffer), buffer, segundos: buffer.duration, nombre: 'aerosoles_' + h.id + '.wav' };
   }
   async function exportar() {
     const btn = $('btn-exportar'), est = $('estado-export');
@@ -175,19 +265,26 @@
       e.preventDefault(); alternar();
     } else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
       if (tag === 'SELECT') return;
-      e.preventDefault(); mover(e.key === 'ArrowLeft' ? -1 / 12 : 1 / 12);
+      e.preventDefault();
+      const i = HISTORIAS.indexOf(hist) + (e.key === 'ArrowLeft' ? -1 : 1);
+      elegir(HISTORIAS[(i + HISTORIAS.length) % HISTORIAS.length].id);
     }
   });
 
   async function iniciar() {
     aplicarIdioma();
     $('historia').textContent = t('cargando');
-    $('idioma').addEventListener('change', (e) => { idioma = e.target.value; aplicarIdioma(); historiaActual = null; });
-    $('btn-escuchar').addEventListener('click', () => { posicion = 0; escuchar(0); });
+    $('idioma').addEventListener('change', (e) => { idioma = e.target.value; aplicarIdioma(); textoActual = null; });
+    $('historia-sel').addEventListener('change', (e) => elegir(e.target.value));
+    $('btn-escuchar').addEventListener('click', () => escuchar(null));
     $('btn-play').addEventListener('click', alternar);
     $('btn-exportar').addEventListener('click', exportar);
-    $('mapa').addEventListener('click', (e) => { const r = e.currentTarget.getBoundingClientRect(); posicion = (e.clientX - r.left) / r.width; escuchar(posicion); });
-    rep.alTerminar = () => { terminado = true; posicion = 1; $('estado').textContent = t('fin'); };
+    $('mapa').addEventListener('click', (e) => {
+      const r = e.currentTarget.getBoundingClientRect(), x = (e.clientX - r.left) / r.width;
+      const l = rep.linea(relojVisual()), tr = recorridoDe(hist).tramos[l.tramo] || recorridoDe(hist).tramos[0];
+      escuchar({ tramo: l.tramo, fraccion: tr.dir < 0 ? 1 - x : x });
+    });
+    rep.alTerminar = () => { terminado = true; $('estado').textContent = t('fin'); };
     if (!window.Tone) { $('historia').textContent = 'Tone.js no cargó (¿sin internet?)'; return; }
     M.cargarPiano().then((p) => rep.usarPiano(p)).catch(() => { /* suena la campana grave */ });
     try {
@@ -195,12 +292,12 @@
       if (!r.ok) throw new Error(r.status);
       datos = await r.json();
     } catch (e) { $('historia').textContent = t('error_datos'); return; }
-    rep.mallas = datos.tipos;
-    $('historia').textContent = '';
-    historiaActual = '';
+    HISTORIAS.forEach((h) => (h.tramos || []).forEach((tr) => { const im = new Image(); im.src = 'recortes/' + tr.img + '.webp'; }));
+    $('historia').textContent = ''; textoActual = '';
+    mostrarHistoria();
     requestAnimationFrame(bucle);
   }
 
-  window.AerosolesApp = { generarWav, reproductor: rep };
+  window.AerosolesApp = { generarWav, reproductor: rep, HISTORIAS };
   iniciar();
 })();

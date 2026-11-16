@@ -96,7 +96,7 @@
       for (let i = 0; i < 8; i++) this.sal.push(new T.Synth({ oscillator: { partials: [1, 0, 0.22, 0, 0.06] }, envelope: { attack: 0.003, decay: 0.7, decayCurve: 'exponential', sustain: 0, release: 0.2 } }).connect(this.buses.sal_marina));
       // sulfatos: marimba (fundamental + armónico 4, golpe seco)
       this.marimba = [];
-      for (let i = 0; i < 8; i++) this.marimba.push(new T.Synth({ oscillator: { partials: [1, 0, 0, 0.2] }, envelope: { attack: 0.012, decay: 0.42, decayCurve: 'exponential', sustain: 0, release: 0.1 } }).connect(this.buses.sulfatos));
+      for (let i = 0; i < 8; i++) this.marimba.push(new T.Synth({ oscillator: { partials: [1, 0, 0, 0.2] }, envelope: { attack: 0.012, attackCurve: 'sine', decay: 0.42, decayCurve: 'exponential', sustain: 0, release: 0.1 } }).connect(this.buses.sulfatos));
       // carbono negro: piano grave (o campana grave si no cargó el piano)
       this.piano = piano ? new T.Sampler({ urls: piano, release: 0.8, attack: 0.004 }).connect(this.buses.carbono_negro) : null;
       this.respaldo = [];
@@ -115,11 +115,12 @@
       else sig('respaldo', this.respaldo).triggerAttackRelease(hz, 0.9, t, vel);
     }
 
-    panear(t0, t1, desde) {
-      const p = this.pan.pan;
+    // el sonido sigue a la línea: de izquierda a derecha (dir +1) o de derecha a izquierda (dir −1)
+    panear(t0, t1, desde, dir) {
+      const p = this.pan.pan, s = dir < 0 ? -1 : 1;
       p.cancelScheduledValues(t0);
-      p.setValueAtTime(-0.75 + 1.5 * (desde || 0), t0);
-      p.linearRampToValueAtTime(0.75, t1);
+      p.setValueAtTime(s * (-0.75 + 1.5 * (desde || 0)), t0);
+      p.linearRampToValueAtTime(s * 0.75, t1);
     }
 
     activar(tipo, si, t) { this.buses[tipo].gain.rampTo(si ? global.Tone.dbToGain(INSTR[tipo].db) : 0, 0.08, t); }
@@ -130,50 +131,69 @@
     }
   }
 
-  // est = { t0, k, libre: { tipo: [] } }. Desde la columna k0 (para empezar en cualquier punto del mapa).
-  function programar(motor, mallas, est, hasta) {
-    const ref = mallas[TIPOS[0]], P = pasos(ref), dt = RADAR.barrido / P;
-    while (est.k < P) {
-      const t = est.t0 + est.k * dt;
+  // Un RECORRIDO es una lista de tramos (una historia puede tener uno o dos lugares). Cada tramo:
+  //   { mallas: {tipo: [columna][fila]}, cpp (columnas por paso), barrido (s), dir (+1 oeste→este, −1 este→oeste),
+  //     estirar (repartir las filas en 12 escalones: zonas chicas con pocas filas), tipos (los que suenan) }.
+  const PAUSA_TRAMOS = 0.8;
+  function armar(rec, t0, desdeTramo) {
+    let t = t0;
+    rec.tramos.forEach((tr, i) => { if (i < (desdeTramo || 0)) { tr.t0 = -1e9; return; } tr.t0 = t; t += tr.barrido + PAUSA_TRAMOS; });
+    return rec;
+  }
+  const copiar = (rec) => ({ ganancia: rec.ganancia, tramos: rec.tramos.map((tr) => Object.assign({}, tr)) });
+  const finDe = (rec) => { const u = rec.tramos[rec.tramos.length - 1]; return u.t0 + u.barrido; };
+  function duracionRecorrido(rec) { return DEMO.entrada + rec.tramos.reduce((s, tr) => s + tr.barrido, 0) + PAUSA_TRAMOS * (rec.tramos.length - 1) + DEMO.salida; }
+  const pasosDe = (tr) => Math.ceil(tr.mallas[Object.keys(tr.mallas)[0]].length / tr.cpp);
+
+  function frecuenciaTramo(tipo, f, filas, estirar) {
+    const p = estirar && filas > 1 ? Math.round((filas - 1 - f) * 12 / (filas - 1)) : filas - 1 - f;
+    return INSTR[tipo].baseHz * Math.pow(2, semitonos(p) / 12);
+  }
+
+  // est = { tramo, k, libre, reanudar, apagados }. Los eventos van en orden de tiempo (igual en vivo y al exportar).
+  function programar(motor, rec, est, hasta) {
+    for (;;) {
+      const tr = rec.tramos[est.tramo];
+      if (!tr) break;
+      const ref = tr.mallas[Object.keys(tr.mallas)[0]], P = pasosDe(tr), dt = tr.barrido / P, t = tr.t0 + est.k * dt;
       if (t >= hasta) break;
-      if (est.reanudar) { motor.panear(t, est.t0 + RADAR.barrido, est.k / P); est.reanudar = false; }
-      const franjas = ref[0].length, c0 = est.k * RADAR.columnasPorPaso;
+      if (est.k === 0 || est.reanudar) { motor.panear(t, tr.t0 + tr.barrido, est.k / P, tr.dir); est.reanudar = false; }
+      const filas = ref[0].length, c0 = est.k * tr.cpp;
       for (const tipo of TIPOS) {
-        if (est.apagados && est.apagados[tipo]) continue;
-        const malla = mallas[tipo], cand = [], libre = est.libre[tipo] || (est.libre[tipo] = []);
-        for (let f = 0; f < franjas; f++) {
+        if (!tr.mallas[tipo] || (tr.tipos && !tr.tipos.includes(tipo)) || (est.apagados && est.apagados[tipo])) continue;
+        const malla = tr.mallas[tipo], cand = [], libre = est.libre[tipo] || (est.libre[tipo] = []);
+        for (let f = 0; f < filas; f++) {
           let v = 0;
-          for (let c = c0; c < Math.min(malla.length, c0 + RADAR.columnasPorPaso); c++) v = Math.max(v, malla[c][f]);
+          for (let c = c0; c < Math.min(malla.length, c0 + tr.cpp); c++) v = Math.max(v, malla[c][f]);
           if (v >= RADAR.umbral && t >= (libre[f] || 0) - 1e-6) cand.push([v, f]);
         }
         cand.sort((a, b) => b[0] - a[0]);
-        cand.slice(0, RADAR.maxPorTipo).forEach(([v, f]) => { motor.nota(tipo, frecuencia(tipo, f, franjas), v, t); libre[f] = t + intervalo(v); });
+        cand.slice(0, RADAR.maxPorTipo).forEach(([v, f]) => { motor.nota(tipo, frecuenciaTramo(tipo, f, filas, tr.estirar), v, t); libre[f] = t + intervalo(v); });
       }
       est.k++;
+      if (est.k >= P) { est.tramo++; est.k = 0; est.libre = {}; }
     }
   }
 
-  const duracion = () => DEMO.entrada + RADAR.barrido + DEMO.salida;
-
-  async function renderizar(mallas, opciones) {
+  async function renderizar(recorrido, opciones) {
     const T = global.Tone, op = opciones || {};
     let piano = null;
     try { piano = await cargarPiano(); } catch (e) { piano = null; }
+    const rec = armar(copiar(recorrido), DEMO.entrada);
     const buf = await T.Offline(() => {
       const m = new Motor().construir(piano);
-      const t0 = DEMO.entrada, fin = t0 + RADAR.barrido;
-      m.volumen(NIVEL.salida, 0, DEMO.subida);
-      const est = { t0, k: 0, libre: {}, reanudar: true, apagados: op.apagados || {} };
+      m.volumen(NIVEL.salida * T.dbToGain(recorrido.ganancia || 0), 0, DEMO.subida);
+      const est = { tramo: 0, k: 0, libre: {}, reanudar: true, apagados: op.apagados || {} };
       TIPOS.forEach((tipo) => { if (est.apagados[tipo]) m.buses[tipo].gain.value = 0; });
-      programar(m, mallas, est, fin);
-      m.volumen(0, fin + 0.5, DEMO.salida - 0.56);
-    }, duracion(), 2, op.sampleRate || 48000);
+      programar(m, rec, est, finDe(rec));
+      m.volumen(0, finDe(rec) + 0.5, DEMO.salida - 0.56);
+    }, duracionRecorrido(recorrido), 2, op.sampleRate || 48000);
     return buf.get();
   }
 
   class Reproductor {
     constructor() {
-      this.motor = null; this.mallas = null; this.sonando = false; this.est = null; this.fraccion = 0;
+      this.motor = null; this.rec = null; this.sonando = false; this.est = null; this.pos = { tramo: 0, fraccion: 0 };
       this.apagados = {}; this.piano = null; this.terminando = false; this.alTerminar = function () {}; this._accion = 0;
     }
     get ahora() { return global.Tone.getContext().currentTime; }
@@ -192,30 +212,32 @@
       } else { await T.start(); }
       clearTimeout(this._suspension);
     }
-    lineaEn(ahoraVisual) {
-      if (!this.est || !this.sonando) return this.fraccion;
-      return limitar((ahoraVisual - this.est.t0) / RADAR.barrido, 0, 1);
+    // dónde va la línea: { tramo, fraccion } (fraccion 0–1 en el sentido del recorrido)
+    linea(ahoraVisual) {
+      if (!this.rec || !this.sonando) return this.pos;
+      let i = 0;
+      this.rec.tramos.forEach((tr, k) => { if (tr.t0 > -1e8 && ahoraVisual >= tr.t0 - PAUSA_TRAMOS / 2) i = k; });
+      const tr = this.rec.tramos[i];
+      return { tramo: i, fraccion: limitar((ahoraVisual - tr.t0) / tr.barrido, 0, 1) };
     }
-    // empieza (o sigue) el recorrido desde una fracción del mapa (0 = oeste, 1 = este)
-    async iniciar(desde) {
+    async iniciar(recorrido, desde) {
       const accion = ++this._accion;
       await this.preparar();
       if (accion !== this._accion) return;
-      const t = this.ahora, P = pasos(this.mallas[TIPOS[0]]);
-      desde = limitar(desde || 0, 0, 0.999);
-      const k = Math.floor(desde * P);
-      this.est = { t0: t + 0.08 - (k / P) * RADAR.barrido, k, libre: {}, reanudar: true, apagados: this.apagados };
+      const t = this.ahora, d = desde || { tramo: 0, fraccion: 0 }, i = limitar(d.tramo, 0, recorrido.tramos.length - 1);
+      const tr0 = recorrido.tramos[i], k = Math.floor(limitar(d.fraccion, 0, 0.999) * pasosDe(tr0));
+      this.rec = armar(copiar(recorrido), t + 0.08 - (k / pasosDe(tr0)) * tr0.barrido, i);
+      this.est = { tramo: i, k, libre: {}, reanudar: true, apagados: this.apagados };
       this.terminando = false;
-      this.motor.volumen(NIVEL.salida, t + 0.01, DEMO.subida);
+      this.motor.volumen(NIVEL.salida * global.Tone.dbToGain(recorrido.ganancia || 0), t + 0.01, DEMO.subida);
       this.sonando = true;
     }
     pausar() {
       this._accion++;
       if (!this.sonando) return;
-      const t = this.ahora;
-      this.fraccion = limitar((t - this.est.t0) / RADAR.barrido, 0, 1);
+      this.pos = this.linea(this.ahora);
       this.sonando = false;
-      this.motor.volumen(0, t + 0.01, 0.4);
+      this.motor.volumen(0, this.ahora + 0.01, 0.4);
       clearTimeout(this._suspension);
       this._suspension = setTimeout(() => { if (!this.sonando) global.Tone.getContext().rawContext.suspend().catch(() => {}); }, 2000);
     }
@@ -226,12 +248,15 @@
     _tic() {
       if (!this.sonando || !this.motor) return;
       const t = this.ahora, hasta = t + (document.hidden ? 1.2 : 0.12);
-      programar(this.motor, this.mallas, this.est, hasta);
-      const fin = this.est.t0 + RADAR.barrido;
+      programar(this.motor, this.rec, this.est, hasta);
+      const fin = finDe(this.rec);
       if (!this.terminando && t >= fin) { this.terminando = true; this.motor.volumen(0, fin + 0.5, DEMO.salida - 0.56); }
-      if (this.terminando && t >= fin + DEMO.salida) { this.terminando = false; this.sonando = false; this.fraccion = 1; this.alTerminar(); }
+      if (this.terminando && t >= fin + DEMO.salida) {
+        this.terminando = false; this.sonando = false;
+        this.pos = { tramo: this.rec.tramos.length - 1, fraccion: 1 }; this.alTerminar();
+      }
     }
   }
 
-  global.MotorAerosoles = { RADAR, DEMO, TIPOS, INSTR, NIVEL, frecuencia, duracion, cargarPiano, Motor, Reproductor, renderizar };
+  global.MotorAerosoles = { RADAR, DEMO, TIPOS, INSTR, NIVEL, duracionRecorrido, cargarPiano, Motor, Reproductor, renderizar };
 })(window);

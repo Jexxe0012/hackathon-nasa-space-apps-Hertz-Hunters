@@ -59,30 +59,36 @@ function clasificar(R, G, B) {
 
 const img = leerPng(ARCHIVO);
 const TIPOS = ['carbono_negro', 'polvo', 'sal_marina', 'sulfatos'];
-const crudo = Object.fromEntries(TIPOS.map((t) => [t, []]));
-const yN = Math.round((90 - LAT_N) / 180 * img.h), yS = Math.round((90 - LAT_S) / 180 * img.h);
 const conteo = Object.fromEntries(TIPOS.map((t) => [t, 0]));
-for (let c = 0; c < COLUMNAS; c++) {
-  const x0 = Math.floor(c * img.w / COLUMNAS), x1 = Math.floor((c + 1) * img.w / COLUMNAS);
-  const cols = Object.fromEntries(TIPOS.map((t) => [t, []]));
-  for (let f = 0; f < FRANJAS; f++) {
-    const y0 = Math.floor(yN + f * (yS - yN) / FRANJAS), y1 = Math.floor(yN + (f + 1) * (yS - yN) / FRANJAS);
-    const suma = Object.fromEntries(TIPOS.map((t) => [t, 0]));
-    let n = 0;
-    for (let y = y0; y < y1; y++) for (let x = x0; x < x1; x++) {
-      const k = (y * img.w + x) * img.bpp, r = clasificar(img.px[k], img.px[k + 1], img.px[k + 2]);
-      n++;
-      if (r && r[1] > 0) { suma[r[0]] += r[1]; conteo[r[0]]++; }
+
+// Malla de COLS × FILAS entre LAT_N y LAT_S; cada tipo normalizado con su máximo (0–1000)
+function malla(COLS, FILAS, contar) {
+  const crudo = Object.fromEntries(TIPOS.map((t) => [t, []]));
+  const yN = Math.round((90 - LAT_N) / 180 * img.h), yS = Math.round((90 - LAT_S) / 180 * img.h);
+  for (let c = 0; c < COLS; c++) {
+    const x0 = Math.floor(c * img.w / COLS), x1 = Math.floor((c + 1) * img.w / COLS);
+    const cols = Object.fromEntries(TIPOS.map((t) => [t, []]));
+    for (let f = 0; f < FILAS; f++) {
+      const y0 = Math.floor(yN + f * (yS - yN) / FILAS), y1 = Math.floor(yN + (f + 1) * (yS - yN) / FILAS);
+      const suma = Object.fromEntries(TIPOS.map((t) => [t, 0]));
+      let n = 0;
+      for (let y = y0; y < y1; y++) for (let x = x0; x < x1; x++) {
+        const k = (y * img.w + x) * img.bpp, r = clasificar(img.px[k], img.px[k + 1], img.px[k + 2]);
+        n++;
+        if (r && r[1] > 0) { suma[r[0]] += r[1]; if (contar) conteo[r[0]]++; }
+      }
+      TIPOS.forEach((t) => cols[t].push(suma[t] / n));
     }
-    TIPOS.forEach((t) => cols[t].push(suma[t] / n));
+    TIPOS.forEach((t) => crudo[t].push(cols[t]));
   }
-  TIPOS.forEach((t) => crudo[t].push(cols[t]));
+  const out = {};
+  for (const t of TIPOS) { const max = Math.max(...crudo[t].flat()); out[t] = crudo[t].map((col) => col.map((v) => Math.round(1000 * v / max))); }
+  return out;
 }
-const tipos = {};
-for (const t of TIPOS) {
-  const max = Math.max(...crudo[t].flat());
-  tipos[t] = crudo[t].map((col) => col.map((v) => Math.round(1000 * v / max)));
-}
+const tipos = malla(COLUMNAS, FRANJAS, true);
+// Malla fina para las historias (zonas pequeñas): 384 × 34 (0,94° × 4°)
+const FINA = { columnas: 384, filas: 34 };
+const fina = malla(FINA.columnas, FINA.filas, false);
 const salida = {
   fuente: 'NASA SVS 5669 · modelo GEOS (FP), aerosoles del 19/08/2025 20:00 UTC, mapa plano 3840×2160',
   aviso_es: 'Modelo (no foto). La leyenda no tiene números: el tipo sale del color y la cantidad, de lo brillante. Cada tipo usa su propia escala.',
@@ -91,6 +97,7 @@ const salida = {
   metodo: 'tono más parecido al de la leyenda; cantidad = brillo sobre un piso; promedio por celda; 0–1000 con el máximo de cada tipo',
   pixeles_por_tipo: conteo,
   tipos, // tipos[tipo][columna oeste→este][franja norte→sur]
+  fina: { columnas: FINA.columnas, filas: FINA.filas, tipos: fina }, // misma idea, más detalle (para las historias)
 };
 const out = path.join(AQUI, 'resultados', 'aerosoles_radar.json');
 fs.mkdirSync(path.dirname(out), { recursive: true });

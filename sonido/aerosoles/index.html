@@ -25,7 +25,10 @@
   button.principal { background: var(--acento); color: var(--acento-texto); border-color: var(--acento); font-weight: 600; }
   button:disabled { opacity: 0.55; cursor: progress; }
   :focus-visible { outline: 3px solid var(--foco); outline-offset: 2px; }
-  .mapa { position: relative; aspect-ratio: 16 / 9; background: #000 url(mapa.webp) center / cover no-repeat; border-radius: 10px; overflow: hidden; cursor: crosshair; }
+  .mapa { position: relative; aspect-ratio: 16 / 9; background: #000 center / cover no-repeat; border-radius: 10px; overflow: hidden; cursor: crosshair; }
+  .sub { color: var(--suave); margin: 0 0 10px; }
+  .pin { position: absolute; width: 10px; height: 10px; margin: -5px 0 0 -5px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 2px rgba(0,0,0,.6); display: none; }
+  .pin span { position: absolute; left: 14px; top: -5px; color: #fff; font-size: 12px; font-weight: 600; text-shadow: 0 1px 3px #000; white-space: nowrap; }
   .radar { position: absolute; top: 0; bottom: 0; width: 2px; margin-left: -1px; background: #fff; box-shadow: 0 0 10px 3px rgba(255,255,255,.6); }
   .historia { min-height: 1.6em; font-weight: 600; margin: 8px 0 0; }
   .leyenda { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 8px; margin-top: 12px; }
@@ -51,12 +54,14 @@
     <div class="fila">
       <label><span data-t="idioma"></span>
         <select id="idioma"><option value="es">Español</option><option value="en">English</option></select></label>
+      <label><span data-t="historia_lbl"></span><select id="historia-sel"></select></label>
     </div>
   </header>
 
   <section class="tarjeta" aria-labelledby="h-mapa">
-    <h2 id="h-mapa" data-t="h_mapa"></h2>
-    <div class="mapa" id="mapa" aria-hidden="true"><div class="radar" id="radar"></div></div>
+    <h2 id="h-mapa"></h2>
+    <p class="sub" id="sub"></p>
+    <div class="mapa" id="mapa" aria-hidden="true"><div class="radar" id="radar"></div><div class="pin" id="pin"><span id="pin-texto"></span></div></div>
     <p class="historia" id="historia" aria-hidden="true"></p>
     <div class="fila" style="margin-top:10px">
       <button type="button" class="principal" id="btn-escuchar"></button>
