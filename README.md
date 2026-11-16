@@ -32,7 +32,9 @@ Al entrar, la pantalla de bienvenida explica el propósito de la aplicación y l
 
 Al abrir la aplicación aparece un aviso de accesibilidad que también se presenta a los lectores de pantalla mediante una región de anuncios. La bienvenida ofrece un acceso a las opciones de contraste y movimiento. La voz integrada de la aplicación está pendiente; por ahora se utiliza el lector de pantalla del dispositivo.
 
-En **Colección** puedes elegir cualquiera de las cuatro pistas. **Sobre la pista** incluye su periodo, variable, procedencia y límites de interpretación. **Original NASA** muestra la imagen fuente y **Arte píxel** permite explorar su reinterpretación gráfica.
+En **Colección** puedes elegir cualquiera de las cuatro pistas. **Sobre la pista** incluye su periodo, variable, procedencia y límites de interpretación. El visor muestra la imagen fuente de NASA.
+
+El reproductor aparece al seleccionar una pista y permanece disponible al regresar a la colección durante la misma visita.
 
 Al pulsar **Reproducir** se escucha una muestra provisional de 48 segundos. El generador divide la imagen fuente en 96 franjas verticales y calcula el brillo medio de cada una. Dentro de esa imagen, una franja más clara produce una nota más aguda. Cada nota dura medio segundo. El fondo y los rótulos también afectan al cálculo. Los tonos expresan brillo relativo y el contador indica tiempo de escucha. Diego Fuentes se encargará del diseño y la validación de los sonidos del proyecto.
 
