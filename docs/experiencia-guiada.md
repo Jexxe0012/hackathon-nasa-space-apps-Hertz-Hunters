@@ -2,10 +2,12 @@
 
 La experiencia guiada es la entrada inicial. La experiencia visual sigue disponible y la elección se conserva en `earthbeat.experience` en el navegador. La voz propia requiere una elección nueva de la persona: no habla automáticamente al abrir el sitio.
 
+El idioma inicial es inglés, sin depender del idioma del dispositivo. El selector Language / Idioma cambia toda la experiencia y conserva la preferencia en `earthbeat.language`. El atributo `lang` de la página y las escenas sigue esa elección para los lectores de pantalla. La web no puede modificar la configuración ni las voces instaladas de TalkBack. [Documentación en inglés](guided-experience.md).
+
 ## Lectura y voz
 
 - **Con mi lector de pantalla**: interfaz semántica, foco en el encabezado al cambiar de paso y controles nativos. Compatible por diseño con TalkBack, NVDA y VoiceOver; no activa ni detecta el lector del sistema.
-- **Con voz de Earthbeat**: usa `SpeechSynthesis`, con una voz en español disponible en el dispositivo. Permite repetir, detener y ajustar la velocidad. Si el navegador no ofrece esa API o falla la voz, permanece disponible la lectura normal con tecnología de asistencia.
+- **Con voz de Earthbeat**: usa `SpeechSynthesis`, con una voz en inglés de forma predeterminada, o español al elegirlo en el selector de idioma. Permite repetir, detener y ajustar la velocidad. Si el navegador no ofrece esa API o falla la voz, permanece disponible la lectura normal con tecnología de asistencia.
 - La guía y la sonificación no se programan juntas: reproducir o intervenir en una escena cancela la voz de guía; repetir la lectura solicita pausar la escena. Cambiar de paso detiene la guía y desmonta la escena anterior.
 - El bot conversacional del equipo sigue siendo un trabajo separado: esta voz lee el contenido de la interfaz y no responde preguntas ni crea interpretaciones.
 
