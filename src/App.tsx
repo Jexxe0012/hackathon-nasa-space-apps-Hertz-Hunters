@@ -3,6 +3,7 @@ import { tracks, listeningLegend } from './data'
 import { Icon, Sprite } from './Art'
 import Player from './Player'
 import MapStage from './MapStage'
+import { WelcomeGlobe } from './WelcomeGlobe'
 
 const families = [
   'Océanos',
@@ -18,7 +19,7 @@ const introductions = [
 ]
 const spriteIndexes = [1, 8, 3, 0]
 const voiceNotice =
-  'Puedes navegar con teclado y un lector de pantalla como TalkBack. La voz integrada de Earth Jukebox está en desarrollo.'
+  'Puedes navegar con teclado y un lector de pantalla como TalkBack. La voz integrada de Earthbeat está en desarrollo.'
 const number = (i: number) => String(i + 1).padStart(2, '0')
 const trackHref = (index: number) => '#pista/' + tracks[index].id
 function readLocation() {
@@ -93,7 +94,7 @@ export default function App() {
   }, [])
   useEffect(() => {
     document.title =
-      (view.welcome ? 'Bienvenida' : view.library ? 'Colección' : track.title) + ' · Earth Jukebox'
+      (view.welcome ? 'Bienvenida' : view.library ? 'Colección' : track.title) + ' · Earthbeat'
     main.current?.scrollTo(0, 0)
     const route = view.welcome ? 'welcome' : view.library ? 'collection' : track.id
     if (previousRoute.current !== route && !document.activeElement?.closest('#reproductor'))
@@ -149,10 +150,10 @@ export default function App() {
         <a
           className="brand"
           href="#inicio"
-          aria-label="Earth Jukebox, ir al inicio"
+          aria-label="Earthbeat, ir al inicio"
         >
           <Sprite className="brand-planet" />
-          <span>Earth Jukebox</span>
+          <span>Earthbeat</span>
         </a>
         <nav className="primary-nav" aria-label="Principal">
           <a
@@ -270,10 +271,7 @@ export default function App() {
                   </button>
                   <p className="welcome__note">Puedes navegar con teclado y usar un lector de pantalla.</p>
                 </div>
-                <figure className="welcome__visual">
-                  <img src={tracks.find(item => item.id === 'luces-nocturnas')?.image} alt="" />
-                  <figcaption>Luces nocturnas · NASA Black Marble, 2016</figcaption>
-                </figure>
+                <WelcomeGlobe reducedMotion={reduced} forestImage={tracks[1].image} />
               </div>
               <section className="welcome__guide" aria-labelledby="welcome-guide-title">
                 <h2 id="welcome-guide-title">¿Cómo funciona?</h2>
@@ -416,7 +414,7 @@ export default function App() {
           <div className="settings">
             <p className="settings__help">
               Usa el lector de pantalla de tu dispositivo, como TalkBack en Android, para escuchar la interfaz.
-              La voz integrada de Earth Jukebox está en desarrollo.
+              La voz integrada de Earthbeat está en desarrollo.
             </p>
             <label>
               <input
