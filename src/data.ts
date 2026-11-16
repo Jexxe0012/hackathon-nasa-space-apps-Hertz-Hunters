@@ -158,6 +158,6 @@ export const tracks: Track[] = details.map((track) => ({
   image: sceneCovers[track.scene] ? `${base}${sceneCovers[track.scene]}` : `${mediaBase}${track.id}.webp`,
   audio: `${mediaBase}${track.id}.mp3`,
   duration: 48,
-  scene: `${base}sonido/${track.scene}/index.html?embed=1&v=${track.scene === 'luces' ? 5 : 4}` +
+  scene: `${base}sonido/${track.scene}/index.html?embed=1&v=6` +
     (track.story.initialYear ? `&anio=${track.story.initialYear}&comparar=${track.story.comparisonYear}` : ''),
 }))

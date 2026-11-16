@@ -2,9 +2,9 @@ import { useEffect, useRef, useState } from 'react'
 import type { Track } from './data'
 import './map-stage.css'
 
-type StageProps = { track: Track }
+type StageProps = { track: Track; guided?: boolean; highContrast?: boolean }
 
-export function MapStage({ track }: StageProps) {
+export function MapStage({ track, guided = false, highContrast = false }: StageProps) {
   const frame = useRef<HTMLIFrameElement>(null)
   const [height, setHeight] = useState(520)
 
@@ -34,8 +34,8 @@ export function MapStage({ track }: StageProps) {
           <iframe
             ref={frame}
             className="escena-sonora"
-            src={track.scene}
-            title={`Escena sonora de ${track.title}: mapa, línea de escucha y controles de exploración`}
+            src={track.scene + (guided ? `&guiado=1&contraste=${highContrast ? 1 : 0}` : '')}
+            title={guided ? `Opciones de la escena sonora de ${track.title}` : `Escena sonora de ${track.title}: mapa, línea de escucha y controles de exploración`}
             style={{ height }}
             allow="autoplay"
           />

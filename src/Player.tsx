@@ -14,6 +14,7 @@ type PlayerProps = {
   total: number
   onPrevious: () => void
   onNext: () => void
+  onBeforePlay?: () => void
 }
 
 type Icon = 'previous' | 'play' | 'pause' | 'next' | 'speaker' | 'muted'
@@ -73,6 +74,7 @@ export function Player({
   total,
   onPrevious,
   onNext,
+  onBeforePlay,
 }: PlayerProps) {
   const audioRef = useRef<HTMLAudioElement>(null)
   const [media, setMedia] = useState(() => initialMediaState(track.id))
@@ -146,6 +148,7 @@ export function Player({
   }
 
   async function togglePlayback() {
+    onBeforePlay?.()
     if (scene) {
       sendScene({ eij: 'alternar' })
       return

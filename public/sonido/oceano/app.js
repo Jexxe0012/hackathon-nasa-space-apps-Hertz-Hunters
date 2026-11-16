@@ -486,6 +486,7 @@
   // Para pruebas y para el video: genera el WAV sin descargarlo.
   // Modo incrustado (Earthbeat): el reproductor de la app manda; sin mover el foco del teclado
   if (window.EIJ) EIJ.conectar({
+    pausar: () => rep.pausar(),
     alternar: async () => {
       if (rep.sonando) { rep.pausar(); return; }
       if (!rep.motor) { await rep.iniciarDemo(); return; }

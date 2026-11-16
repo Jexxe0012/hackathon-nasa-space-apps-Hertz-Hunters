@@ -1,0 +1,84 @@
+.guided-app {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  font-family: var(--body);
+}
+.guided-app button,
+.guided-app select,
+.guided-app summary {
+  min-height: 48px;
+  font-size: 17px;
+}
+.guided-app button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 11px 18px;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  line-height: 1.4;
+}
+.guided-app button:hover:not(:disabled) { border-color: var(--mint); background: var(--raised); }
+.guided-app button:disabled { opacity: 0.55; cursor: not-allowed; }
+.guided-app .guided-primary { color: #0b1425; background: var(--gold); border-color: var(--gold); font-weight: 700; }
+.guided-app .guided-primary:hover:not(:disabled) { background: #ffe9a8; border-color: #ffe9a8; }
+.guided-header {
+  flex: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 24px;
+  padding: 12px clamp(16px, 4vw, 56px);
+  border-bottom: 1px solid var(--line);
+}
+.guided-header .guided-brand { border: 0; background: transparent; padding: 0; font: 700 25px/1.3 var(--body); }
+.guided-progress { color: var(--muted); font-size: 16px; }
+.guided-header > button:last-child { margin-left: auto; }
+.guided-main { flex: 1; min-height: 0; overflow-y: auto; padding: clamp(28px, 5vw, 60px) 22px; }
+.guided-content { max-width: 850px; margin-inline: auto; }
+.guided-content h1 { max-width: 25ch; font-size: clamp(30px, 4vw, 48px); line-height: 1.15; }
+.guided-content h2 { font-size: 25px; line-height: 1.3; }
+.guided-copy { max-width: 65ch; margin-top: 22px; font-size: clamp(19px, 2vw, 23px); line-height: 1.6; }
+.guided-start { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 30px; }
+.guided-help { margin-top: 23px; color: var(--muted); font-size: 17px; line-height: 1.6; max-width: 70ch; }
+.guided-instructions { margin-top: 28px; padding-top: 23px; border-top: 1px solid var(--line); }
+.guided-instructions p { margin-top: 14px; font-size: 18px; line-height: 1.6; }
+.guided-stories { display: flex; flex-direction: column; gap: 14px; margin-top: 28px; }
+.guided-stories button { align-items: flex-start; flex-direction: column; text-align: left; padding: 20px 22px; }
+.guided-stories strong { font-size: 22px; }
+.guided-stories span { color: var(--muted); font-size: 17px; }
+.guided-tools { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 30px; }
+.guided-preferences { margin-top: 22px; padding-block: 18px; border-block: 1px solid var(--line); }
+.guided-preferences summary, .guided-instructions summary { display: list-item; padding-block: 10px; font-weight: 700; cursor: pointer; }
+.guided-preferences label { display: flex; align-items: center; gap: 12px; padding-block: 12px; font-size: 18px; line-height: 1.5; }
+.guided-preferences input[type='checkbox'] { width: 24px; height: 24px; flex: none; accent-color: var(--mint); }
+.guided-preferences select { padding: 6px 12px; color: var(--ink); background: var(--surface); border: 1px solid var(--line); }
+.guided-navigation { display: flex; justify-content: space-between; gap: 16px; flex: none; padding: 14px max(22px, calc((100vw - 850px) / 2)); border-top: 1px solid var(--line); background: var(--bg); }
+.guided-back-icon { display: flex; transform: rotate(180deg); }
+.guided-source { display: inline-flex; align-items: center; gap: 8px; min-height: 48px; margin-top: 20px; color: var(--mint); text-decoration: underline; text-underline-offset: 4px; }
+.guided-status { color: var(--gold); margin-top: 16px; font-size: 18px; line-height: 1.5; }
+.guided-status:empty { margin: 0; }
+.guided-scene { margin-top: 28px; }
+.guided-scene h2 { margin-bottom: 15px; }
+.guided-scene .map-stage__field { background-image: none; padding: 14px; }
+.guided-scene .map-stage__corner, .guided-scene .map-stage__ruler { display: none; }
+.guided-scene .map-stage__source { font: 600 15px/1.5 var(--body); }
+.guided-app .hh-player { flex: none; }
+.guided-app .hh-player button { padding: 8px; }
+@media (max-width: 760px) {
+  .guided-header { gap: 8px 12px; padding: 10px 16px; }
+  .guided-header .guided-brand { font-size: 22px; }
+  .guided-header > button:last-child { font-size: 15px; padding: 8px 12px; }
+  .guided-progress { flex-basis: 100%; order: 2; font-size: 15px; }
+  .guided-main { padding: 27px 20px; }
+  .guided-start { flex-direction: column; }
+  .guided-start button { width: 100%; }
+  .guided-stories strong { font-size: 20px; }
+  .guided-navigation { padding: 12px 16px; gap: 10px; }
+  .guided-navigation button { padding: 10px 12px; font-size: 16px; }
+  .guided-preferences label { align-items: flex-start; }
+}

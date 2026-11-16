@@ -193,6 +193,7 @@
 
   // Modo incrustado (Earthbeat): el reproductor de la app manda
   if (window.EIJ) EIJ.conectar({
+    pausar: () => rep.pausar(),
     alternar: () => alternar(),
     ir: (f) => { const i = Math.floor(f * puntos.length); rep.pos = i; terminado = false; if (rep.sonando) escuchar(i); },
     estado: () => {

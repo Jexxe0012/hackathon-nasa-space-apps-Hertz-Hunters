@@ -231,6 +231,7 @@
 
   // Modo incrustado (Earthbeat): el reproductor de la app manda
   if (window.EIJ) EIJ.conectar({
+    pausar: () => rep.pausar(),
     alternar: () => alternar(),
     ir: () => { /* el radar no salta: se reinicia con Reproducir */ },
     estado: () => {

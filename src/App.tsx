@@ -4,6 +4,7 @@ import { Icon, Sprite } from './Art'
 import Player from './Player'
 import MapStage from './MapStage'
 import { WelcomeGlobe } from './WelcomeGlobe'
+import GuidedExperience from './GuidedExperience'
 
 const families = [
   'Océanos',
@@ -13,7 +14,7 @@ const families = [
 ]
 const spriteIndexes = [1, 8, 3, 0]
 const voiceNotice =
-  'Puedes navegar con teclado y un lector de pantalla como TalkBack. La voz integrada de Earthbeat está en desarrollo.'
+  'Puedes usar TalkBack u otro lector de pantalla. Earthbeat también ofrece una experiencia guiada con voz opcional.'
 const number = (i: number) => String(i + 1).padStart(2, '0')
 const trackHref = (index: number) => '#pista/' + tracks[index].id
 function readLocation() {
@@ -46,6 +47,19 @@ function usePreference(key: string, fallback: boolean) {
 }
 
 export default function App() {
+  const [experience, setExperience] = useState<'guided' | 'visual'>(() => {
+    try { return localStorage.getItem('earthbeat.experience') === 'visual' ? 'visual' : 'guided' } catch { return 'guided' }
+  })
+  function changeExperience(next: 'guided' | 'visual') {
+    try { localStorage.setItem('earthbeat.experience', next) } catch { /* Available for this visit. */ }
+    setExperience(next)
+  }
+  return experience === 'guided'
+    ? <GuidedExperience onVisualMode={() => changeExperience('visual')} />
+    : <VisualExperience onGuidedMode={() => changeExperience('guided')} />
+}
+
+function VisualExperience({ onGuidedMode }: { onGuidedMode: () => void }) {
   const [view, setView] = useState(readLocation)
   const [selected, select] = useState(view.index)
   const [hasSelected, setHasSelected] = useState(!view.welcome && !view.library)
@@ -163,6 +177,7 @@ export default function App() {
           </a>
         </nav>
         <div className="utilities">
+          <button type="button" aria-label="Activar experiencia guiada" onClick={onGuidedMode}><Icon name="headset" /><span>Experiencia guiada</span></button>
           <button
             aria-label="Ajustes de accesibilidad"
             onClick={() => setModal('settings')}
@@ -412,9 +427,9 @@ export default function App() {
         {modal === 'settings' ? (
           <div className="settings">
             <p className="settings__help">
-              Usa el lector de pantalla de tu dispositivo, como TalkBack en Android, para escuchar la interfaz.
-              La voz integrada de Earthbeat está en desarrollo.
+              Puedes usar TalkBack en Android u otro lector de pantalla. La experiencia guiada ofrece un recorrido por pasos y una voz opcional de Earthbeat.
             </p>
+            <button type="button" onClick={onGuidedMode}>Activar experiencia guiada</button>
             <label>
               <input
                 type="checkbox"
