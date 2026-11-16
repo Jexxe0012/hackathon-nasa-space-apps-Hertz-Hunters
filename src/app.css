@@ -773,22 +773,88 @@ dialog::backdrop {
   line-height: 1.4;
 }
 .welcome__visual {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   background: #080f20;
   border: 1px solid var(--line);
-  padding: clamp(12px, 1.6vw, 24px);
+  padding: clamp(16px, 2vw, 30px);
 }
-.welcome__visual img {
-  display: block;
+.welcome__globe {
+  position: relative;
+  width: min(100%, 340px);
+  aspect-ratio: 1;
+}
+.welcome__globe img,
+.welcome__globe canvas {
+  position: absolute;
+  inset: 0;
   width: 100%;
-  height: clamp(200px, 25vw, 340px);
+  height: 100%;
+}
+.welcome__globe img {
   object-fit: contain;
 }
+.welcome__globe[data-ready='true'] img { visibility: hidden; }
 .welcome__visual figcaption {
   color: #c3d4e1;
   font-size: 14px;
   line-height: 1.4;
-  margin-top: 12px;
+  text-align: center;
+  margin-top: 8px;
 }
+.welcome__visual figcaption span {
+  display: block;
+  margin-top: 3px;
+}
+.welcome__visual figcaption a {
+  display: inline-block;
+  color: var(--mint);
+  margin-top: 8px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.welcome__globe-actions {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.welcome__globe-legend {
+  width: min(100%, 220px);
+  margin-top: 14px;
+}
+.welcome__globe-legend > span {
+  display: block;
+  height: 8px;
+  background: linear-gradient(to right, #4a4529, #477a33 29%, #9ebd4f 57%, #edebab);
+}
+.welcome__globe-legend > div {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 13px;
+}
+.welcome__globe-error {
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 14px;
+  text-align: center;
+}
+.welcome__globe-error button { display: block; margin-inline: auto; }
+.welcome__globe-control {
+  min-height: 44px;
+  margin-top: 12px;
+  padding: 8px 14px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 700;
+}
+.welcome__globe-control:hover { border-color: var(--mint); background: var(--raised); }
 .welcome__guide {
   margin-top: clamp(42px, 6vw, 78px);
   padding-top: 26px;
@@ -835,7 +901,7 @@ dialog::backdrop {
   .welcome__lead { font-size: 18px; margin-top: 15px; }
   .welcome__action { width: 100%; margin-top: 22px; }
   .welcome__accessibility { width: 100%; margin: 10px 0 0; }
-  .welcome__visual img { height: clamp(160px, 43vw, 250px); }
+  .welcome__globe { width: min(100%, 270px); }
   .welcome__guide { margin-top: 36px; padding-top: 23px; }
   .welcome__steps { grid-template-columns: 1fr; gap: 20px; }
 }
