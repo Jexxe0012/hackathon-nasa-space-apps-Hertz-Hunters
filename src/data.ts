@@ -100,7 +100,7 @@ const details: TrackDetails[] = [
     scene: 'luces',
     guide: [
       'La línea del radar suena lo que toca: donde hay luz suena el piano; donde está oscuro, silencio.',
-      'Más luz = notas más fuertes y más seguidas. Norte agudo, sur grave. El sonido viaja de izquierda a derecha con la línea.',
+      'Más luz = notas más fuertes y más seguidas. Norte agudo, sur grave. Con audífonos el sonido te da la vuelta con la línea (8D): El Salvador enfrente, Asia detrás.',
       'Con «Comparar 2012 →» del visor escuchas 2012 y luego tu año, uno tras otro.',
     ],
   },

@@ -11,7 +11,7 @@ Una línea recorre el mapa de oeste a este (de América a Asia) en 12 segundos y
 | Hay luz en esa franja | suena una nota de piano; sin luz, silencio (océanos, desiertos) |
 | Cuánta luz | nota más fuerte y repetida más seguido |
 | Latitud | norte agudo, sur grave (16 franjas de 8°, pentatónica La2–La5) |
-| Longitud | es el tiempo: la línea avanza y el sonido viaja de izquierda a derecha |
+| Longitud | es el tiempo y el lugar: la línea avanza y el sonido da una vuelta completa alrededor de tu cabeza (8D, con audífonos): Pacífico a la izquierda, El Salvador enfrente, Europa y África a la derecha, Asia detrás |
 
 **Comparar 2012 → año elegido**: suenan los dos recorridos seguidos (25 s). En 2023 el mundo tiene un 37 % más de luz que en 2012; en 2020 hubo menos luz que en 2019. La NASA no da unidades: el brillo es relativo y comparable entre años. Sin voz (la pone el bot).
 
@@ -28,6 +28,6 @@ Teclado: Espacio reproducir/pausar, ← → cambiar de fecha. Exportar WAV (2012
 
 ## Datos
 
-`imagen-a-sonido/luces_5276/radar_luces.mjs` → `resultados/luces_radar.json` (malla 192 columnas × 16 franjas por año, brillo 0–1000). Medido sobre el WAV: −20,7 LUFS, 0 saturación, 0 clics.
+`imagen-a-sonido/luces_5276/radar_luces.mjs` → `resultados/luces_radar.json` (malla 192 columnas × 16 franjas por año, brillo 0–1000). Medido sobre el WAV en 8D (2012 vs 2023): −20,5 LUFS, pico −5,7 dBFS, 0 saturación, sin clics nuevos frente a la versión estéreo.
 
 Imágenes: NASA/SVS 5276. Piano: Salamander Grand Piano (Alexander Holm, CC BY 3.0).

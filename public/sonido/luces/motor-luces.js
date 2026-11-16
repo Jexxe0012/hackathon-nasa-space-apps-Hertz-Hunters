@@ -4,7 +4,8 @@
  * RADAR: una línea recorre el mapa del mundo de noche de oeste a este en 12 s y suena lo que va tocando:
  *   cada franja de latitud es una nota (norte = agudo, sur = grave; pentatónica, 3 octavas);
  *   más luz en esa franja = nota más fuerte y repetida más seguido; sin luz = silencio;
- *   el sonido también viaja de izquierda a derecha, como la línea.
+ *   8D (con audífonos): la línea le da la vuelta al planeta y el sonido le da la vuelta a tu cabeza
+ *   (HRTF de Web Audio). El Salvador suena enfrente; Asia, al otro lado del planeta, detrás.
  *   Principio: la emoción sigue al dato. Si el dato no cambia, el sonido no cambia. Sin voz (la pone el bot).
  *
  * El mismo código suena en vivo y genera el WAV (Tone.Offline). Requiere Tone.js. Expone `window.MotorLuces`.
@@ -20,8 +21,11 @@
     baseHz: 110,        // la franja más al sur suena La2; cada franja hacia el norte sube un escalón
     pentatonica: [0, 2, 4, 7, 9],
   });
+  // 8D: ángulo 0 = enfrente = El Salvador (89,1° O); hacia el este gira a la derecha. La malla va de 180° O a 180° E.
+  const ESPACIO = Object.freeze({ lonFrente: -89.1, puntos: 192 }); // 192 puntos por vuelta (1,9° cada uno)
   const DEMO = Object.freeze({ entrada: 0.3, pausa: 1.0, salida: 2.0, subida: 0.2 });
-  const NIVEL = Object.freeze({ pianoDb: -6, retornoRevDb: -10, salida: 2.7 }); // ~-20 LUFS (medido)
+  // ~-20 LUFS (medido). pianoDb era -6 en estéreo; el HRTF del navegador sube el nivel (medido), se compensa aquí.
+  const NIVEL = Object.freeze({ pianoDb: -13.8, retornoRevDb: -10, salida: 2.7 });
   const PIANO = Object.freeze({
     base: 'https://tonejs.github.io/audio/salamander/', // Salamander Grand Piano (Alexander Holm, CC BY 3.0)
     notas: { A2: 'A2', C3: 'C3', 'D#3': 'Ds3', 'F#3': 'Fs3', A3: 'A3', C4: 'C4', 'D#4': 'Ds4', 'F#4': 'Fs4', A4: 'A4', C5: 'C5', 'D#5': 'Ds5', 'F#5': 'Fs5', A5: 'A5' },
@@ -34,6 +38,8 @@
   // más luz = la nota se repite más seguido
   function intervalo(v) { return v >= 300 ? 0.125 : v >= 100 ? 0.25 : 0.5; }
   function fuerza(v) { return Math.min(1, 0.3 + 0.7 * Math.sqrt(v / 500)); }
+  // dónde suena la línea alrededor de tu cabeza (radianes), según cuánto ha recorrido del mapa (0–1)
+  function azimut(fraccion) { return ((-180 + 360 * fraccion) - ESPACIO.lonFrente) * Math.PI / 180; }
   const pasos = (malla) => Math.ceil(malla.length / RADAR.columnasPorPaso);
   const dPaso = (malla) => RADAR.barrido / pasos(malla);
 
@@ -76,8 +82,8 @@
       this.envio = new T.Gain(1);
       const reverb = new T.Convolver(T.ToneAudioBuffer.fromArray(respuestaReverb(T.getContext().sampleRate)));
       this.envio.chain(new T.Filter({ type: 'highpass', frequency: 300, rolloff: -12 }), reverb, new T.Gain(g(NIVEL.retornoRevDb)), this.salida);
-      // El sonido viaja de izquierda a derecha con la línea del radar
-      this.pan = new T.Panner(0);
+      // 8D: el sonido da la vuelta alrededor de tu cabeza con la línea del radar (volumen constante: no se aleja)
+      this.pan = new T.Panner3D({ panningModel: 'HRTF', distanceModel: 'inverse', refDistance: 1, rolloffFactor: 0, positionX: 0, positionY: 0, positionZ: -1 });
       this.pianoBus = new T.Gain(g(NIVEL.pianoDb));
       this.pianoBus.chain(this.pan, this.salida);
       const env = new T.Gain(g(-3)); this.pan.connect(env); env.connect(this.envio);
@@ -97,12 +103,18 @@
       else { const s = this.campana[this.sigCampana]; this.sigCampana = (this.sigCampana + 1) % this.campana.length; s.triggerAttackRelease(hz, 1.2, t, vel); }
     }
 
-    // la línea del radar: de -0,75 (oeste) a +0,75 (este) durante el barrido
+    // la línea del radar da una vuelta completa alrededor de tu cabeza durante el barrido
+    // (oyente mirando hacia -z, derecha = +x): empieza a tu izquierda (Pacífico), pasa enfrente (El Salvador),
+    // a la derecha (Europa, África), detrás (Asia) y vuelve a la izquierda.
     panear(t0, t1, desde) {
-      const p = this.pan.pan;
-      p.cancelScheduledValues(t0);
-      p.setValueAtTime(-0.75 + 1.5 * (desde || 0), t0);
-      p.linearRampToValueAtTime(0.75, t1);
+      const x = this.pan.positionX, z = this.pan.positionZ, d0 = desde || 0;
+      const n = Math.max(2, Math.ceil(ESPACIO.puntos * (1 - d0)));
+      x.cancelScheduledValues(t0); z.cancelScheduledValues(t0);
+      for (let i = 0; i <= n; i++) {
+        const a = azimut(d0 + (1 - d0) * i / n), t = t0 + (t1 - t0) * i / n;
+        if (i === 0) { x.setValueAtTime(Math.sin(a), t); z.setValueAtTime(-Math.cos(a), t); }
+        else { x.linearRampToValueAtTime(Math.sin(a), t); z.linearRampToValueAtTime(-Math.cos(a), t); }
+      }
     }
 
     volumen(valor, t, dur) {
@@ -222,5 +234,5 @@
     }
   }
 
-  global.MotorLuces = { RADAR, DEMO, NIVEL, frecuenciaFranja, intervalo, fuerza, duracion, cargarPiano, Motor, Reproductor, renderizar, armarSegmentos };
+  global.MotorLuces = { RADAR, ESPACIO, azimut, DEMO, NIVEL, frecuenciaFranja, intervalo, fuerza, duracion, cargarPiano, Motor, Reproductor, renderizar, armarSegmentos };
 })(window);
