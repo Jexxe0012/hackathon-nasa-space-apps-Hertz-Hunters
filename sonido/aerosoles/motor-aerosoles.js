@@ -3,7 +3,7 @@
  *
  * RADAR con 4 instrumentos: una línea recorre el mapa de oeste a este en 15 s y suena lo que toca.
  *   Cada TIPO de partícula tiene su instrumento (así se reconoce qué es):
- *     polvo = soplido de arena · sal marina = campanitas de agua · sulfatos = marimba · carbono negro = piano grave
+ *     polvo = flauta (viento) · sal marina = campanitas de agua · sulfatos = marimba · carbono negro = piano grave
  *   Norte = agudo, sur = grave (cada franja de latitud es una nota de la pentatónica, dentro del registro de cada instrumento).
  *   Más intenso el color = nota más fuerte y repetida más seguido; sin ese tipo = silencio de ese instrumento.
  *   El sonido viaja de izquierda a derecha con la línea. Sin voz (la pone el bot).
@@ -18,7 +18,7 @@
   const TIPOS = ['polvo', 'sal_marina', 'sulfatos', 'carbono_negro'];
   // registro de cada instrumento (nota de la franja más al sur) y nivel, calibrados midiendo cada uno solo
   const INSTR = Object.freeze({
-    polvo: { baseHz: 220, db: 6 },        // el ruido filtrado pierde mucha energía: va más alto
+    polvo: { baseHz: 220, db: -19 },      // flauta suave (antes ruido: sonaba a aplausos)
     sal_marina: { baseHz: 440, db: -15 },
     sulfatos: { baseHz: 110, db: -13 },
     carbono_negro: { baseHz: 55, db: -6 },
@@ -83,13 +83,13 @@
       this.buses = {};
       for (const t of TIPOS) { const b = new T.Gain(g(INSTR[t].db)); b.connect(this.mezcla); this.buses[t] = b; }
 
-      // polvo: soplos de ruido filtrado en la nota de la franja ("shhh" de arena)
+      // polvo: flauta suave (triángulo filtrado, entrada de soplo y vibrato): viento que lleva arena
+      const vibrato = new T.Vibrato({ frequency: 5, depth: 0.06 });
+      const lpPolvo = new T.Filter({ type: 'lowpass', frequency: 2600, rolloff: -12 });
+      vibrato.chain(lpPolvo, this.buses.polvo);
       this.polvo = [];
       for (let i = 0; i < 8; i++) {
-        const ruido = new T.NoiseSynth({ noise: { type: 'pink' }, envelope: { attack: 0.04, decay: 0.32, sustain: 0, release: 0.1 } });
-        const filtro = new T.Filter({ type: 'bandpass', frequency: 1000, Q: 5 });
-        ruido.chain(filtro, this.buses.polvo);
-        this.polvo.push({ ruido, filtro });
+        this.polvo.push(new T.Synth({ oscillator: { type: 'triangle' }, envelope: { attack: 0.06, attackCurve: 'sine', decay: 0.5, decayCurve: 'exponential', sustain: 0, release: 0.2 } }).connect(vibrato));
       }
       // sal marina: campanitas de cristal
       this.sal = [];
@@ -108,7 +108,7 @@
 
     nota(tipo, hz, v, t) {
       const vel = fuerza(v), sig = (k, arr) => { const x = arr[this.turno[k]]; this.turno[k] = (this.turno[k] + 1) % arr.length; return x; };
-      if (tipo === 'polvo') { const p = sig('polvo', this.polvo); p.filtro.frequency.setValueAtTime(hz * 4, t); p.ruido.triggerAttackRelease(0.34, t, vel); }
+      if (tipo === 'polvo') sig('polvo', this.polvo).triggerAttackRelease(hz, 0.5, t, vel);
       else if (tipo === 'sal_marina') sig('sal', this.sal).triggerAttackRelease(hz, 0.7, t, vel);
       else if (tipo === 'sulfatos') sig('marimba', this.marimba).triggerAttackRelease(hz, 0.42, t, vel);
       else if (this.piano) this.piano.triggerAttackRelease(hz, 0.3, t, vel);
