@@ -6,7 +6,9 @@
  *     polvo = flauta (viento) · sal marina = campanitas de agua · sulfatos = marimba · carbono negro = piano grave
  *   Norte = agudo, sur = grave (cada franja de latitud es una nota de la pentatónica, dentro del registro de cada instrumento).
  *   Más intenso el color = nota más fuerte y repetida más seguido; sin ese tipo = silencio de ese instrumento.
- *   El sonido viaja de izquierda a derecha con la línea. Sin voz (la pone el bot).
+ *   8D (con audífonos, HRTF de Web Audio): el sonido está donde está la línea en el planeta, alrededor de tu cabeza.
+ *   El Salvador suena enfrente; lo que está al este, a tu derecha; el otro lado del planeta (Asia), detrás.
+ *   Una historia de todo el mundo da la vuelta completa; una de una zona recorre solo su arco. Sin voz (la pone el bot).
  *
  * El mismo código suena en vivo y genera el WAV (Tone.Offline). Requiere Tone.js. Expone `window.MotorAerosoles`.
  */
@@ -23,7 +25,10 @@
     sulfatos: { baseHz: 110, db: -13 },
     carbono_negro: { baseHz: 55, db: -6 },
   });
-  const NIVEL = Object.freeze({ retornoRevDb: -10, salida: 1.4 });
+  // mezclaDb: el HRTF del navegador sube el nivel (medido); se compensa para seguir en ~-20,5 LUFS.
+  const NIVEL = Object.freeze({ retornoRevDb: -10, salida: 1.4, mezclaDb: -3.6 });
+  // 8D: ángulo 0 = enfrente = El Salvador (89,1° O); hacia el este gira a la derecha. Un punto cada 1,875° de longitud.
+  const ESPACIO = Object.freeze({ lonFrente: -89.1, gradosPorPunto: 1.875 });
   const PIANO = Object.freeze({
     base: 'https://tonejs.github.io/audio/salamander/', // Salamander Grand Piano (Alexander Holm, CC BY 3.0)
     notas: { A1: 'A1', C2: 'C2', 'D#2': 'Ds2', 'F#2': 'Fs2', A2: 'A2', C3: 'C3', 'D#3': 'Ds3', 'F#3': 'Fs3', A3: 'A3', C4: 'C4', 'D#4': 'Ds4', 'F#4': 'Fs4', A4: 'A4' },
@@ -35,6 +40,13 @@
   function intervalo(v) { return v >= 500 ? 0.15 : v >= 200 ? 0.3 : 0.6; }
   function fuerza(v) { return Math.min(1, 0.3 + 0.7 * Math.sqrt(v / 600)); }
   const pasos = (malla) => Math.ceil(malla.length / RADAR.columnasPorPaso);
+  // dónde suena una longitud alrededor de tu cabeza (radianes)
+  function azimut(lon) { return (lon - ESPACIO.lonFrente) * Math.PI / 180; }
+  // longitud de la línea en un tramo, según cuánto ha recorrido (0–1) y su sentido
+  function lonTramo(tr, fraccion) {
+    const z = tr && tr.zona ? tr.zona : [-180, 180];
+    return tr && tr.dir < 0 ? z[1] - fraccion * (z[1] - z[0]) : z[0] + fraccion * (z[1] - z[0]);
+  }
 
   function respuestaReverb(sr) {
     const dur = 2.6, pre = Math.floor(0.02 * sr), n = Math.floor(dur * sr), canales = [new Float32Array(n), new Float32Array(n)];
@@ -75,8 +87,9 @@
       this.envio = new T.Gain(1);
       const reverb = new T.Convolver(T.ToneAudioBuffer.fromArray(respuestaReverb(T.getContext().sampleRate)));
       this.envio.chain(new T.Filter({ type: 'highpass', frequency: 300, rolloff: -12 }), reverb, new T.Gain(g(NIVEL.retornoRevDb)), this.salida);
-      this.pan = new T.Panner(0);
-      this.mezcla = new T.Gain(1);
+      // 8D: el sonido está donde está la línea, alrededor de tu cabeza (volumen constante: no se aleja)
+      this.pan = new T.Panner3D({ panningModel: 'HRTF', distanceModel: 'inverse', refDistance: 1, rolloffFactor: 0, positionX: 0, positionY: 0, positionZ: -1 });
+      this.mezcla = new T.Gain(g(NIVEL.mezclaDb));
       this.mezcla.chain(this.pan, this.salida);
       const env = new T.Gain(g(-3)); this.pan.connect(env); env.connect(this.envio);
 
@@ -115,12 +128,18 @@
       else sig('respaldo', this.respaldo).triggerAttackRelease(hz, 0.9, t, vel);
     }
 
-    // el sonido sigue a la línea: de izquierda a derecha (dir +1) o de derecha a izquierda (dir −1)
-    panear(t0, t1, desde, dir) {
-      const p = this.pan.pan, s = dir < 0 ? -1 : 1;
-      p.cancelScheduledValues(t0);
-      p.setValueAtTime(s * (-0.75 + 1.5 * (desde || 0)), t0);
-      p.linearRampToValueAtTime(s * 0.75, t1);
+    // el sonido sigue a la línea por su arco alrededor de tu cabeza, en el sentido del tramo
+    // (oyente mirando hacia -z, derecha = +x). Mundo completo = una vuelta; una zona = solo su arco.
+    panear(t0, t1, desde, tr) {
+      const x = this.pan.positionX, z = this.pan.positionZ, d0 = desde || 0;
+      const lon0 = lonTramo(tr, d0), lon1 = lonTramo(tr, 1);
+      const n = Math.max(2, Math.ceil(Math.abs(lon1 - lon0) / ESPACIO.gradosPorPunto));
+      x.cancelScheduledValues(t0); z.cancelScheduledValues(t0);
+      for (let i = 0; i <= n; i++) {
+        const a = azimut(lon0 + (lon1 - lon0) * i / n), t = t0 + (t1 - t0) * i / n;
+        if (i === 0) { x.setValueAtTime(Math.sin(a), t); z.setValueAtTime(-Math.cos(a), t); }
+        else { x.linearRampToValueAtTime(Math.sin(a), t); z.linearRampToValueAtTime(-Math.cos(a), t); }
+      }
     }
 
     activar(tipo, si, t) { this.buses[tipo].gain.rampTo(si ? global.Tone.dbToGain(INSTR[tipo].db) : 0, 0.08, t); }
@@ -157,7 +176,7 @@
       if (!tr) break;
       const ref = tr.mallas[Object.keys(tr.mallas)[0]], P = pasosDe(tr), dt = tr.barrido / P, t = tr.t0 + est.k * dt;
       if (t >= hasta) break;
-      if (est.k === 0 || est.reanudar) { motor.panear(t, tr.t0 + tr.barrido, est.k / P, tr.dir); est.reanudar = false; }
+      if (est.k === 0 || est.reanudar) { motor.panear(t, tr.t0 + tr.barrido, est.k / P, tr); est.reanudar = false; }
       const filas = ref[0].length, c0 = est.k * tr.cpp;
       for (const tipo of TIPOS) {
         if (!tr.mallas[tipo] || (tr.tipos && !tr.tipos.includes(tipo)) || (est.apagados && est.apagados[tipo])) continue;
@@ -258,5 +277,5 @@
     }
   }
 
-  global.MotorAerosoles = { RADAR, DEMO, TIPOS, INSTR, NIVEL, duracionRecorrido, cargarPiano, Motor, Reproductor, renderizar };
+  global.MotorAerosoles = { RADAR, DEMO, TIPOS, INSTR, NIVEL, ESPACIO, azimut, lonTramo, duracionRecorrido, cargarPiano, Motor, Reproductor, renderizar };
 })(window);

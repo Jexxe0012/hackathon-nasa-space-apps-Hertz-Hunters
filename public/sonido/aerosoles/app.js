@@ -12,16 +12,16 @@
 
   // zona = [lon oeste, lon este, lat sur, lat norte]; dir −1 = la línea va de este a oeste (como el viento)
   const HISTORIAS = [
-    { id: 'polvo', ganancia: 2, tramos: [{ zona: [-100, 25, -2, 38], dir: -1, tipos: ['polvo'], barrido: 14, pin: true }],
-      es: ['El viaje del polvo del Sahara', 'El radar sigue al viento: de África hacia nosotros (de derecha a izquierda). Solo suena el polvo: una flauta, como el viento.'],
-      en: ['The journey of Saharan dust', 'The radar follows the wind: from Africa toward us (right to left). Only dust plays: a flute, like the wind.'],
+    { id: 'polvo', ganancia: 1.1, tramos: [{ zona: [-100, 25, -2, 38], dir: -1, tipos: ['polvo'], barrido: 14, pin: true }],
+      es: ['El viaje del polvo del Sahara', 'El radar sigue al viento: de África hacia nosotros. Con audífonos, el polvo viene desde atrás a tu derecha hasta casi enfrente de ti. Solo suena el polvo: una flauta, como el viento.'],
+      en: ['The journey of Saharan dust', 'The radar follows the wind: from Africa toward us. With headphones, the dust comes from behind on your right to almost in front of you. Only dust plays: a flute, like the wind.'],
       textos: [
         { lon: [-15, 25], es: 'El polvo se levanta del Sahara', en: 'Dust rises from the Sahara' },
         { lon: [-58, -15], es: 'Cruza el Atlántico empujado por los vientos alisios', en: 'It crosses the Atlantic, pushed by the trade winds' },
         { lon: [-70, -58], es: 'Llega al Caribe oriental: unos 5.000 km de viaje', en: 'It reaches the eastern Caribbean: a ~5,000 km journey' },
         { lon: [-100, -70], es: 'Aquí ya no hay polvo: ese día se detuvo a unos 2.700 km de El Salvador', en: 'No more dust here: that day it stopped ~2,700 km from El Salvador' },
       ] },
-    { id: 'africa', ganancia: -1.5, tramos: [{ zona: [-20, 55, -36, 38], dir: 1, tipos: ['polvo', 'carbono_negro'], barrido: 13 }],
+    { id: 'africa', ganancia: -2.4, tramos: [{ zona: [-20, 55, -36, 38], dir: 1, tipos: ['polvo', 'carbono_negro'], barrido: 13 }],
       es: ['África: polvo al norte, humo al sur', 'Arriba, el polvo del Sahara (flauta, agudo); abajo, el humo de las quemas (piano grave). Se oyen los dos a la vez, cada uno en su altura.'],
       en: ['Africa: dust in the north, smoke in the south', 'Above, Saharan dust (flute, high); below, smoke from fires (low piano). You hear both at once, each at its own height.'],
       textos: [{ lon: [-20, 55], es: 'Norte: polvo del Sahara (flauta) · sur: humo de quemas (piano grave)', en: 'North: Saharan dust (flute) · south: smoke from fires (low piano)' }] },
@@ -34,13 +34,13 @@
         { lon: [-80, -58], es: 'Caribe: hasta aquí llegó el polvo del Sahara, apenas', en: 'Caribbean: Saharan dust barely reached this far' },
         { lon: [-58, -30], es: 'Este de Sudamérica y el Atlántico: sulfatos y sal marina', en: 'Eastern South America and the Atlantic: sulfate and sea salt' },
       ] },
-    { id: 'sur', ganancia: 3.5, tramos: [{ zona: [-180, 180, -64, -36], dir: 1, tipos: ['sal_marina'], barrido: 15 }],
-      es: ['Los mares del sur', 'Una franja de sal marina (campanitas) que da la vuelta al planeta: los vientos fuertes del océano Austral levantan gotitas de mar.'],
-      en: ['The southern seas', 'A band of sea salt (little bells) circling the planet: strong Southern Ocean winds lift droplets of sea water.'],
+    { id: 'sur', ganancia: 5.7, tramos: [{ zona: [-180, 180, -64, -36], dir: 1, tipos: ['sal_marina'], barrido: 15 }],
+      es: ['Los mares del sur', 'Una franja de sal marina (campanitas) que da la vuelta al planeta: los vientos fuertes del océano Austral levantan gotitas de mar. Con audífonos, las campanitas también te dan la vuelta a ti.'],
+      en: ['The southern seas', 'A band of sea salt (little bells) circling the planet: strong Southern Ocean winds lift droplets of sea water. With headphones, the bells circle around you too.'],
       textos: [{ lon: [-180, 180], es: 'Océano Austral: sal marina (campanitas) alrededor de todo el planeta', en: 'Southern Ocean: sea salt (bells) all around the planet' }] },
     { id: 'todo', global: true,
-      es: ['Todo el planeta', 'El radar recorre el mundo completo con los 4 instrumentos (de izquierda a derecha).'],
-      en: ['The whole planet', 'The radar sweeps the whole world with all 4 instruments (left to right).'],
+      es: ['Todo el planeta', 'El radar recorre el mundo completo con los 4 instrumentos. Con audífonos, el sonido te da la vuelta completa: El Salvador enfrente, Asia detrás.'],
+      en: ['The whole planet', 'The radar sweeps the whole world with all 4 instruments. With headphones, the sound makes a full turn around you: El Salvador in front, Asia behind.'],
       textos: [
         { lon: [-160, -148], es: 'Hilo verde: volcán Kilauea (Hawái) → marimba', en: 'Green thread: Kilauea volcano (Hawaii) → marimba' },
         { lon: [-82, -64], es: 'Remolino: huracán Erin → campanitas y flauta', en: 'Swirl: Hurricane Erin → bells and flute' },
@@ -57,7 +57,7 @@
     es: {
       disco: 'Disco 3 · Aerosoles · NASA SVS 5669',
       titulo: 'Un día en el aire del planeta',
-      aviso: 'Las partículas del aire de todo el mundo el 19 de agosto de 2025, a las 2 p.m. de El Salvador (modelo GEOS de la NASA). Elige una historia: cada tipo de partícula suena con su propio instrumento.',
+      aviso: 'Las partículas del aire de todo el mundo el 19 de agosto de 2025, a las 2 p.m. de El Salvador (modelo GEOS de la NASA). Elige una historia: cada tipo de partícula suena con su propio instrumento. Con audífonos se oye en 8D.',
       idioma: 'Idioma · Language', historia_lbl: 'Historia', fecha_mapa: '19 ago 2025 · 2:00 p.m. hora de El Salvador', leyenda: 'Tipos de partícula (prende o apaga cada uno)',
       tipos: {
         polvo: ['Polvo', 'desiertos · flauta (viento)'], sal_marina: ['Sal marina', 'el mar · campanitas'],
@@ -72,7 +72,8 @@
       pie: 'Datos e imagen: NASA Scientific Visualization Studio, SVS 5669 (modelo GEOS FP, NASA GMAO). Piano: Salamander Grand Piano (Alexander Holm, CC BY 3.0). Hertz Hunters · NASA Space Apps Challenge 2026 · San Salvador.',
       porque_lista: [
         '<strong>Qué escuchas.</strong> Las partículas que flotan en el aire el 19 de agosto de 2025 a las 2 p.m. de El Salvador, según el modelo GEOS de la NASA (combina satélites, estaciones y observaciones del clima). Es un modelo de un solo momento, no una foto ni un promedio.',
-        '<strong>El radar.</strong> Una línea recorre la zona de la historia y suena lo que toca. El sonido viaja con ella (izquierda/derecha). En el viaje del polvo, la línea va de este a oeste, como el viento.',
+        '<strong>El radar.</strong> Una línea recorre la zona de la historia y suena lo que toca. En el viaje del polvo, la línea va de este a oeste, como el viento.',
+        '<strong>8D: el sonido está donde está la línea.</strong> Con audífonos, imagina que estás en El Salvador: lo que está al oeste suena a tu izquierda, lo que está al este a tu derecha, y el otro lado del planeta (Asia), detrás. «Todo el planeta» y «Los mares del sur» te dan la vuelta completa; las demás historias recorren solo su parte (América, enfrente de ti; África, a tu derecha). Sin audífonos se oye como estéreo normal.',
         '<strong>Cada tipo, su instrumento:</strong> polvo = flauta (viento); sal marina = campanitas; sulfatos = marimba; carbono negro (hollín de incendios) = piano grave.',
         '<strong>Norte agudo, sur grave.</strong> Más intenso el color = más fuerte y más seguido. Donde no hay ese tipo, su instrumento calla: el silencio también es dato.',
         '<strong>Sin números, a propósito.</strong> La leyenda de la NASA solo dice qué tipo es; la cantidad se nota en lo brillante del color. Cada tipo tiene su propia escala.',
@@ -84,7 +85,7 @@
     en: {
       disco: 'Disc 3 · Aerosols · NASA SVS 5669',
       titulo: 'One day in the planet\'s air',
-      aviso: 'Airborne particles over the whole world on August 19, 2025, at 2 p.m. El Salvador time (NASA GEOS model). Pick a story: each particle type plays its own instrument.',
+      aviso: 'Airborne particles over the whole world on August 19, 2025, at 2 p.m. El Salvador time (NASA GEOS model). Pick a story: each particle type plays its own instrument. With headphones it plays in 8D.',
       idioma: 'Idioma · Language', historia_lbl: 'Story', fecha_mapa: 'Aug 19, 2025 · 2:00 p.m. El Salvador time', leyenda: 'Particle types (turn each on or off)',
       tipos: {
         polvo: ['Dust', 'deserts · flute (wind)'], sal_marina: ['Sea salt', 'the sea · little bells'],
@@ -99,7 +100,8 @@
       pie: 'Data and image: NASA Scientific Visualization Studio, SVS 5669 (GEOS FP model, NASA GMAO). Piano: Salamander Grand Piano (Alexander Holm, CC BY 3.0). Hertz Hunters · NASA Space Apps Challenge 2026 · San Salvador.',
       porque_lista: [
         '<strong>What you hear.</strong> The particles floating in the air on August 19, 2025 at 2 p.m. El Salvador time, according to NASA\'s GEOS model (it combines satellites, ground stations and weather observations). It is a model of a single moment, not a photo or an average.',
-        '<strong>The radar.</strong> A line sweeps the story\'s area and plays what it touches. The sound moves with it (left/right). In the dust journey, the line goes east to west, like the wind.',
+        '<strong>The radar.</strong> A line sweeps the story\'s area and plays what it touches. In the dust journey, the line goes east to west, like the wind.',
+        '<strong>8D: the sound is where the line is.</strong> With headphones, imagine you are in El Salvador: what lies west plays on your left, what lies east on your right, and the other side of the planet (Asia) behind you. «The whole planet» and «The southern seas» make a full turn around you; the other stories cover only their part (the Americas in front of you, Africa on your right). Without headphones it sounds like normal stereo.',
         '<strong>Each type, its instrument:</strong> dust = flute (wind); sea salt = little bells; sulfate = marimba; black carbon (wildfire soot) = low piano.',
         '<strong>North high, south low.</strong> More intense color = louder and more frequent. Where a type is absent, its instrument is silent: silence is data too.',
         '<strong>No numbers, on purpose.</strong> NASA\'s legend only says which type it is; the amount shows in how bright the color is. Each type has its own scale.',
