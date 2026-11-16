@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bosques · Earth Jukebox</title>
-<meta name="description" content="Un viaje de norte a sur por los bosques de América, convertido en sonido. NASA SVS 4950 (GEDI) · Hertz Hunters.">
+<meta name="description" content="Del corazón del Amazonas al borde donde se acaba el bosque alto, convertido en sonido. NASA SVS 4950 (GEDI) · Hertz Hunters.">
 <style>
-  :root { --fondo: #f6f8fa; --tarjeta: #ffffff; --texto: #12202e; --suave: #4a5b6c; --borde: #c9d3dd; --acento: #5a7d2b; --acento-texto: #ffffff; --foco: #f59e0b; }
+  :root { --fondo: #f6f8fa; --tarjeta: #ffffff; --texto: #12202e; --suave: #4a5b6c; --borde: #c9d3dd; --acento: #5a7d2b; --acento-texto: #ffffff; --foco: #f59e0b; --corte: #b45309; }
   @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) { --fondo: #0d1520; --tarjeta: #152232; --texto: #e8eef5; --suave: #a7b6c6; --borde: #2c3e52; --acento: #a8cf6a; --acento-texto: #0d1520; }
+    :root:not([data-theme="light"]) { --fondo: #0d1520; --tarjeta: #152232; --texto: #e8eef5; --suave: #a7b6c6; --borde: #2c3e52; --acento: #a8cf6a; --acento-texto: #0d1520; --corte: #f59e0b; }
   }
   * { box-sizing: border-box; }
   body { margin: 0; background: var(--fondo); color: var(--texto); font: 17px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
@@ -26,8 +26,14 @@
   button.principal { background: var(--acento); color: var(--acento-texto); border-color: var(--acento); font-weight: 600; }
   button:disabled { opacity: 0.55; cursor: progress; }
   :focus-visible { outline: 3px solid var(--foco); outline-offset: 2px; }
-  .mapa { position: relative; aspect-ratio: 16 / 9; background: #000 url(globo.webp) center / cover no-repeat; border-radius: 10px; overflow: hidden; cursor: crosshair; }
-  .linea { position: absolute; left: 0; right: 0; height: 2px; margin-top: -1px; background: #fff; box-shadow: 0 0 10px 3px rgba(168,207,106,.8); }
+  .mapa { position: relative; aspect-ratio: 16 / 9; background: #000 url(globo.webp) center / cover no-repeat; border-radius: 10px; overflow: hidden; }
+  .mapa svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .barras { display: flex; align-items: flex-end; gap: 4px; height: 110px; margin: 10px 0 2px; padding: 0 2px; border-bottom: 1px solid var(--borde); }
+  .barra { flex: 1; background: var(--acento); border-radius: 3px 3px 0 0; opacity: 0.18; transition: opacity .2s, height .25s; }
+  .barra.oida { opacity: 1; }
+  .barra.ahora { outline: 2px solid var(--foco); }
+  .barra.borde { background: var(--corte); }
+  .ejes { display: flex; justify-content: space-between; color: var(--suave); font-size: .8rem; }
   .lugar { min-height: 1.6em; font-weight: 600; margin: 8px 0 0; }
   .teclas { color: var(--suave); font-size: 0.95rem; margin-top: 10px; }
   kbd { font: 0.85rem ui-monospace, monospace; border: 1px solid var(--borde); border-bottom-width: 2px; border-radius: 5px; padding: 1px 6px; background: var(--fondo); }
@@ -50,9 +56,11 @@
     </div>
   </header>
 
-  <section class="tarjeta" aria-labelledby="h-viaje">
-    <h2 id="h-viaje" data-t="h_viaje"></h2>
-    <div class="mapa" id="mapa" aria-hidden="true"><div class="linea" id="linea"></div></div>
+  <section class="tarjeta" aria-labelledby="h-camino">
+    <h2 id="h-camino" data-t="h_camino"></h2>
+    <div class="mapa" aria-hidden="true"><svg id="capa" viewBox="0 0 3840 2160" preserveAspectRatio="none"></svg></div>
+    <div class="barras" id="barras" aria-hidden="true"></div>
+    <div class="ejes" aria-hidden="true"><span data-t="eje_norte"></span><span data-t="eje_sur"></span></div>
     <p class="lugar" id="lugar" aria-hidden="true"></p>
     <div class="fila" style="margin-top:10px">
       <button type="button" class="principal" id="btn-escuchar"></button>

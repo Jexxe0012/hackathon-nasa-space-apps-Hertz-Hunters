@@ -1,30 +1,23 @@
-# Disco Bosques · viaje de norte a sur (NASA SVS 4950, GEDI)
+# Disco Bosques · "Del corazón del Amazonas al borde donde se acaba el bosque" (NASA SVS 4950, GEDI)
 
-La altura de los bosques de América, medida por **GEDI**, un láser de la NASA en la Estación Espacial Internacional (2019–2020). La NASA solo publica estos datos como un **globo 3D con relieve y sombras**.
+La altura de los bosques medida por **GEDI**, un láser de la NASA en la Estación Espacial Internacional (2019–2020). La NASA solo publica estos datos como un **globo 3D con relieve y sombras**.
 
-## Cómo suena
+## La historia
 
-Una **línea horizontal baja por el globo, de Alaska a la Patagonia** (16 s), y suena lo que toca:
+Un camino de **16 puntos en línea recta**, del corazón del Amazonas hacia el sur. El bosque se mantiene alto y, de un punto al siguiente, **cae a menos de un tercio de su altura**: ahí se acaba el bosque alto. En el sur del Amazonas ese borde coincide con el **"arco de la deforestación"** que vigilan la NASA y el INPE de Brasil, donde el bosque da paso a sabana natural y a campos de cultivo y ganado.
 
-| Dato | Sonido |
-|---|---|
-| Altura de los árboles | **marimba** más aguda donde son más altos (13 escalones de la pentatónica, Mi3–Si5) |
-| Cuánto bosque | nota más fuerte y más seguida |
-| Dónde está en la imagen | izquierda / derecha (6 columnas con posición fija) |
+**Honestidad:** GEDI es una foto de 2019–2020, sin antes y después: **no mide la deforestación**. Muestra dónde se acaba el bosque alto; la página lo dice así.
 
-Marimba: de madera, como los árboles, e instrumento tradicional de Centroamérica. Textos al pasar: Canadá y Alaska, EE. UU. (bosques del este altos, llanuras bajas), México, Centroamérica y El Salvador, Amazonas (los más altos), sur de Sudamérica y Patagonia (bajos). Sin voz (la pone el bot).
+## Cómo suena: "subir el árbol"
 
-## Honestidad del dato
+En cada punto (1,1 s), el **piano sube una escalera de notas desde el suelo hasta la copa** (pentatónica Mi3 → Sol#5); la copa se queda sonando. Más alto el bosque = la escalera llega más arriba. En el Amazonas, escaleras largas; en el borde, cortas y abajo. Es otro sonido que los radares de los demás discos (a pedido de Diego: el radar con marimba ya sonaba repetido). Sin voz (la pone el bot).
 
-El globo tiene luz de un lado y sombra del otro, y la luz tiñe de amarillo. Se corrige con el **mar como referencia de luz** (su brillo en cada zona mide la luz que llega; malla 24×24 interpolada) y se busca el color más parecido de la barra 0–50 m. El patrón sale bien (Amazonas alto; Grandes Llanuras, noreste de Brasil y Patagonia bajos), pero **los metros no son confiables**: la página dice "más alto / más bajo", sin cifras. Las franjas siguen la imagen, no latitudes exactas.
+## Lo que se ve
 
-## Abrir
-
-`python -m http.server 8000` en la raíz del repo → `http://localhost:8000/sonido/bosques/`. Celular: `https://raw.githack.com/diegonoetorresvillatoro-netizen/hackathon-nasa-space-apps-Hertz-Hunters/fuentes/sonido/bosques/index.html`.
-Teclado: Espacio reproducir/pausar, ↑ ↓ mover la línea; tocar el globo empieza ahí. Exportar WAV (18,3 s).
+El globo completo con el camino punteado y el punto actual; debajo, 16 barras que se encienden al sonar (las del borde en naranja). Texto: corazón del Amazonas → el borde → más allá del borde.
 
 ## Datos y calidad
 
-`imagen-a-sonido/bosques_4950/leer_bosques.mjs` (Node) → `resultados/bosques_radar.json`: 96 franjas × 6 columnas con cobertura (0–1000) y altura aproximada. Medido sobre el WAV: ~−20 LUFS, sin saturación; agudos sobre 6 kHz 40 dB bajo el pico (los golpes graves de marimba no son clics).
+`imagen-a-sonido/bosques_4950/leer_bosques.mjs` → `resultados/bosques_radar.json` → `transecto` (16 puntos: posición en la imagen, vegetación, altura aproximada). Luz del globo corregida con el brillo del mar cercano; alturas aproximadas: se dice "más alto / más bajo", sin metros. Medido sobre el WAV: ~−20 LUFS, 0 clics, sin saturación.
 
-Imagen: NASA/SVS 4950.
+Abrir: `python -m http.server 8000` → `http://localhost:8000/sonido/bosques/` · Teclado: Espacio, ← →. Imagen: NASA/SVS 4950. Piano: Salamander Grand Piano (CC BY 3.0).

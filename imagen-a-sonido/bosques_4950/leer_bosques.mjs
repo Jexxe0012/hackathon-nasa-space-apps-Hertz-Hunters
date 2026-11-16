@@ -121,6 +121,23 @@ for (let f = 0; f < FRANJAS; f++) {
   filas.push(celdas);
 }
 
+// Historia: del corazón del Amazonas (norte) al borde sur donde el bosque alto se acaba. 16 puntos en línea recta
+// sobre la imagen; cada punto = altura media de la vegetación en una ventana de 60×60 px (misma lectura corregida).
+const TRANSECTO = { xa: 2250, ya: 1040, xb: 2250, yb: 1760, n: 16, ventana: 30 };
+const transecto = [];
+for (let i = 0; i < TRANSECTO.n; i++) {
+  const cx = Math.round(TRANSECTO.xa + (TRANSECTO.xb - TRANSECTO.xa) * i / (TRANSECTO.n - 1));
+  const cy = Math.round(TRANSECTO.ya + (TRANSECTO.yb - TRANSECTO.ya) * i / (TRANSECTO.n - 1));
+  let s2 = 0, v = 0, tot = 0;
+  for (let y = cy - TRANSECTO.ventana; y < cy + TRANSECTO.ventana; y += 2) for (let x = cx - TRANSECTO.ventana; x < cx + TRANSECTO.ventana; x += 2) {
+    const k = (y * img.w + x) * img.bpp, R = img.px[k], G = img.px[k + 1], B = img.px[k + 2];
+    tot++;
+    if (esVegetacion(R, G, B)) { v++; s2 += altura(R, G, B, factorLuz(x, y)); }
+  }
+  transecto.push({ x: cx, y: cy, vegetacion: +(v / tot).toFixed(2), altura: v / tot > 0.3 ? +(s2 / v).toFixed(1) : null });
+}
+console.log('transecto (altura en la escala de la barra):', transecto.map((q) => q.altura == null ? '-' : Math.round(q.altura)).join(' '));
+
 const salida = {
   fuente: 'NASA SVS 4950 · altura de la vegetación (GEDI, Estación Espacial Internacional), globo de América 3840×2160',
   aviso_es: 'La NASA solo publica este dataset como globo 3D con relieve y sombras: las alturas son APROXIMADAS y se usan como relativas (más alto / más bajo), no como metros exactos. Las franjas siguen la imagen (de arriba a abajo), no latitudes exactas.',
@@ -128,6 +145,7 @@ const salida = {
   metodo: 'luz corregida con el brillo del mar cercano (malla 24×24) y color más parecido de la barra 0–50 m (menos peso al azul); se descartan mar, hielo, fondo y leyenda',
   franjas: FRANJAS, columnas: COLUMNAS, zona_pixeles: { x0: X0, x1: X1, y0: Y0, y1: Y1, ancho: img.w, alto: img.h },
   filas, // filas[franja de arriba a abajo][columna de izquierda a derecha] = { cobertura 0–1000, altura_m }
+  transecto, // del corazón del Amazonas al borde sur: [{ x, y (pixeles), vegetacion 0–1, altura (escala de la barra, aproximada) }]
 };
 const out = path.join(AQUI, 'resultados', 'bosques_radar.json');
 fs.mkdirSync(path.dirname(out), { recursive: true });
