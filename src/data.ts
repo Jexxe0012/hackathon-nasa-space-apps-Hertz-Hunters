@@ -18,6 +18,15 @@ export interface Track {
   scene?: string
   /** Guía sonora: cómo se convierte el dato en sonido en esta pista. */
   guide: string[]
+  story: {
+    title: string
+    teaser: string
+    introduction: string
+    listenFor: string
+    action: string
+    initialYear?: number
+    comparisonYear?: number
+  }
 }
 
 export const listeningLegend =
@@ -37,8 +46,15 @@ const details: TrackDetails[] = [
     pattern: 'El mar frente a la costa salvadoreña durante un año, semana a semana. Arriba, todo el Pacífico y un zoom a la costa; abajo, la curva del año se dibuja mientras suena. Ronda los 29 °C de abril a octubre y cae de golpe en noviembre.',
     limit: 'Es un modelo de un solo año: se escucha el ciclo de las estaciones, no el calentamiento global. La temperatura se lee del color de las líneas de corriente (error máximo 0,46 °C).',
     source: 'https://svs.gsfc.nasa.gov/3912/',
-    alt: 'Mapa mundial con trazos rojos y amarillos cerca del ecuador, verdes y azules hacia los polos.',
+    alt: 'Vista del Pacífico con corrientes de colores y Centroamérica en su borde oriental.',
     scene: 'oceano',
+    story: {
+      title: 'Un año junto al mar de El Salvador',
+      teaser: 'El mar que conoces también tiene una historia que contar.',
+      introduction: 'Piensa en una visita a la costa salvadoreña. Ahora recorre un año frente a ella: las olas y el piano te guían por los cambios de temperatura, semana a semana.',
+      listenFor: 'Escucha cuándo sube la melodía y cómo cambia el ritmo de las olas. Son datos convertidos en sonido, no una grabación del mar.',
+      action: 'Explorar el año junto al mar',
+    },
     guide: [
       'Solo suenan dos cosas: el mar (olas) y una melodía de piano.',
       'Melodía más aguda = mar más caliente. Cada medio grado sube un escalón de una escala pentatónica; cuando la temperatura cambia de escalón, la nota nueva suena en ese momento.',
@@ -57,8 +73,15 @@ const details: TrackDetails[] = [
     pattern: 'Un camino de 16 puntos baja del corazón del Amazonas hacia el sur. El bosque se mantiene alto y, de un punto al siguiente, cae a menos de un tercio de su altura: ahí se acaba el bosque alto.',
     limit: 'GEDI es una sola foto, sin antes y después: no mide la deforestación. Ese borde coincide con el arco de la deforestación que vigilan la NASA y el INPE de Brasil. El globo 3D tiene sombras: las alturas son aproximadas.',
     source: 'https://svs.gsfc.nasa.gov/4950/',
-    alt: 'Globo con África en primer plano y zonas verdes con relieve que representan el dosel forestal.',
+    alt: 'Globo centrado en América con zonas verdes y relieve que representan la altura del dosel forestal.',
     scene: 'bosques',
+    story: {
+      title: 'Del corazón del Amazonas al borde del bosque',
+      teaser: 'Sube con el piano hasta las copas y escucha dónde cambia el bosque.',
+      introduction: 'Imagina que puedes subir desde el suelo hasta la copa de un árbol con cada nota. Este camino de 16 puntos te lleva del interior del Amazonas hacia su borde sur.',
+      listenFor: 'Presta atención a la altura que alcanza cada escalera de piano. El recorrido compara lugares de una misma visualización; no muestra una pérdida de bosque a lo largo del tiempo.',
+      action: 'Recorrer el Amazonas',
+    },
     guide: [
       'En cada punto del camino, el piano sube una escalera de notas desde el suelo hasta la copa: mientras más alto el bosque, más arriba llega.',
       'En el corazón del Amazonas las escaleras son largas; en el borde se cortan de golpe y quedan abajo.',
@@ -78,6 +101,13 @@ const details: TrackDetails[] = [
     source: 'https://svs.gsfc.nasa.gov/5669/',
     alt: 'Mapamundi oscuro con extensas bandas de partículas verdes, violetas, anaranjadas y azules.',
     scene: 'aerosoles',
+    story: {
+      title: 'El viaje del polvo del Sahara',
+      teaser: 'Sigue con el oído un viaje que cruza el Atlántico.',
+      introduction: 'El aire conecta lugares que parecen lejanos. Empieza en el Sahara y sigue el polvo sobre el Atlántico en una escena del 19 de agosto de 2025. Después puedes explorar otras historias del mismo mapa.',
+      listenFor: 'La flauta representa el polvo y el sonido avanza con el recorrido. El mapa muestra un momento de un modelo atmosférico, no una medición del aire que respiras hoy.',
+      action: 'Seguir el viaje del polvo',
+    },
     guide: [
       'Una línea recorre la zona de la historia y suena lo que toca. En el viaje del polvo va de este a oeste, como el viento.',
       'Cada partícula tiene su instrumento: polvo = flauta, sal marina = campanitas, sulfatos = marimba, carbono negro = piano grave.',
@@ -92,27 +122,42 @@ const details: TrackDetails[] = [
     kind: 'Observación satelital VIIRS',
     variable: 'Luz visible de noche',
     unit: 'Brillo relativo, sin unidades',
-    pattern: 'Elige una fecha importante y una línea recorre el mundo de noche de ese año, de oeste a este. En 2023 el planeta tiene un 37 % más de luz que en 2012; en 2020 hubo menos luz que en 2019.',
-    limit: 'Cada mapa es el promedio de todo un año, no del día de la fecha. La NASA no da unidades: el brillo es relativo y comparable entre años.',
+    pattern: 'Una línea recorre el mapa nocturno de oeste a este y transforma las luces en piano. Puedes escuchar los promedios anuales de 2012 a 2023. La historia de entrada prepara 2020 y permite compararlo con 2019.',
+    limit: 'Cada mapa es el promedio de todo un año, no de un día ni de un confinamiento. El brillo se lee de imágenes en una escala relativa común. Una diferencia entre 2019 y 2020 no permite atribuir por sí sola su causa a la pandemia.',
     source: 'https://svs.gsfc.nasa.gov/5276/',
     credit: 'NASA SVS 5276 · Black Marble, Suomi NPP / VIIRS',
     alt: 'Mapa mundial nocturno con continentes azul oscuro y agrupaciones de luces blancas y doradas.',
     scene: 'luces',
+    story: {
+      title: '¿Cómo sonaban las luces del mundo durante la pandemia?',
+      teaser: 'Vuelve a 2020 y escucha las luces de un año que cambió nuestras rutinas.',
+      introduction: '¿Recuerdas cómo cambió tu rutina en 2020? Acércate a ese año desde otra perspectiva: escucha las luces nocturnas del planeta. Empieza por 2020 y compáralo con 2019; después puedes recorrer otros años.',
+      listenFor: 'Donde hay luz suena el piano. Compara dónde aparecen las notas y con qué intensidad. Escuchas promedios anuales; el mapa por sí solo no explica las causas de los cambios.',
+      action: 'Explorar las luces de 2020',
+      initialYear: 2020,
+      comparisonYear: 2019,
+    },
     guide: [
       'La línea del radar suena lo que toca: donde hay luz suena el piano; donde está oscuro, silencio.',
       'Más luz = notas más fuertes y más seguidas. Norte agudo, sur grave. El sonido viaja de izquierda a derecha con la línea.',
-      'Con «Comparar 2012 →» del visor escuchas 2012 y luego tu año, uno tras otro.',
+      'La historia empieza con 2020 y ofrece comparar 2019 → 2020: primero escuchas el año de referencia y luego el elegido. Puedes cambiar ambos años en el visor.',
     ],
   },
 ]
 const base = import.meta.env.BASE_URL
 const mediaBase = `${base}media/`
+const sceneCovers: Record<string, string> = {
+  oceano: 'sonido/oceano/mapas/s01.webp',
+  bosques: 'sonido/bosques/globo.webp',
+  luces: 'sonido/luces/mapas/mundo_2020.webp',
+}
 
 export const tracks: Track[] = details.map((track) => ({
   credit: 'NASA Scientific Visualization Studio',
   ...track,
-  image: `${mediaBase}${track.id}.webp`,
+  image: sceneCovers[track.scene] ? `${base}${sceneCovers[track.scene]}` : `${mediaBase}${track.id}.webp`,
   audio: `${mediaBase}${track.id}.mp3`,
   duration: 48,
-  scene: `${base}sonido/${track.scene}/index.html?embed=1&v=4`, // v: evita copias viejas en caché
+  scene: `${base}sonido/${track.scene}/index.html?embed=1&v=${track.scene === 'luces' ? 5 : 4}` +
+    (track.story.initialYear ? `&anio=${track.story.initialYear}&comparar=${track.story.comparisonYear}` : ''),
 }))

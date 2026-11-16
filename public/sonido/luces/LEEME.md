@@ -13,7 +13,9 @@ Una línea recorre el mapa de oeste a este (de América a Asia) en 12 segundos y
 | Latitud | norte agudo, sur grave (16 franjas de 8°, pentatónica La2–La5) |
 | Longitud | es el tiempo: la línea avanza y el sonido viaja de izquierda a derecha |
 
-**Comparar 2012 → año elegido**: suenan los dos recorridos seguidos (25 s). En 2023 el mundo tiene un 37 % más de luz que en 2012; en 2020 hubo menos luz que en 2019. La NASA no da unidades: el brillo es relativo y comparable entre años. Sin voz (la pone el bot).
+**Comparar año de referencia → año elegido**: suenan los dos recorridos seguidos (25 s), con la misma escala. Ambos años se pueden elegir. Los mapas son promedios anuales: una diferencia entre 2019 y 2020 no permite concluir por sí sola que su causa fue la pandemia. Sin voz (la pone el bot).
+
+La entrada de Earthbeat «¿Cómo sonaban las luces del mundo durante la pandemia?» usa `?embed=1&v=5&anio=2020&comparar=2019`. Los parámetros se validan entre 2012 y 2023 y preparan la escucha sin reproducir automáticamente. Sin esos parámetros, la página comienza en 2023 con 2012 como referencia. El motor conserva su conversión de datos a sonido; solo cambia qué años solicita la interfaz.
 
 ## Fechas (una por año)
 
@@ -22,7 +24,7 @@ Una línea recorre el mapa de oeste a este (de América a Asia) en 12 segundos y
 ## Cómo abrirla
 
 Desde la raíz del repo `npm run dev` en la raíz del repo (app Earthbeat) → `http://localhost:5173/sonido/luces/`. Celular: `https://raw.githack.com/diegonoetorresvillatoro-netizen/hackathon-nasa-space-apps-Hertz-Hunters/fuentes/public/sonido/luces/index.html`.
-Teclado: Espacio reproducir/pausar, ← → cambiar de fecha. Exportar WAV (2012 + año elegido).
+Teclado: Espacio reproducir/pausar, ← → cambiar de fecha. Exportar WAV (año de referencia + año elegido).
 
 ## Datos
 

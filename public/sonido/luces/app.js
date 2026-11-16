@@ -28,23 +28,23 @@
       disco: 'Disco 2 · Luces nocturnas · NASA SVS 5276',
       titulo: 'Escucha cómo se veía el mundo de noche',
       aviso: 'Elige una fecha importante y escucha las luces del planeta ese año, vistas desde el espacio (satélite VIIRS de la NASA y la NOAA). Cada mapa es el promedio de todo el año, no de ese día.',
-      idioma: 'Idioma · Language', fecha: 'Fecha',
+      idioma: 'Idioma · Language', fecha: 'Año que quieres escuchar', referencia: 'Año de referencia',
       leyenda_mapa: 'La línea recorre el mundo de oeste a este (de América a Asia) y suena lo que toca: más luz, más notas; norte agudo, sur grave.',
-      escuchar: 'Escuchar {anio} (12 s)', comparar: 'Comparar 2012 → {anio} (25 s)',
+      escuchar: 'Escuchar {anio} (12 s)', comparar: 'Comparar {base} → {anio} (25 s)',
       reproducir: 'Reproducir', pausar: 'Pausar',
       teclas: 'Teclado: <kbd>Espacio</kbd> reproducir o pausar · <kbd>←</kbd> <kbd>→</kbd> cambiar de fecha',
       porque: '¿Por qué suena así?',
       h_exportar: 'Exportar audio',
-      exportar_texto: 'Genera el recorrido de 2012 y del año elegido como archivo WAV, con el mismo motor que escuchas aquí. Sirve para el video de la demo.',
+      exportar_texto: 'Genera el recorrido de {base} y del año elegido como archivo WAV, con el mismo motor que escuchas aquí. Sirve para el video de la demo.',
       exportar: 'Exportar en WAV', exportando: 'Generando el audio…', exportado: 'Listo: {archivo} ({seg} s).', export_error: 'No se pudo generar el audio: {error}',
       fin: 'Fin del recorrido.', cargando: 'Cargando datos…', error_datos: 'No se pudieron cargar los datos. Abre la página desde un servidor web (ver LEEME.md).',
       pie: 'Datos e imágenes: NASA Scientific Visualization Studio, SVS 5276 (Black Marble, VIIRS / Suomi NPP). Piano: Salamander Grand Piano (Alexander Holm, CC BY 3.0). Hertz Hunters · NASA Space Apps Challenge 2026 · San Salvador.',
-      porque_lista: (rel) => [
+      porque_lista: () => [
         '<strong>Qué escuchas.</strong> El mundo de noche visto desde el espacio (mapas Black Marble de la NASA, satélite VIIRS) el año de la fecha que elegiste. Cada mapa es el promedio de todo ese año: la fecha es solo para ubicarte en el tiempo.',
         '<strong>El radar.</strong> Una línea recorre el mapa de oeste a este en 12 segundos y suena lo que va tocando. El sonido también viaja de izquierda a derecha en tus audífonos.',
         '<strong>Más luz = más notas y más fuertes.</strong> Las ciudades suenan; los océanos y los desiertos oscuros quedan en silencio.',
         '<strong>Norte agudo, sur grave.</strong> Cada franja de latitud es una nota de una escala pentatónica: Europa suena aguda; Brasil, Sudáfrica y Australia, graves.',
-        '<strong>Comparar con 2012.</strong> Primero suena 2012 y después tu año. En 2023 el mundo tiene un ' + Math.round(100 * (rel[2023] - 1)) + ' % más de luz que en 2012 (se oyen más notas), y en 2020 hubo menos luz que en 2019.',
+        '<strong>Comparar años.</strong> Primero suena el año de referencia y después el elegido, con la misma escala. Son promedios anuales: las diferencias no explican por sí solas su causa ni muestran un día concreto de la pandemia.',
         '<strong>Sin números, a propósito.</strong> La NASA no da unidades: el brillo es relativo y comparable entre años. Más luz no es buena ni mala por sí sola.',
       ],
       decimal: ',',
@@ -53,23 +53,23 @@
       disco: 'Disc 2 · Night lights · NASA SVS 5276',
       titulo: 'Listen to how the world looked at night',
       aviso: 'Pick an important date and listen to the planet\'s lights that year, seen from space (NASA–NOAA VIIRS satellite). Each map is the average of the whole year, not of that day.',
-      idioma: 'Idioma · Language', fecha: 'Date',
+      idioma: 'Idioma · Language', fecha: 'Year to listen to', referencia: 'Reference year',
       leyenda_mapa: 'The line sweeps the world from west to east (from the Americas to Asia) and plays what it touches: more light, more notes; north high, south low.',
-      escuchar: 'Listen to {anio} (12 s)', comparar: 'Compare 2012 → {anio} (25 s)',
+      escuchar: 'Listen to {anio} (12 s)', comparar: 'Compare {base} → {anio} (25 s)',
       reproducir: 'Play', pausar: 'Pause',
       teclas: 'Keyboard: <kbd>Space</kbd> play or pause · <kbd>←</kbd> <kbd>→</kbd> change date',
       porque: 'Why does it sound like this?',
       h_exportar: 'Export audio',
-      exportar_texto: 'Renders the sweep of 2012 and of the chosen year as a WAV file, with the same engine you hear here. Use it for the demo video.',
+      exportar_texto: 'Renders the sweep of {base} and of the chosen year as a WAV file, with the same engine you hear here. Use it for the demo video.',
       exportar: 'Export as WAV', exportando: 'Rendering audio…', exportado: 'Done: {archivo} ({seg} s).', export_error: 'Could not render the audio: {error}',
       fin: 'End of the sweep.', cargando: 'Loading data…', error_datos: 'Could not load the data. Open the page from a web server (see LEEME.md).',
       pie: 'Data and images: NASA Scientific Visualization Studio, SVS 5276 (Black Marble, VIIRS / Suomi NPP). Piano: Salamander Grand Piano (Alexander Holm, CC BY 3.0). Hertz Hunters · NASA Space Apps Challenge 2026 · San Salvador.',
-      porque_lista: (rel) => [
+      porque_lista: () => [
         '<strong>What you hear.</strong> The world at night seen from space (NASA Black Marble maps, VIIRS satellite) in the year of the date you picked. Each map is the average of the whole year: the date only places you in time.',
         '<strong>The radar.</strong> A line sweeps the map from west to east in 12 seconds and plays what it touches. The sound also travels from left to right in your headphones.',
         '<strong>More light = more and louder notes.</strong> Cities sound; dark oceans and deserts stay silent.',
         '<strong>North high, south low.</strong> Each latitude band is a note of a pentatonic scale: Europe sounds high; Brazil, South Africa and Australia, low.',
-        '<strong>Compare with 2012.</strong> First 2012 plays, then your year. In 2023 the world has ' + Math.round(100 * (rel[2023] - 1)) + ' % more light than in 2012 (you hear more notes), and 2020 had less light than 2019.',
+        '<strong>Compare years.</strong> The reference year plays first, followed by the selected year, using the same scale. These are annual averages: differences alone do not explain their causes or show a particular day during the pandemic.',
         '<strong>No numbers, on purpose.</strong> NASA gives no units: brightness is relative and comparable between years. More light is neither good nor bad by itself.',
       ],
       decimal: '.',
@@ -78,7 +78,12 @@
 
   const $ = (id) => document.getElementById(id);
   const rep = new M.Reproductor();
-  let idioma = 'es', datos = null, anio = 2023;
+  const parametros = new URLSearchParams(location.search);
+  const anioValido = (a) => Number.isInteger(a) && a >= 2012 && a <= 2023;
+  const solicitado = Number(parametros.get('anio'));
+  const baseSolicitada = Number(parametros.get('comparar'));
+  let idioma = 'es', datos = null, anio = anioValido(solicitado) ? solicitado : 2023;
+  let referencia = anioValido(baseSolicitada) ? baseSolicitada : 2012;
   const L = () => TXT[idioma];
   function t(clave, vars) { let s = L()[clave]; if (vars) for (const k in vars) s = s.split('{' + k + '}').join(vars[k]); return s; }
   const num = (x, d) => x.toFixed(d).replace('.', L().decimal);
@@ -86,13 +91,15 @@
 
   function aplicarIdioma() {
     document.documentElement.lang = idioma;
-    document.querySelectorAll('[data-t]').forEach((el) => { el.textContent = t(el.dataset.t); });
+    document.querySelectorAll('[data-t]').forEach((el) => { el.textContent = t(el.dataset.t, { base: referencia }); });
     $('teclas').innerHTML = t('teclas');
     $('btn-exportar').textContent = t('exportar');
     const sel = $('fecha'), previo = sel.value || String(anio);
     sel.innerHTML = Object.keys(FECHAS).map((a) => `<option value="${a}">${a} · ${FECHAS[a][idioma][0]}</option>`).join('');
     sel.value = previo;
-    if (datos) $('porque-texto').innerHTML = '<ul>' + L().porque_lista(datos.total_relativo_2012).map((x) => '<li>' + x + '</li>').join('') + '</ul>';
+    $('referencia').innerHTML = Object.keys(FECHAS).map((a) => `<option value="${a}">${a}</option>`).join('');
+    $('referencia').value = String(referencia);
+    if (datos) $('porque-texto').innerHTML = '<ul>' + L().porque_lista().map((x) => '<li>' + x + '</li>').join('') + '</ul>';
     mostrarFecha();
   }
 
@@ -101,8 +108,9 @@
     $('evento').textContent = anio + ' · ' + f[0];
     $('evento-sub').textContent = f[1];
     $('btn-escuchar').textContent = t('escuchar', { anio });
-    $('btn-comparar').textContent = t('comparar', { anio });
-    $('btn-comparar').disabled = anio === 2012;
+    $('btn-comparar').textContent = t('comparar', { base: referencia, anio });
+    $('btn-comparar').disabled = !datos || anio === referencia;
+    $('btn-escuchar').disabled = !datos;
     if (!rep.sonando) ponerMapa(anio, 0);
     actualizarBotonPlay(true);
   }
@@ -163,7 +171,7 @@
     return new Blob([dv], { type: 'audio/wav' });
   }
   async function generarWav(anios) {
-    anios = anios || (anio === 2012 ? [2012] : [2012, anio]);
+    anios = anios || (anio === referencia ? [referencia] : [referencia, anio]);
     const buffer = await M.renderizar(datos.anios, anios, { sampleRate: 48000 });
     return { blob: aWav(buffer), buffer, segundos: buffer.duration, nombre: 'luces_radar_' + anios.join('_vs_') + '.wav' };
   }
@@ -197,8 +205,14 @@
     $('evento').textContent = t('cargando');
     $('idioma').addEventListener('change', (e) => { idioma = e.target.value; aplicarIdioma(); });
     $('fecha').addEventListener('change', (e) => elegir(Number(e.target.value)));
+    $('referencia').addEventListener('change', (e) => {
+      referencia = Number(e.target.value);
+      if (rep.sonando) rep.pausar();
+      rep.est = null; terminado = false;
+      aplicarIdioma();
+    });
     $('btn-escuchar').addEventListener('click', () => { terminado = false; escuchar([anio]); });
-    $('btn-comparar').addEventListener('click', () => { terminado = false; escuchar([2012, anio]); });
+    $('btn-comparar').addEventListener('click', () => { terminado = false; escuchar([referencia, anio]); });
     $('btn-play').addEventListener('click', alternar);
     $('btn-exportar').addEventListener('click', exportar);
     rep.alTerminar = () => { terminado = true; $('estado').textContent = t('fin'); };

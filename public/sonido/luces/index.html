@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Luces · Earth Jukebox</title>
+<title>Luces nocturnas · Earthbeat</title>
 <meta name="description" content="Escucha cómo se veía el mundo de noche en fechas importantes de 2012 a 2023. NASA SVS 5276 · Hertz Hunters.">
 <style>
   :root {
@@ -29,7 +29,7 @@
   select { max-width: 100%; }
   button, select { font: inherit; min-height: 44px; border-radius: 10px; border: 1px solid var(--borde); background: var(--tarjeta); color: var(--texto); padding: 8px 14px; cursor: pointer; }
   button.principal { background: var(--acento); color: var(--acento-texto); border-color: var(--acento); font-weight: 600; }
-  button:disabled { opacity: 0.55; cursor: progress; }
+  button:disabled { opacity: 0.55; cursor: not-allowed; }
   :focus-visible { outline: 3px solid var(--foco); outline-offset: 2px; }
   .teclas { color: var(--suave); font-size: 0.95rem; margin-top: 10px; }
   kbd { font: 0.85rem ui-monospace, monospace; border: 1px solid var(--borde); border-bottom-width: 2px; border-radius: 5px; padding: 1px 6px; background: var(--fondo); }
@@ -57,6 +57,7 @@
       <label class="solo-pagina"><span data-t="idioma"></span>
         <select id="idioma"><option value="es">Español</option><option value="en">English</option></select></label>
       <label><span data-t="fecha"></span><select id="fecha"></select></label>
+      <label><span data-t="referencia"></span><select id="referencia"></select></label>
     </div>
   </header>
 
@@ -91,8 +92,8 @@
 </main>
 <script src="https://cdn.jsdelivr.net/npm/tone@14.8.49/build/Tone.js"></script>
 <script>window.Tone || document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"><\/script>');</script>
-<script src="../comun/incrustado.js?v=4"></script>
+<script src="../comun/incrustado.js?v=5"></script>
 <script src="motor-luces.js"></script>
-<script src="app.js"></script>
+<script src="app.js?v=5"></script>
 </body>
 </html>
