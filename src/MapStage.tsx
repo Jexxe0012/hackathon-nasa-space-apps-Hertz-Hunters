@@ -1,12 +1,18 @@
 import { useEffect, useRef, useState } from 'react'
 import type { Track } from './data'
+import { useLanguage } from './i18n'
 import './map-stage.css'
 
 type StageProps = { track: Track; guided?: boolean; highContrast?: boolean }
 
 export function MapStage({ track, guided = false, highContrast = false }: StageProps) {
+  const { language, t } = useLanguage()
+  const initialLanguage = useRef(language)
   const frame = useRef<HTMLIFrameElement>(null)
   const [height, setHeight] = useState(520)
+  const updateLanguage = () => frame.current?.contentWindow?.postMessage({ eij: 'idioma', valor: language }, location.origin)
+
+  useEffect(() => { updateLanguage() }, [language, track.scene])
 
   // La escena sonora informa su alto para que el visor la muestre completa
   useEffect(() => {
@@ -21,7 +27,7 @@ export function MapStage({ track, guided = false, highContrast = false }: StageP
   }, [track.scene])
 
   return (
-    <figure className="map-stage" aria-label={`Visualización de ${track.title}`}>
+    <figure className="map-stage" aria-label={t('Visualization of {title}', { title: track.title })}>
       <figcaption className="map-stage__caption">
         <span className="map-stage__source">
           <span className="map-stage__mark" aria-hidden="true" />
@@ -34,8 +40,9 @@ export function MapStage({ track, guided = false, highContrast = false }: StageP
           <iframe
             ref={frame}
             className="escena-sonora"
-            src={track.scene + (guided ? `&guiado=1&contraste=${highContrast ? 1 : 0}` : '')}
-            title={guided ? `Opciones de la escena sonora de ${track.title}` : `Escena sonora de ${track.title}: mapa, línea de escucha y controles de exploración`}
+            src={track.scene + `&lang=${initialLanguage.current}` + (guided ? `&guiado=1&contraste=${highContrast ? 1 : 0}` : '')}
+            onLoad={updateLanguage}
+            title={guided ? t('Sound scene options for {title}', { title: track.title }) : t('Sound scene for {title}: map, scanning line, and exploration controls', { title: track.title })}
             style={{ height }}
             allow="autoplay"
           />

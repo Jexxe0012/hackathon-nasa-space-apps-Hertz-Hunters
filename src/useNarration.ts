@@ -1,6 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { useLanguage } from './i18n'
+import { narrationVoice, speechLanguage } from './translations'
 
 export function useNarration() {
+  const { language, t } = useLanguage()
   const supported = 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window
   const [enabled, setEnabled] = useState(false)
   const [speaking, setSpeaking] = useState(false)
@@ -27,9 +30,9 @@ export function useNarration() {
     setError('')
     const current = token.current
     const utterance = new SpeechSynthesisUtterance(text)
-    utterance.lang = 'es-ES'
+    utterance.lang = speechLanguage(language)
     utterance.rate = rate
-    const voice = window.speechSynthesis.getVoices().find(item => item.lang.toLowerCase().startsWith('es'))
+    const voice = narrationVoice(window.speechSynthesis.getVoices(), language)
     if (voice) utterance.voice = voice
     utterance.onstart = () => { if (current === token.current) window.clearTimeout(startTimer.current) }
     utterance.onend = () => {
@@ -44,7 +47,7 @@ export function useNarration() {
       utteranceRef.current = null
       setSpeaking(false)
       if (!['canceled', 'interrupted'].includes(event.error))
-        setError('No se pudo reproducir la voz. Puedes repetir la lectura o usar tu lector de pantalla.')
+        setError("Narration could not play. Try reading again or use your screen reader.")
     }
     utteranceRef.current = utterance
     setSpeaking(true)
@@ -55,10 +58,15 @@ export function useNarration() {
       startTimer.current = window.setTimeout(() => {
         if (current !== token.current) return
         stop()
-        setError('La voz no pudo iniciar en este navegador. Puedes repetir la lectura o continuar con tu lector de pantalla.')
+        setError("Narration could not start in this browser. Try reading again or continue with your screen reader.")
       }, 6000)
     }, 60)
-  }, [supported, rate, stop])
+  }, [supported, rate, stop, language])
+
+  useEffect(() => {
+    stop()
+    setError('')
+  }, [language, stop])
 
   const enable = useCallback(() => {
     if (!supported) return
@@ -83,5 +91,5 @@ export function useNarration() {
     }
   }, [supported])
 
-  return { supported, enabled, speaking, error, rate, setRate, enable, disable, read, stop }
+  return { supported, enabled, speaking, error: t(error), rate, setRate, enable, disable, read, stop }
 }

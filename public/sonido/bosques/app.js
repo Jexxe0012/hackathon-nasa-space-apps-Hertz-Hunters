@@ -10,7 +10,7 @@
       disco: 'Disco 4 · Bosques · NASA SVS 4950 (GEDI)',
       titulo: 'Del corazón del Amazonas al borde donde se acaba el bosque',
       aviso: 'La altura de los árboles medida con un láser desde la Estación Espacial Internacional (GEDI, 2019–2020). En cada punto del camino, el piano sube del suelo a la copa: mientras más alto el bosque, más arriba llega.',
-      idioma: 'Idioma · Language', h_camino: 'El camino (de norte a sur)', eje_norte: 'Corazón del Amazonas', eje_sur: 'Borde sur',
+      idioma: 'Idioma', h_camino: 'El camino (de norte a sur)', eje_norte: 'Corazón del Amazonas', eje_sur: 'Borde sur',
       escuchar: 'Escuchar el camino (18 s)', reproducir: 'Reproducir', pausar: 'Pausar',
       teclas: 'Teclado: <kbd>Espacio</kbd> reproducir o pausar · <kbd>←</kbd> <kbd>→</kbd> ir al punto anterior o siguiente',
       lugar_interior: 'Corazón del Amazonas: bosque alto → la escalera de notas sube muy arriba',
@@ -34,7 +34,7 @@
       disco: 'Disc 4 · Forests · NASA SVS 4950 (GEDI)',
       titulo: 'From the heart of the Amazon to the edge where the forest ends',
       aviso: 'Tree height measured by a laser on the International Space Station (GEDI, 2019–2020). At each point along the path, the piano climbs from the ground to the canopy: the taller the forest, the higher it reaches.',
-      idioma: 'Idioma · Language', h_camino: 'The path (north to south)', eje_norte: 'Heart of the Amazon', eje_sur: 'Southern edge',
+      idioma: 'Language', h_camino: 'The path (north to south)', eje_norte: 'Heart of the Amazon', eje_sur: 'Southern edge',
       escuchar: 'Listen to the path (18 s)', reproducir: 'Play', pausar: 'Pause',
       teclas: 'Keyboard: <kbd>Space</kbd> play or pause · <kbd>←</kbd> <kbd>→</kbd> previous or next point',
       lugar_interior: 'Heart of the Amazon: tall forest → the note ladder climbs very high',
@@ -58,13 +58,22 @@
 
   const $ = (id) => document.getElementById(id);
   const rep = new M.Reproductor();
-  let idioma = 'es', datos = null, puntos = [], borde = -1, terminado = false, lugarActual = null, actual = -1;
+  let idioma = window.EIJ ? EIJ.idiomaInicial() : 'en', datos = null, puntos = [], borde = -1, terminado = false, lugarActual = null, actual = -1;
   const L = () => TXT[idioma];
   function t(clave, vars) { let s = L()[clave]; if (vars) for (const k in vars) s = s.split('{' + k + '}').join(vars[k]); return s; }
   const num = (x, d) => x.toFixed(d).replace('.', L().decimal);
 
+  function cambiarIdioma(nuevo) {
+    if ((nuevo !== 'en' && nuevo !== 'es') || nuevo === idioma) return;
+    idioma = nuevo;
+    aplicarIdioma();
+
+  }
+
   function aplicarIdioma() {
     document.documentElement.lang = idioma;
+    document.title = L().titulo + ' · Earthbeat';
+    $('idioma').value = idioma;
     document.querySelectorAll('[data-t]').forEach((el) => { el.textContent = t(el.dataset.t); });
     $('teclas').innerHTML = t('teclas');
     $('btn-escuchar').textContent = t('escuchar');
@@ -171,12 +180,12 @@
   async function iniciar() {
     aplicarIdioma();
     $('lugar').textContent = t('cargando');
-    $('idioma').addEventListener('change', (e) => { idioma = e.target.value; aplicarIdioma(); });
+    $('idioma').addEventListener('change', (e) => { cambiarIdioma(e.target.value); if (window.EIJ) EIJ.guardarIdioma(idioma); });
     $('btn-escuchar').addEventListener('click', () => { rep.pos = 0; escuchar(0); });
     $('btn-play').addEventListener('click', alternar);
     $('btn-exportar').addEventListener('click', exportar);
     rep.alTerminar = () => { terminado = true; $('estado').textContent = t('fin'); };
-    if (!window.Tone) { $('lugar').textContent = 'Tone.js no cargó (¿sin internet?)'; return; }
+    if (!window.Tone) { $('lugar').textContent = (idioma === 'es' ? 'No se pudo cargar el audio. Comprueba tu conexión e inténtalo de nuevo.' : 'Audio could not load. Check your connection and try again.'); return; }
     M.cargarPiano().then((p) => rep.usarPiano(p)).catch(() => { /* suena el respaldo */ });
     try {
       const r = await fetch(RUTA, { cache: 'no-cache' });
@@ -193,6 +202,7 @@
 
   // Modo incrustado (Earthbeat): el reproductor de la app manda
   if (window.EIJ) EIJ.conectar({
+    idioma: cambiarIdioma,
     pausar: () => rep.pausar(),
     alternar: () => alternar(),
     ir: (f) => { const i = Math.floor(f * puntos.length); rep.pos = i; terminado = false; if (rep.sonando) escuchar(i); },

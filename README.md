@@ -1,77 +1,86 @@
 # Earthbeat
 
-Proyecto del equipo Hertz Hunters para el NASA Space Apps Challenge.
+[Español](docs/README.es.md)
 
-Earthbeat presenta cuatro historias de la Tierra con imágenes, descripciones en español y escenas sonoras basadas en datos. Una persona puede elegir una historia, aprender qué representa cada sonido y explorarla con el teclado. La aplicación lleva el diseño **Enfoque** a React, TypeScript y Vite, con iconos pixel art, un visor central y controles de reproducción al pie. [Diseño de Enfoque en Figma](https://www.figma.com/design/4q6sU5VYc8qZHcr2rmdSLO?node-id=6-11720)
+A Hertz Hunters project for the NASA Space Apps Challenge.
 
-Cada disco tiene un fondo inspirado en su tema: océano, bosques, aerosoles y un cielo estrellado para luces nocturnas. El modo de alto contraste utiliza un fondo limpio para facilitar la lectura.
+Earthbeat turns four NASA Earth visualizations into stories you can explore through sound, clear descriptions, and keyboard controls. Designed primarily for blind and low-vision people, it starts with a guided experience and also offers a visual collection and interactive maps. The **Enfoque** design is implemented with React, TypeScript, and Vite, with restrained pixel art details and playback controls at the bottom. [Enfoque design in Figma](https://www.figma.com/design/4q6sU5VYc8qZHcr2rmdSLO?node-id=6-11720)
 
-La interfaz combina detalles pixel art con títulos de mayor legibilidad y fondos suaves para reducir la carga visual.
+Each track has a background inspired by its subject. High contrast uses a clean background, and reduced motion removes decorative animation.
 
-## Ejecutar en local
+## Run locally
 
-Con Node.js 22.12 o posterior y npm, ejecuta desde la raíz del repositorio:
+Use Node.js 22.12 or later and npm. From the repository root:
 
 ```sh
 npm ci
 npm run dev
 ```
 
-Abre la dirección que imprime Vite. Para generar la versión de producción y revisarla en local:
+Open the address printed by Vite. To build and preview production:
 
 ```sh
 npm run build
 npm run preview
 ```
 
-Las imágenes, las fuentes, los MP3 de prueba y las escenas sonoras se sirven desde el proyecto (las escenas cargan Tone.js y las muestras de piano desde la web). La aplicación funciona sin claves API. Python, Pillow y FFmpeg solo intervienen al regenerar los MP3 con `python scripts/sonify.py`.
+Images, fonts, sample MP3 files, and sound scenes are served by the project. The scenes load Tone.js and piano samples from the web. No API key is required. Python, Pillow, and FFmpeg are only needed to regenerate sample MP3 files with `python scripts/sonify.py`.
 
-## Escuchar una imagen
+## Language and accessibility
 
-La primera visita abre la **experiencia guiada**, orientada a personas ciegas y con baja visión. Permite elegir entre el lector de pantalla del dispositivo y la voz opcional de Earthbeat. El recorrido lleva de la selección de historia a su contexto, escucha y límites de interpretación. El botón **Experiencia visual** abre la interfaz con colección y globo; desde esa vista se puede volver con **Experiencia guiada**. Se recuerda la experiencia elegida en este navegador.
+**English is the default**, even when the browser or device uses Spanish. Choose **Español** in the Language selector to use Spanish. The selector is available in both experiences and remembers the choice in `earthbeat.language`. It updates the interface, stories, descriptions, sound scenes, accessible labels, announcements, and optional narration together.
 
-El globo de bienvenida usa una malla 3D con cartografía global de Natural Earth y alturas estimadas del dosel GEDI de abril a julio de 2019, publicadas por Lang y colaboradores. Ambas capas comparten coordenadas WGS84: el modelo gira sin reconstruir hemisferios a partir de fotografías. El relieve está exagerado para hacerlo visible; las zonas sin mediciones aparecen grises. El giro puede pausarse y se detiene con movimiento reducido. [Fuentes, atribución y procesamiento del globo](docs/globo-datos.md).
+On a first visit, the **guided experience** lets you choose your own screen reader or optional Earthbeat narration. It takes you through choosing a story, understanding its context, listening, and reviewing what the data can tell you. **Visual experience** opens the collection and globe; **Guided experience** takes you back. The preferred experience is remembered separately from the language.
 
-TalkBack se activa en los ajustes de Android; la web ofrece encabezados, botones y controles nativos para usarlo, y también admite otros lectores de pantalla. La voz de Earthbeat utiliza la síntesis de voz del navegador, se activa por una acción de la persona y se puede detener o repetir. Elegir el lector de pantalla mantiene la voz propia apagada. La voz de guía se detiene al operar la escena o reproducir los datos. [Funcionamiento y comprobaciones de accesibilidad](docs/experiencia-guiada.md).
+Earthbeat sets the page and scene language to English or Spanish for screen readers. TalkBack is enabled in Android settings; the website cannot activate it or change its system voice. Automatic language switching in a screen reader depends on its settings and installed voices. Earthbeat's optional narration requests `en-US` by default and `es-ES` in Spanish, using an available voice in the chosen language. Narration starts only after a user action, can be stopped or repeated, and pauses when you operate a sound scene. [Guided experience and validation limits](docs/guided-experience.md)
 
-En el área de lectura de la experiencia guiada, después de comenzar, clic derecho avanza y clic izquierdo regresa. Los botones, enlaces, preferencias y controles de las escenas conservan su comportamiento normal. Se puede desactivar esta navegación. Con voz de Earthbeat, detener el ratón sobre un párrafo permite escucharlo; también se puede desactivar. Los botones **Anterior** y **Siguiente** ofrecen las mismas acciones mediante teclado o táctil. La experiencia guiada usa texto grande, contraste ajustable y evita las animaciones decorativas.
+After starting the guide, right-click in the reading area to move forward and left-click to go back. Buttons, links, preferences, and scene controls keep their native behavior. Click navigation can be disabled. Optional pointer reading waits until the pointer rests over text. **Previous** and **Next** offer keyboard and touch alternatives. Every task can be completed without moving the mouse.
 
-En **Colección** puedes elegir cualquiera de las cuatro pistas. **Sobre la pista** incluye su periodo, variable, procedencia y límites de interpretación. El visor muestra la imagen fuente de NASA.
+The player appears only inside a sound experience: on an open track in the visual experience, or during the listening step in the guide. Its controls and skip link disappear when you return to home or the collection.
 
-El reproductor aparece al seleccionar una pista y permanece disponible al regresar a la colección durante la misma visita.
+Use **Tab** and **Shift + Tab** to move between controls. Use **Enter** or **Space** to activate buttons, and the arrow keys, **Home**, and **End** on sliders. Accessibility settings remember contrast and motion preferences.
 
-La bienvenida destaca una pregunta: «¿Cómo sonaban las luces del mundo durante la pandemia?». Al abrirla, la escena prepara el promedio de 2020 y ofrece comparar 2019 → 2020. La escucha empieza solo al pulsar Reproducir o Comparar. Se pueden cambiar tanto el año escuchado como el de referencia. El relato aporta contexto humano; los mapas anuales no permiten atribuir por sí solos una diferencia a la pandemia ni describen un día de confinamiento.
+## Listen to an image
 
-La colección también invita a escuchar un año frente a la costa salvadoreña, recorrer el Amazonas y seguir el polvo del Sahara. Cada historia incluye una indicación breve de qué escuchar y conserva la ficha científica y la guía del motor de Fuentes.
+Choose a story from the collection. **About this track** explains its period, variable, source, and interpretation limits. **Sound guide** explains how the data maps to sound.
 
-Cada pista muestra en el visor su **escena sonora**: el mapa de la NASA con una línea de escucha, sus historias y su curva o barras, todo sincronizado con el sonido. El reproductor del pie controla esa escena: **Reproducir**, la barra de avance y el volumen mueven el motor de sonido de la pista. Las escenas viven en `public/sonido/` (motor de Diego Fuentes, Tone.js) y leen datos ya extraídos de las imágenes (`public/sonido/datos/`, generados en `imagen-a-sonido/`).
+The opening night-lights story asks, “What did the world's night lights sound like during the pandemic?” It prepares the 2020 average and offers a **2019 → 2020** comparison. You can change both years. Playback starts only when you press Play or Compare. Annual maps alone cannot attribute a difference to the pandemic or describe a particular day of lockdown.
 
-| Pista | Qué se escucha |
+| Track | What you hear |
 | --- | --- |
-| Corrientes y temperatura | El mar frente a El Salvador durante un año: olas y melodía de piano; más agudo = más caliente; espuma sobre 27 °C. |
-| Luces nocturnas | Una fecha importante de 2012–2023: un radar recorre el mundo de noche; donde hay luz suena el piano. Comparación con 2012. |
-| Aerosoles | Historias de un solo día (19 ago 2025): un instrumento por partícula (polvo, sal marina, sulfatos, carbono negro). |
-| Altura de bosques | Del corazón del Amazonas al borde donde se acaba el bosque alto: el piano «sube el árbol» en cada punto. |
+| Currents and temperature | A year off El Salvador's coast, represented by waves and piano. Higher notes mean warmer water; foam appears above 27 °C. |
+| Night lights | A scan of annual night-light maps from 2012 to 2023. Where there is light, the piano plays. Choose two years to compare. |
+| Aerosols | Stories from August 19, 2025, with an instrument for each particle type: dust, sea salt, sulfates, and black carbon. |
+| Forest height | A journey from the heart of the Amazon to its forest edge. The piano climbs a tree at each point. |
 
-El principio de diseño: la emoción sigue al dato; si el dato no cambia, el sonido no cambia. Los límites de cada dato (modelo de un año, mapas promediados, alturas aproximadas) se explican en «Sobre la pista». Cada escena también se puede abrir sola en `sonido/<disco>/` (por ejemplo `sonido/oceano/`) con su opción para exportar el audio en WAV.
+Each track embeds Diego Fuentes's sound scene from `public/sonido/`, using data extracted from NASA images in `public/sonido/datos/`. Regeneration scripts live in `imagen-a-sonido/`. The bottom player controls playback, position, and volume through the scene bridge. Standalone scenes such as `sonido/oceano/` also offer WAV export.
 
-Con **Tab** y **Mayús + Tab** se recorren los controles. Los primeros enlaces de salto llevan al contenido o al reproductor. Las flechas ajustan el avance y el volumen. **Ajustes** conserva las preferencias de contraste y movimiento en el navegador.
+The design principle is that emotion follows the data: if the data does not change, the sound does not change. Each track explains the limits of its source, including single-year models, annual averages, and approximate heights.
 
-## Fuentes y créditos
+The welcome globe combines Natural Earth cartography with estimated GEDI canopy heights from April–July 2019, published by Lang and colleagues. Both layers use WGS84 coordinates. Relief is exaggerated and areas without measurements appear gray. Rotation can be paused and stops with reduced motion. [Globe data, attribution, and processing (Spanish)](docs/globo-datos.md)
 
-Las fichas científicas remiten a NASA Scientific Visualization Studio. La portada de luces nocturnas usa el mapa anual de 2020 de la serie 2012–2023; el visor permite recorrer los demás años. Los enlaces identifican las visualizaciones y sus imágenes de referencia.
+## Sources and credits
 
-| Pista | Recursos originales |
+| Track | Original resources |
 | --- | --- |
-| Corrientes y temperatura | [Ficha NASA](https://svs.gsfc.nasa.gov/3912/) · [Portada del Pacífico](public/sonido/oceano/mapas/s01.webp) |
-| Altura de bosques | [Ficha NASA](https://svs.gsfc.nasa.gov/4950/) · [Portada de América](public/sonido/bosques/globo.webp) |
-| Aerosoles | [Ficha NASA](https://svs.gsfc.nasa.gov/5669/) · [Imagen utilizada](https://svs.gsfc.nasa.gov/vis/a000000/a005600/a005669/Aerosols_2025-08-19T20_00_00_1920x1080.png) |
-| Luces nocturnas | [Serie 2012–2023](https://svs.gsfc.nasa.gov/5276/) · [Portada de 2020](public/sonido/luces/mapas/mundo_2020.webp) |
+| Currents and temperature | [NASA SVS 3912](https://svs.gsfc.nasa.gov/3912/) · [Pacific cover](public/sonido/oceano/mapas/s01.webp) |
+| Forest height | [NASA SVS 4950](https://svs.gsfc.nasa.gov/4950/) · [Americas cover](public/sonido/bosques/globo.webp) |
+| Aerosols | [NASA SVS 5669](https://svs.gsfc.nasa.gov/5669/) · [Source image](https://svs.gsfc.nasa.gov/vis/a000000/a005600/a005669/Aerosols_2025-08-19T20_00_00_1920x1080.png) |
+| Night lights | [NASA SVS 5276, 2012–2023 series](https://svs.gsfc.nasa.gov/5276/) · [2020 cover](public/sonido/luces/mapas/mundo_2020.webp) |
 
-El catálogo y las descripciones están en [src/data.ts](src/data.ts). El generador está en [scripts/sonify.py](scripts/sonify.py). Las licencias de Silkscreen y Atkinson Hyperlegible se incluyen en [public/licenses](public/licenses).
+The catalog is in [src/data.ts](src/data.ts), the English-to-Spanish messages in [src/messages.ts](src/messages.ts), and language selection in [src/i18n.tsx](src/i18n.tsx). Font licenses are in [public/licenses](public/licenses). The sample audio generator is [scripts/sonify.py](scripts/sonify.py).
 
-## Desarrollo en equipo
+## Validation
 
-Josué trabaja en el diseño y la interfaz accesible. Diego Fuentes se encarga de los sonidos y Diego del bot guía. El backend lo desarrollará el integrante asignado por el equipo. Los sonidos de las cuatro pistas son los motores de Diego Fuentes (rama `fuentes`).
+```sh
+npm run test:localization
+npm run build
+```
 
-Agrupamos los cambios por tarea en ramas de trabajo. Usamos mensajes como `feat(datos)`, `feat(reproductor)`, `fix(accesibilidad)` y `docs(readme)`. Cuando una tarea cambia lo que puede hacer la aplicación o cómo ejecutarla, actualizamos este README.
+Localization tests check message coverage, placeholders, dataset identity and translations, narration language selection, and the standalone scene language preference. Real-device testing with TalkBack, NVDA/VoiceOver, and blind users is still required before claiming verified screen-reader compatibility.
+
+## Team workflow
+
+Josué works on design and the accessible interface. Diego Fuentes develops the sound engines, and Diego works on the guide bot. The backend is assigned to the corresponding team member. Interface narration reads existing content; it is separate from the conversational bot.
+
+Group changes by task on working branches. Use commit messages such as `feat(datos)`, `feat(reproductor)`, `fix(accesibilidad)`, and `docs(readme)`. Update this README when a task changes what the app does or how to run it.

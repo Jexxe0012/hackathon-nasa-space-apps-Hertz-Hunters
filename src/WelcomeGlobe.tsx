@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
 import { createGlobeModel } from './globe-model'
+import { useLanguage } from './i18n'
 
 type Props = { reducedMotion: boolean; forestImage: string }
 const initialAngle = -20 * Math.PI / 180
 
 export function WelcomeGlobe({ reducedMotion, forestImage }: Props) {
+  const { t } = useLanguage()
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const modelRef = useRef<ReturnType<typeof createGlobeModel> | null>(null)
   const angleRef = useRef(initialAngle)
@@ -108,26 +110,22 @@ export function WelcomeGlobe({ reducedMotion, forestImage }: Props) {
         <img src={forestImage} alt="" />
         <canvas ref={canvasRef} width="680" height="680" />
       </div>
-      <figcaption>
-        Altura estimada del dosel · GEDI, abril–julio de 2019
-        <span>Relieve exagerado. Zonas grises: sin mediciones.</span>
-        <a href="https://doi.org/10.5281/zenodo.5704852" target="_blank" rel="noreferrer">Fuente de los datos del globo</a>
+      <figcaption>{t("Estimated canopy height · GEDI, April–July 2019")}<span>{t("Height is exaggerated. Gray areas have no measurements.")}</span>
+        <a href="https://doi.org/10.5281/zenodo.5704852" target="_blank" rel="noreferrer">{t("Globe data source")}</a>
       </figcaption>
       {ready && <>
-        <div className="welcome__globe-legend" role="img" aria-label="Escala de altura: de cero a setenta metros, de marrón a verde y amarillo claro.">
+        <div className="welcome__globe-legend" role="img" aria-label={t("Height scale: zero to seventy meters, from brown to green and pale yellow.")}>
           <span aria-hidden="true" />
           <div aria-hidden="true"><span>0 m</span><span>70 m</span></div>
         </div>
-        <div className="welcome__globe-actions" role="group" aria-label="Controles del globo">
+        <div className="welcome__globe-actions" role="group" aria-label={t("Globe controls")}>
           {!motionOff && <button className="welcome__globe-control" type="button" onClick={() => setPaused(!paused)}>
-            {paused ? 'Reanudar giro' : 'Pausar giro'}
+            {paused ? t("Resume rotation") : t("Pause rotation")}
           </button>}
-          <button className="welcome__globe-control" type="button" onClick={turn}>Ver otro lado</button>
+          <button className="welcome__globe-control" type="button" onClick={turn}>{t("View another side")}</button>
         </div>
       </>}
-      {error && <p className="welcome__globe-error" role="status">
-        No se pudo cargar el giro. Se muestra la imagen original.
-        <button className="welcome__globe-control" type="button" onClick={() => setAttempt(value => value + 1)}>Reintentar</button>
+      {error && <p className="welcome__globe-error" role="status">{t("The rotating globe could not load. The original image is shown.")}<button className="welcome__globe-control" type="button" onClick={() => setAttempt(value => value + 1)}>{t("Retry")}</button>
       </p>}
     </figure>
   )

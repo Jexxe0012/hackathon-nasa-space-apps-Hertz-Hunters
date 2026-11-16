@@ -1,3 +1,5 @@
+import { translateText, type Language } from './translations'
+
 export interface Track {
   id: string
   title: string
@@ -30,117 +32,117 @@ export interface Track {
 }
 
 export const listeningLegend =
-  'Cada disco suena con un motor que lee los datos de su imagen de la NASA. La guía sonora de cada pista explica qué representa cada sonido.'
+  "Each track uses a sound engine that reads data from its NASA image. The sound guide explains what each sound represents."
 
 type TrackDetails = Omit<Track, 'audio' | 'image' | 'duration' | 'credit' | 'scene'> & { credit?: string; scene: string }
 
 const details: TrackDetails[] = [
   {
     id: 'corrientes-temperatura',
-    title: 'Corrientes y temperatura',
-    shortTitle: 'Corrientes y temperatura',
-    period: 'Mar 2007–feb 2008',
-    kind: 'Modelo oceánico ECCO2',
-    variable: 'Temperatura del mar frente a El Salvador',
-    unit: 'Temperatura superficial en °C',
-    pattern: 'El mar frente a la costa salvadoreña durante un año, semana a semana. Arriba, todo el Pacífico y un zoom a la costa; abajo, la curva del año se dibuja mientras suena. Ronda los 29 °C de abril a octubre y cae de golpe en noviembre.',
-    limit: 'Es un modelo de un solo año: se escucha el ciclo de las estaciones, no el calentamiento global. La temperatura se lee del color de las líneas de corriente (error máximo 0,46 °C).',
+    title: "Currents and temperature",
+    shortTitle: "Currents and temperature",
+    period: "Mar 2007–Feb 2008",
+    kind: "ECCO2 ocean model",
+    variable: "Sea temperature off El Salvador",
+    unit: "Sea surface temperature in °C",
+    pattern: "A year of sea temperatures off the Salvadoran coast, week by week. Above are the Pacific and a close-up of the coast; below, the year's curve unfolds with the sound. Temperatures stay around 29 °C from April to October, then drop sharply in November.",
+    limit: "This model covers a single year: you hear the seasonal cycle, not global warming. Temperature is read from the color of the current lines, with a maximum error of 0.46 °C.",
     source: 'https://svs.gsfc.nasa.gov/3912/',
-    alt: 'Vista del Pacífico con corrientes de colores y Centroamérica en su borde oriental.',
+    alt: "The Pacific Ocean with colored currents and Central America along its eastern edge.",
     scene: 'oceano',
     story: {
-      title: 'Un año junto al mar de El Salvador',
-      teaser: 'El mar que conoces también tiene una historia que contar.',
-      introduction: 'Piensa en una visita a la costa salvadoreña. Ahora recorre un año frente a ella: las olas y el piano te guían por los cambios de temperatura, semana a semana.',
-      listenFor: 'Escucha cuándo sube la melodía y cómo cambia el ritmo de las olas. Son datos convertidos en sonido, no una grabación del mar.',
-      action: 'Explorar el año junto al mar',
+      title: "A year by the sea in El Salvador",
+      teaser: "The sea you know has a story to tell, too.",
+      introduction: "Think of a visit to the Salvadoran coast. Now explore a year offshore: waves and piano guide you through temperature changes, week by week.",
+      listenFor: "Listen for the melody rising and the rhythm of the waves changing. These are data turned into sound, not a recording of the sea.",
+      action: "Explore a year by the sea",
     },
     guide: [
-      'Solo suenan dos cosas: el mar (olas) y una melodía de piano.',
-      'Melodía más aguda = mar más caliente. Cada medio grado sube un escalón de una escala pentatónica; cuando la temperatura cambia de escalón, la nota nueva suena en ese momento.',
-      'Olas y notas más seguidas = mar más activo. Sobre 27 °C las olas rompen con espuma. 26,5 °C es la temperatura del mar que favorece la formación de huracanes (NOAA).',
-      'Reproducir escucha el año completo en unos 30 segundos. El control de semanas del visor permite detenerse en una semana.',
+      "You hear just two sounds: ocean waves and a piano melody.",
+      "A higher melody means warmer water. Each half degree moves one step up a pentatonic scale. When the temperature crosses a step, the new note sounds at that moment.",
+      "More frequent waves and notes mean a more active sea. Above 27 °C, the waves break with foam. A sea temperature of 26.5 °C supports hurricane formation (NOAA).",
+      "Press Play to hear the full year in about 30 seconds. Use the scene's week control to explore a single week.",
     ],
   },
   {
     id: 'altura-de-bosques',
-    title: 'Altura de bosques',
-    shortTitle: 'Altura de bosques',
-    period: 'Abr 2019–abr 2020',
-    kind: 'Observación satelital GEDI',
-    variable: 'Altura del dosel forestal',
-    unit: 'Altura relativa (más alto / más bajo)',
-    pattern: 'Un camino de 16 puntos baja del corazón del Amazonas hacia el sur. El bosque se mantiene alto y, de un punto al siguiente, cae a menos de un tercio de su altura: ahí se acaba el bosque alto.',
-    limit: 'GEDI es una sola foto, sin antes y después: no mide la deforestación. Ese borde coincide con el arco de la deforestación que vigilan la NASA y el INPE de Brasil. El globo 3D tiene sombras: las alturas son aproximadas.',
+    title: "Forest height",
+    shortTitle: "Forest height",
+    period: "Apr 2019–Apr 2020",
+    kind: "GEDI satellite observation",
+    variable: "Forest canopy height",
+    unit: "Relative height (taller / shorter)",
+    pattern: "A 16-point path heads south from the heart of the Amazon. The forest stays tall, then drops to less than a third of its height between two points: this is where the tall forest ends.",
+    limit: "This GEDI visualization is a single snapshot, with no before-and-after comparison: it does not measure deforestation. The edge aligns with the arc of deforestation monitored by NASA and Brazil's INPE. Shadows on the 3D globe make the heights approximate.",
     source: 'https://svs.gsfc.nasa.gov/4950/',
-    alt: 'Globo centrado en América con zonas verdes y relieve que representan la altura del dosel forestal.',
+    alt: "A globe centered on the Americas, with green areas and relief representing forest canopy height.",
     scene: 'bosques',
     story: {
-      title: 'Del corazón del Amazonas al borde del bosque',
-      teaser: 'Sube con el piano hasta las copas y escucha dónde cambia el bosque.',
-      introduction: 'Imagina que puedes subir desde el suelo hasta la copa de un árbol con cada nota. Este camino de 16 puntos te lleva del interior del Amazonas hacia su borde sur.',
-      listenFor: 'Presta atención a la altura que alcanza cada escalera de piano. El recorrido compara lugares de una misma visualización; no muestra una pérdida de bosque a lo largo del tiempo.',
-      action: 'Recorrer el Amazonas',
+      title: "From the heart of the Amazon to the forest edge",
+      teaser: "Climb to the treetops with the piano and hear where the forest changes.",
+      introduction: "Imagine climbing from the ground to a treetop with each note. This 16-point path takes you from the Amazon's interior to its southern edge.",
+      listenFor: "Listen for how high each piano staircase reaches. This journey compares places within one visualization; it does not show forest loss over time.",
+      action: "Explore the Amazon",
     },
     guide: [
-      'En cada punto del camino, el piano sube una escalera de notas desde el suelo hasta la copa: mientras más alto el bosque, más arriba llega.',
-      'En el corazón del Amazonas las escaleras son largas; en el borde se cortan de golpe y quedan abajo.',
-      'Las barras bajo el globo se encienden al sonar; las naranjas marcan el borde.',
+      "At each point, the piano climbs a staircase of notes from the ground to the canopy: the taller the forest, the higher it reaches.",
+      "In the heart of the Amazon, the staircases are long. At the edge, they cut off suddenly and stay low.",
+      "The bars beneath the globe light up with the sound; orange bars mark the edge.",
     ],
   },
   {
     id: 'aerosoles',
-    title: 'Aerosoles',
-    shortTitle: 'Aerosoles',
-    period: '19 ago 2025 · 20:00 UTC',
-    kind: 'Modelo atmosférico GEOS',
-    variable: 'Tipos de partículas suspendidas',
-    unit: 'Categorías de aerosol',
-    pattern: 'Un solo momento del aire del planeta, contado en historias: el viaje del polvo del Sahara, África (polvo al norte, humo al sur), nuestro continente, los mares del sur y todo el planeta.',
-    limit: 'La leyenda no tiene números: el tipo sale del color y la cantidad, del brillo; cada tipo usa su propia escala. Ese día el polvo del Sahara se detuvo a unos 2.700 km de El Salvador.',
+    title: "Aerosols",
+    shortTitle: "Aerosols",
+    period: "Aug 19, 2025 · 20:00 UTC",
+    kind: "GEOS atmospheric model",
+    variable: "Types of airborne particles",
+    unit: "Aerosol categories",
+    pattern: "A single moment in Earth's atmosphere, told through stories: the journey of Saharan dust, Africa (dust in the north, smoke in the south), the Americas, the southern oceans, and the whole planet.",
+    limit: "The legend has no numbers: particle type is inferred from color and quantity from brightness. Each type has its own scale. On that day, Saharan dust stopped about 2,700 km from El Salvador.",
     source: 'https://svs.gsfc.nasa.gov/5669/',
-    alt: 'Mapamundi oscuro con extensas bandas de partículas verdes, violetas, anaranjadas y azules.',
+    alt: "A dark world map with broad bands of green, purple, orange, and blue particles.",
     scene: 'aerosoles',
     story: {
-      title: 'El viaje del polvo del Sahara',
-      teaser: 'Sigue con el oído un viaje que cruza el Atlántico.',
-      introduction: 'El aire conecta lugares que parecen lejanos. Empieza en el Sahara y sigue el polvo sobre el Atlántico en una escena del 19 de agosto de 2025. Después puedes explorar otras historias del mismo mapa.',
-      listenFor: 'La flauta representa el polvo y el sonido avanza con el recorrido. El mapa muestra un momento de un modelo atmosférico, no una medición del aire que respiras hoy.',
-      action: 'Seguir el viaje del polvo',
+      title: "The journey of Saharan dust",
+      teaser: "Follow a journey across the Atlantic with your ears.",
+      introduction: "Air connects places that seem far apart. Start in the Sahara and follow the dust across the Atlantic in a scene from August 19, 2025. Then explore other stories from the same map.",
+      listenFor: "The flute represents dust, and the sound follows the route. The map shows one moment from an atmospheric model, not a measurement of the air you breathe today.",
+      action: "Follow the dust's journey",
     },
     guide: [
-      'Una línea recorre la zona de la historia y suena lo que toca. En el viaje del polvo va de este a oeste, como el viento.',
-      'Cada partícula tiene su instrumento: polvo = flauta, sal marina = campanitas, sulfatos = marimba, carbono negro = piano grave.',
-      'Norte agudo, sur grave. Color más intenso = notas más fuertes y más seguidas. En el visor puedes elegir la historia y apagar tipos.',
+      "A line moves across the story's region and plays what it touches. In the dust story, it travels from east to west, like the wind.",
+      "Each particle type has an instrument: dust is a flute, sea salt is bells, sulfates are a marimba, and black carbon is a low piano.",
+      "The north has higher notes; the south has lower ones. More intense color means louder, more frequent notes. Choose a story and turn particle types on or off in the scene.",
     ],
   },
   {
     id: 'luces-nocturnas',
-    title: 'Luces nocturnas',
-    shortTitle: 'Luces nocturnas',
+    title: "Night lights",
+    shortTitle: "Night lights",
     period: '2012–2023',
-    kind: 'Observación satelital VIIRS',
-    variable: 'Luz visible de noche',
-    unit: 'Brillo relativo, sin unidades',
-    pattern: 'Una línea recorre el mapa nocturno de oeste a este y transforma las luces en piano. Puedes escuchar los promedios anuales de 2012 a 2023. La historia de entrada prepara 2020 y permite compararlo con 2019.',
-    limit: 'Cada mapa es el promedio de todo un año, no de un día ni de un confinamiento. El brillo se lee de imágenes en una escala relativa común. Una diferencia entre 2019 y 2020 no permite atribuir por sí sola su causa a la pandemia.',
+    kind: "VIIRS satellite observation",
+    variable: "Visible light at night",
+    unit: "Relative brightness, no units",
+    pattern: "A line sweeps the night map from west to east, turning lights into piano notes. Listen to annual averages from 2012 to 2023. The opening story starts in 2020 and lets you compare it with 2019.",
+    limit: "Each map is an average of a whole year, not a day or a lockdown. Brightness is read from images on a shared relative scale. A difference between 2019 and 2020 alone cannot be attributed to the pandemic.",
     source: 'https://svs.gsfc.nasa.gov/5276/',
     credit: 'NASA SVS 5276 · Black Marble, Suomi NPP / VIIRS',
-    alt: 'Mapa mundial nocturno con continentes azul oscuro y agrupaciones de luces blancas y doradas.',
+    alt: "A world map at night with dark blue continents and clusters of white and golden lights.",
     scene: 'luces',
     story: {
-      title: '¿Cómo sonaban las luces del mundo durante la pandemia?',
-      teaser: 'Vuelve a 2020 y escucha las luces de un año que cambió nuestras rutinas.',
-      introduction: '¿Recuerdas cómo cambió tu rutina en 2020? Acércate a ese año desde otra perspectiva: escucha las luces nocturnas del planeta. Empieza por 2020 y compáralo con 2019; después puedes recorrer otros años.',
-      listenFor: 'Donde hay luz suena el piano. Compara dónde aparecen las notas y con qué intensidad. Escuchas promedios anuales; el mapa por sí solo no explica las causas de los cambios.',
-      action: 'Explorar las luces de 2020',
+      title: "What did the world's night lights sound like during the pandemic?",
+      teaser: "Return to 2020 and hear the lights of a year that changed our routines.",
+      introduction: "Remember how your routine changed in 2020? Revisit that year from a different perspective: listen to Earth's night lights. Start with 2020 and compare it with 2019, then explore other years.",
+      listenFor: "Where there is light, the piano plays. Compare where notes appear and how strong they are. You are hearing annual averages; the map alone cannot explain what caused the changes.",
+      action: "Explore the lights of 2020",
       initialYear: 2020,
       comparisonYear: 2019,
     },
     guide: [
-      'La línea del radar suena lo que toca: donde hay luz suena el piano; donde está oscuro, silencio.',
-      'Más luz = notas más fuertes y más seguidas. Norte agudo, sur grave. El sonido viaja de izquierda a derecha con la línea.',
-      'La historia empieza con 2020 y ofrece comparar 2019 → 2020: primero escuchas el año de referencia y luego el elegido. Puedes cambiar ambos años en el visor.',
+      "The scanning line plays what it touches: light becomes piano notes; darkness becomes silence.",
+      "More light means louder, more frequent notes. The north has higher notes; the south has lower ones. Sound moves from left to right with the line.",
+      "The story starts in 2020 and offers a 2019 → 2020 comparison: first you hear the reference year, then the selected year. You can change both years in the scene.",
     ],
   },
 ]
@@ -158,6 +160,26 @@ export const tracks: Track[] = details.map((track) => ({
   image: sceneCovers[track.scene] ? `${base}${sceneCovers[track.scene]}` : `${mediaBase}${track.id}.webp`,
   audio: `${mediaBase}${track.id}.mp3`,
   duration: 48,
-  scene: `${base}sonido/${track.scene}/index.html?embed=1&v=6` +
+  scene: `${base}sonido/${track.scene}/index.html?embed=1&v=7` +
     (track.story.initialYear ? `&anio=${track.story.initialYear}&comparar=${track.story.comparisonYear}` : ''),
 }))
+
+const spanishTracks: Track[] = tracks.map(track => {
+  const t = (text: string) => translateText('es', text)
+  return {
+    ...track,
+    title: t(track.title), shortTitle: t(track.shortTitle), period: t(track.period),
+    kind: t(track.kind), variable: t(track.variable), unit: t(track.unit),
+    pattern: t(track.pattern), limit: t(track.limit), alt: t(track.alt),
+    guide: track.guide.map(t),
+    story: {
+      ...track.story,
+      title: t(track.story.title), teaser: t(track.story.teaser),
+      introduction: t(track.story.introduction), listenFor: t(track.story.listenFor), action: t(track.story.action),
+    },
+  }
+})
+
+export function getTracks(language: Language): Track[] {
+  return language === 'es' ? spanishTracks : tracks
+}

@@ -14,7 +14,7 @@
       titulo: 'Escucha el mar durante un año',
       zona_prefijo: 'Zona:',
       aviso: 'Temperatura del mar, una cifra por semana. Es una simulación de la NASA (ECCO2, marzo 2007 – febrero 2008): se escucha el ciclo de las estaciones, no el calentamiento global.',
-      idioma: 'Idioma · Language',
+      idioma: 'Idioma',
       zona: 'Zona',
       instrumento: 'Melodía',
       mapa_globo: 'Todo el Pacífico (NASA SVS 3912). El recuadro blanco es la zona ampliada.',
@@ -74,7 +74,7 @@
       titulo: 'Listen to the sea for one year',
       zona_prefijo: 'Zone:',
       aviso: 'Sea temperature, one value per week. It is a NASA simulation (ECCO2, March 2007 – February 2008): you hear the seasonal cycle, not global warming.',
-      idioma: 'Idioma · Language',
+      idioma: 'Language',
       zona: 'Zone',
       instrumento: 'Melody',
       mapa_globo: 'The whole Pacific (NASA SVS 3912). The white box is the zoomed area.',
@@ -134,7 +134,7 @@
   // ---------------------------------------------------------------- estado
   const $ = (id) => document.getElementById(id);
   const rep = new M.Reproductor();
-  let idioma = 'es', datos = null, zonaSel = 'costa', serie = [], ultimaMostrada = -1, estadoPiano = 'cargando';
+  let idioma = window.EIJ ? EIJ.idiomaInicial() : 'en', datos = null, zonaSel = 'costa', serie = [], ultimaMostrada = -1, estadoPiano = 'cargando';
 
   const L = () => TXT[idioma];
   function t(clave, vars) {
@@ -154,8 +154,17 @@
   }
 
   // ---------------------------------------------------------------- textos y pantalla
+  function cambiarIdioma(nuevo) {
+    if ((nuevo !== 'en' && nuevo !== 'es') || nuevo === idioma) return;
+    idioma = nuevo;
+    aplicarIdioma();
+    if (serie.length) { construirVisual(); mostrar(rep.semanaActual(), true); }
+  }
+
   function aplicarIdioma() {
     document.documentElement.lang = idioma;
+    document.title = L().titulo + ' · Earthbeat';
+    $('idioma').value = idioma;
     document.querySelectorAll('[data-t]').forEach((el) => { el.textContent = t(el.dataset.t); });
     $('teclas').innerHTML = t('teclas');
     $('btn-demo').textContent = t('demo');
@@ -443,7 +452,7 @@
     $('btn-next').addEventListener('click', () => mover(1));
     $('btn-exportar').addEventListener('click', exportar);
     $('semana').addEventListener('input', (e) => irA(Number(e.target.value) - 1));
-    $('idioma').addEventListener('change', (e) => { idioma = e.target.value; aplicarIdioma(); construirVisual(); if (serie.length) mostrar(rep.semanaActual(), true); });
+    $('idioma').addEventListener('change', (e) => { cambiarIdioma(e.target.value); if (window.EIJ) EIJ.guardarIdioma(idioma); });
     $('zona').addEventListener('change', (e) => elegirZona(e.target.value));
     $('instrumento').addEventListener('change', (e) => rep.elegirInstrumento(e.target.value));
     $('mar').addEventListener('input', (e) => {
@@ -453,7 +462,7 @@
       e.target.setAttribute('aria-valuetext', t('mar_valor', { db: txt }));
     });
     rep.alTerminarDemo = () => { mostrar(rep.semanaActual(), true); anunciar(t('fin_demo')); };
-    if (!window.Tone) { $('fecha').textContent = 'Tone.js no cargó (¿sin internet?)'; return; }
+    if (!window.Tone) { $('fecha').textContent = (idioma === 'es' ? 'No se pudo cargar el audio. Comprueba tu conexión e inténtalo de nuevo.' : 'Audio could not load. Check your connection and try again.'); return; }
 
     // El piano se carga aparte: mientras tanto (o si falla) suena la campana
     rep.elegirInstrumento('campana');
@@ -486,6 +495,7 @@
   // Para pruebas y para el video: genera el WAV sin descargarlo.
   // Modo incrustado (Earthbeat): el reproductor de la app manda; sin mover el foco del teclado
   if (window.EIJ) EIJ.conectar({
+    idioma: cambiarIdioma,
     pausar: () => rep.pausar(),
     alternar: async () => {
       if (rep.sonando) { rep.pausar(); return; }

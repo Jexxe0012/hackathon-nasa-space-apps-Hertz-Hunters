@@ -9,7 +9,18 @@
 (function () {
   'use strict';
   const incrustado = new URLSearchParams(location.search).get('embed') === '1';
-  const EIJ = { incrustado, conectar() {} };
+  const EIJ = {
+    incrustado,
+    conectar() {},
+    idiomaInicial() {
+      const solicitado = new URLSearchParams(location.search).get('lang');
+      if (solicitado === 'en' || solicitado === 'es') return solicitado;
+      try { return localStorage.getItem('earthbeat.language') === 'es' ? 'es' : 'en'; } catch (e) { return 'en'; }
+    },
+    guardarIdioma(idioma) {
+      try { localStorage.setItem('earthbeat.language', idioma); } catch (e) { /* session only */ }
+    },
+  };
   window.EIJ = EIJ;
   if (!incrustado) return;
 
@@ -47,6 +58,7 @@
     if (!d || typeof d !== 'object' || !d.eij || !api) return;
     if (d.eij === 'alternar' && api.alternar) api.alternar();
     else if (d.eij === 'pausar' && api.pausar) api.pausar();
+    else if (d.eij === 'idioma' && (d.valor === 'en' || d.valor === 'es') && api.idioma) api.idioma(d.valor);
     else if (d.eij === 'ir' && api.ir) api.ir(Math.max(0, Math.min(0.999, Number(d.fraccion) || 0)));
     else if (d.eij === 'volumen' && window.Tone) {
       const v = Math.max(0, Math.min(1, Number(d.valor)));
@@ -69,8 +81,9 @@
       if (event.pointerType !== 'mouse' || !(event.target instanceof Element)) return;
       const el = event.target.closest('button, select, input, summary, p');
       let texto = el ? el.getAttribute('aria-label') || el.textContent.trim() : '';
-      if (el instanceof HTMLSelectElement) texto = (el.labels[0]?.querySelector('span')?.textContent || 'Opción') + '. ' + el.selectedOptions[0]?.textContent;
-      if (el instanceof HTMLInputElement) texto = (el.getAttribute('aria-label') || el.labels[0]?.textContent || 'Control') + '. ' + (el.type === 'checkbox' ? el.checked ? 'Activado' : 'Desactivado' : el.getAttribute('aria-valuetext') || el.value);
+      const es = document.documentElement.lang === 'es';
+      if (el instanceof HTMLSelectElement) texto = (el.labels[0]?.querySelector('span')?.textContent || (es ? 'Opción' : 'Option')) + '. ' + el.selectedOptions[0]?.textContent;
+      if (el instanceof HTMLInputElement) texto = (el.getAttribute('aria-label') || el.labels[0]?.textContent || 'Control') + '. ' + (el.type === 'checkbox' ? el.checked ? (es ? 'Activado' : 'On') : (es ? 'Desactivado' : 'Off') : el.getAttribute('aria-valuetext') || el.value);
       if (texto === anterior) return;
       anterior = texto;
       clearTimeout(lectura);

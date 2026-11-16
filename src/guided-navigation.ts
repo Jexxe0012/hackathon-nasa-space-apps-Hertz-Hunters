@@ -1,3 +1,5 @@
+import { translateText, type Language } from './translations'
+
 export type GuidedStep = 0 | 1 | 2 | 3 | 4
 
 export function nextGuidedStep(step: GuidedStep, hasStory: boolean): GuidedStep {
@@ -17,15 +19,16 @@ export function isGuidedControl(target: EventTarget | null): boolean {
   ))
 }
 
-export function describeGuidedElement(element: HTMLElement): string {
+export function describeGuidedElement(element: HTMLElement, language: Language = 'en'): string {
+  const t = (message: string) => translateText(language, message)
   const control = element.matches('label') ? element.querySelector<HTMLElement>('input, select') ?? element : element
   const label = control.getAttribute('aria-label') ||
     (control instanceof HTMLInputElement || control instanceof HTMLSelectElement ? control.labels?.[0]?.querySelector('span')?.textContent : '') || ''
   if (control instanceof HTMLSelectElement)
-    return `${label || 'Opción'}. ${control.selectedOptions[0]?.textContent ?? ''}`
+    return `${label || control.labels?.[0]?.textContent?.trim() || t('Option')}. ${control.selectedOptions[0]?.textContent ?? ''}`
   if (control instanceof HTMLInputElement) {
-    const name = label || control.labels?.[0]?.textContent?.trim() || 'Control'
-    const value = control.type === 'checkbox' ? control.checked ? 'Activado' : 'Desactivado' : control.getAttribute('aria-valuetext') || control.value
+    const name = label || control.labels?.[0]?.textContent?.trim() || t('Control')
+    const value = control.type === 'checkbox' ? t(control.checked ? 'On' : 'Off') : control.getAttribute('aria-valuetext') || control.value
     return `${name}. ${value}`
   }
   return (label || control.innerText || control.textContent || '').trim()
