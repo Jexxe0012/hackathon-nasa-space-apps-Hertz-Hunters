@@ -62,3 +62,8 @@ Contexto completo del reto (análisis, decisiones, bitácora): carpeta local `C:
 - Datos: `radar_luces.mjs` (Node; en esta PC no había numpy/Pillow) → `luces_radar.json`: malla 192 columnas × 16 franjas (72°N–56°S) por año, brillo 0–1000 normalizado con el máximo de todos los años (comparable entre años); se tapa el texto del año de cada imagen. Luz total del mundo: 2023 = 1,37× 2012; 2020 < 2019.
 - Mapa 3840×2160 = mundo estirado a 16:9 (x=(lon+180)/360·W, y=(90−lat)/180·H, comprobado con el delta del Nilo). `leer_luces.mjs` / `luces_5276.json` (El Salvador) quedan de la v1.
 - Medido sobre el WAV (2012 vs 2023): −20,7 LUFS, pico −5,3 dBFS, 0 clics.
+
+## Disco Aerosoles (5669) — `sonido/aerosoles/`, datos en `imagen-a-sonido/aerosoles_5669/`
+- Mismo radar que Luces (se entendió), 15 s, con **un instrumento por tipo**: polvo = soplido de arena, sal marina = campanitas, sulfatos = marimba, carbono negro = piano grave. Norte agudo, sur grave; más intenso = más fuerte y seguido; casillas para prender/apagar cada tipo; texto con las historias de la NASA según la longitud de la línea.
+- Lectura (`leer_aerosoles.mjs`, Node): tipo = tono más parecido a la leyenda (rojo sin el amarillo de las luces de ciudades; sal = clara y más azul que roja), cantidad = brillo sobre un piso; malla 192×16 (72°N–64°S); **cada tipo con su propia escala** (la leyenda no tiene números). Verificado con las historias de la NASA.
+- Niveles por instrumento calibrados midiendo cada uno solo (el polvo, ruido filtrado, necesita ~+15 dB). Marimba con ataque de 12 ms (con 2–6 ms el golpe salía brusco). Mezcla: ~−20,6 LUFS.
