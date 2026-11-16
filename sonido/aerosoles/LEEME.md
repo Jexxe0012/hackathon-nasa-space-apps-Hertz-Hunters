@@ -4,7 +4,7 @@ Las partículas que flotan en el aire de todo el planeta el **19 de agosto de 20
 
 ## Un día en el aire, en historias
 
-Como Luces se cuenta con fechas y el Océano con lo local, Aerosoles se cuenta con **el viaje**: la atmósfera conecta lugares lejanos. Eliges una historia y el radar recorre esa zona ampliada con su instrumento al frente:
+Como Luces se cuenta con fechas y el Océano con lo local, Aerosoles se cuenta con **el viaje**: la atmósfera conecta lugares lejanos. Eliges una historia y el radar recorre esa zona con su instrumento al frente. Siempre se ve el mapa completo (sin zoom: las ampliaciones se veían borrosas); la zona se marca con un recuadro y el resto se oscurece. La fecha (19 ago 2025, 2 p.m. hora de El Salvador) va sobre el mapa:
 
 | Historia | Zona y sentido | Suena |
 |---|---|---|
@@ -15,7 +15,7 @@ Como Luces se cuenta con fechas y el Océano con lo local, Aerosoles se cuenta c
 | Incendios | España, luego sur de África | carbono negro |
 | Todo el planeta | el mundo, oeste a este | los 4 |
 
-**Dato honesto para lo local:** ese día el polvo llegó al Caribe oriental (~5.000 km de viaje) y se detuvo a ~2.700 km de El Salvador; sobre el país había sulfatos. No decimos que llegó al país porque la imagen no lo muestra.
+**Dato honesto para lo local:** ese día el polvo llegó al Caribe oriental (~5.000 km de viaje) y se detuvo a ~2.700 km de El Salvador; sobre el país había sulfatos. En el Caribe occidental se ve un rastro lila muy tenue, por debajo de lo que cuenta el radar (máx. 1/1000). No decimos que llegó al país porque la imagen no lo muestra.
 
 ## Cómo suena
 

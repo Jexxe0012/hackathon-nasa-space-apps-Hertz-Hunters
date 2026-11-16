@@ -22,9 +22,9 @@
         { lon: [-100, -70], es: 'Aquí ya no hay polvo: ese día se detuvo a unos 2.700 km de El Salvador', en: 'No more dust here: that day it stopped ~2,700 km from El Salvador' },
       ] },
     { id: 'local', ganancia: 6, tramos: [{ zona: [-96, -78, 6, 22], dir: 1, tipos: null, barrido: 8, img: 'centroamerica', pin: true }],
-      es: ['El aire sobre El Salvador ese día', 'Suenan los 4 tipos. Sobre Centroamérica había sulfatos (marimba) y nada de polvo del Sahara.'],
-      en: ['The air over El Salvador that day', 'All 4 types play. Over Central America there was sulfate (marimba) and no Saharan dust.'],
-      textos: [{ lon: [-96, -78], es: 'Sobre Centroamérica: sulfatos (marimba); sin polvo del Sahara', en: 'Over Central America: sulfate (marimba); no Saharan dust' }] },
+      es: ['El aire sobre El Salvador ese día', 'Suenan los 4 tipos. Sobre El Salvador y Centroamérica había sulfatos (marimba) y nada de polvo; en el Caribe se ve apenas un rastro lila muy tenue, por debajo de lo que cuenta el radar.'],
+      en: ['The air over El Salvador that day', 'All 4 types play. Over El Salvador and Central America there was sulfate (marimba) and no dust; in the Caribbean there is only a very faint lilac trace, below what the radar counts.'],
+      textos: [{ lon: [-96, -78], es: 'Sobre El Salvador y Centroamérica: sulfatos (marimba); sin polvo', en: 'Over El Salvador and Central America: sulfate (marimba); no dust' }] },
     { id: 'erin', ganancia: 4.5, tramos: [{ zona: [-88, -58, 12, 40], dir: 1, tipos: ['sal_marina', 'polvo'], barrido: 9, img: 'erin' }],
       es: ['El huracán Erin', 'El remolino levanta sal marina (campanitas) y jala polvo del Sahara (arena).'],
       en: ['Hurricane Erin', 'The swirl lifts sea salt (little bells) and pulls in Saharan dust (sand).'],
@@ -63,7 +63,7 @@
       disco: 'Disco 3 · Aerosoles · NASA SVS 5669',
       titulo: 'Un día en el aire del planeta',
       aviso: 'Las partículas del aire de todo el mundo el 19 de agosto de 2025, a las 2 p.m. de El Salvador (modelo GEOS de la NASA). Elige una historia: cada tipo de partícula suena con su propio instrumento.',
-      idioma: 'Idioma · Language', historia_lbl: 'Historia', leyenda: 'Tipos de partícula (prende o apaga cada uno)',
+      idioma: 'Idioma · Language', historia_lbl: 'Historia', fecha_mapa: '19 ago 2025 · 2:00 p.m. hora de El Salvador', leyenda: 'Tipos de partícula (prende o apaga cada uno)',
       tipos: {
         polvo: ['Polvo', 'desiertos · soplido de arena'], sal_marina: ['Sal marina', 'el mar · campanitas'],
         sulfatos: ['Sulfatos', 'industria y volcanes · marimba'], carbono_negro: ['Carbono negro', 'humo de incendios · piano grave'],
@@ -90,7 +90,7 @@
       disco: 'Disc 3 · Aerosols · NASA SVS 5669',
       titulo: 'One day in the planet\'s air',
       aviso: 'Airborne particles over the whole world on August 19, 2025, at 2 p.m. El Salvador time (NASA GEOS model). Pick a story: each particle type plays its own instrument.',
-      idioma: 'Idioma · Language', historia_lbl: 'Story', leyenda: 'Particle types (turn each on or off)',
+      idioma: 'Idioma · Language', historia_lbl: 'Story', fecha_mapa: 'Aug 19, 2025 · 2:00 p.m. El Salvador time', leyenda: 'Particle types (turn each on or off)',
       tipos: {
         polvo: ['Dust', 'deserts · sand breath'], sal_marina: ['Sea salt', 'the sea · little bells'],
         sulfatos: ['Sulfate', 'industry and volcanoes · marimba'], carbono_negro: ['Black carbon', 'wildfire smoke · low piano'],
@@ -167,6 +167,7 @@
 
   function mostrarHistoria() {
     $('h-mapa').textContent = hist[idioma][0];
+    $('fecha-mapa').textContent = t('fecha_mapa');
     $('sub').textContent = hist[idioma][1];
     if (datos) $('btn-escuchar').textContent = t('escuchar', { seg: Math.round(M.duracionRecorrido(recorridoDe(hist)) - M.DEMO.entrada - M.DEMO.salida) });
     tramoMostrado = -1;
@@ -175,24 +176,25 @@
   }
 
   let tramoMostrado = -1, textoActual = null;
+  // Siempre el mapa completo (sin zoom): la zona de la historia se marca y el resto se oscurece un poco.
+  // Mapa = mundo estirado a 16:9: x = (lon+180)/360, y = (90−lat)/180.
+  const X = (lon) => (lon + 180) / 360, Y = (lat) => (90 - lat) / 180;
   function ponerVisual(l) {
-    const rec = recorridoDe(hist), tr = rec.tramos[l.tramo] || rec.tramos[0];
+    const rec = recorridoDe(hist), tr = rec.tramos[l.tramo] || rec.tramos[0], z = tr.zona;
     if (l.tramo !== tramoMostrado) {
-      const z = tr.zona, mapa = $('mapa');
-      mapa.style.backgroundImage = 'url(' + (tr.img ? 'recortes/' + tr.img + '.webp' : 'mapa.webp') + ')';
-      mapa.style.aspectRatio = tr.img ? ((z[1] - z[0]) * 3840 / 360) + ' / ' + ((z[3] - z[2]) * 2160 / 180) : '16 / 9';
+      const zh = $('zona-hist').style;
+      if (hist.global) zh.display = 'none';
+      else Object.assign(zh, { display: 'block', left: (100 * X(z[0])) + '%', width: (100 * (X(z[1]) - X(z[0]))) + '%', top: (100 * Y(z[3])) + '%', height: (100 * (Y(z[2]) - Y(z[3]))) + '%' });
+      const r = $('radar').style;
+      r.top = (100 * (hist.global ? 0 : Y(z[3]))) + '%';
+      r.height = (100 * (hist.global ? 1 : Y(z[2]) - Y(z[3]))) + '%';
       const pin = $('pin');
-      if (tr.pin) {
-        pin.style.display = 'block';
-        pin.style.left = (100 * (EL_SALVADOR.lon - z[0]) / (z[1] - z[0])) + '%';
-        pin.style.top = (100 * (z[3] - EL_SALVADOR.lat) / (z[3] - z[2])) + '%';
-        $('pin-texto').textContent = 'El Salvador';
-      } else pin.style.display = 'none';
+      if (tr.pin) { pin.style.display = 'block'; pin.style.left = (100 * X(EL_SALVADOR.lon)) + '%'; pin.style.top = (100 * Y(EL_SALVADOR.lat)) + '%'; $('pin-texto').textContent = 'El Salvador'; }
+      else pin.style.display = 'none';
       tramoMostrado = l.tramo;
     }
-    const x = tr.dir < 0 ? 1 - l.fraccion : l.fraccion;
-    $('radar').style.left = (100 * x) + '%';
-    const lon = tr.zona[0] + x * (tr.zona[1] - tr.zona[0]);
+    const f = tr.dir < 0 ? 1 - l.fraccion : l.fraccion, lon = z[0] + f * (z[1] - z[0]);
+    $('radar').style.left = (100 * X(lon)) + '%';
     const h = hist.textos.find((q) => (q.tramo != null ? q.tramo === l.tramo : lon >= q.lon[0] && lon <= q.lon[1]));
     const texto = h ? h[idioma] : '';
     if (texto !== textoActual) { $('historia').textContent = texto; textoActual = texto; }
@@ -280,9 +282,10 @@
     $('btn-play').addEventListener('click', alternar);
     $('btn-exportar').addEventListener('click', exportar);
     $('mapa').addEventListener('click', (e) => {
-      const r = e.currentTarget.getBoundingClientRect(), x = (e.clientX - r.left) / r.width;
-      const l = rep.linea(relojVisual()), tr = recorridoDe(hist).tramos[l.tramo] || recorridoDe(hist).tramos[0];
-      escuchar({ tramo: l.tramo, fraccion: tr.dir < 0 ? 1 - x : x });
+      const r = e.currentTarget.getBoundingClientRect(), lon = -180 + 360 * (e.clientX - r.left) / r.width;
+      const l = rep.linea(relojVisual()), tr = recorridoDe(hist).tramos[l.tramo] || recorridoDe(hist).tramos[0], z = tr.zona;
+      const f = Math.max(0, Math.min(1, (lon - z[0]) / (z[1] - z[0])));
+      escuchar({ tramo: l.tramo, fraccion: tr.dir < 0 ? 1 - f : f });
     });
     rep.alTerminar = () => { terminado = true; $('estado').textContent = t('fin'); };
     if (!window.Tone) { $('historia').textContent = 'Tone.js no cargó (¿sin internet?)'; return; }
@@ -292,7 +295,6 @@
       if (!r.ok) throw new Error(r.status);
       datos = await r.json();
     } catch (e) { $('historia').textContent = t('error_datos'); return; }
-    HISTORIAS.forEach((h) => (h.tramos || []).forEach((tr) => { const im = new Image(); im.src = 'recortes/' + tr.img + '.webp'; }));
     $('historia').textContent = ''; textoActual = '';
     mostrarHistoria();
     requestAnimationFrame(bucle);
