@@ -17,12 +17,18 @@ const introductions = [
   'La luz de pueblos y ciudades dibuja la huella humana sobre el planeta.',
 ]
 const spriteIndexes = [1, 8, 3, 0]
+const voiceNotice =
+  'Puedes navegar con teclado y un lector de pantalla como TalkBack. La voz integrada de Earth Jukebox está en desarrollo.'
 const number = (i: number) => String(i + 1).padStart(2, '0')
 const trackHref = (index: number) => '#pista/' + tracks[index].id
 function readLocation() {
   const location = window.location.hash
   const index = tracks.findIndex((track) => location === '#pista/' + track.id)
-  return { library: location === '#coleccion', index: Math.max(0, index) }
+  return {
+    welcome: location === '' || location === '#inicio',
+    library: location === '#coleccion',
+    index: Math.max(0, index),
+  }
 }
 function readOption(key: string, fallback: boolean) {
   try {
@@ -47,7 +53,10 @@ function usePreference(key: string, fallback: boolean) {
 export default function App() {
   const [view, setView] = useState(readLocation)
   const [selected, select] = useState(view.index)
+  const [hasSelected, setHasSelected] = useState(!view.welcome && !view.library)
   const [modal, setModal] = useState<'help' | 'settings' | null>(null)
+  const [noticeVisible, setNoticeVisible] = useState(true)
+  const [noticeAnnouncement, setNoticeAnnouncement] = useState('')
   const [info, setInfo] = useState<'track' | 'audio'>('track')
   const [contrast, setContrast] = usePreference('contrast', false)
   const [reduced, setReduced] = usePreference(
@@ -58,12 +67,24 @@ export default function App() {
   const heading = useRef<HTMLHeadingElement>(null)
   const main = useRef<HTMLElement>(null)
   const track = tracks[selected]
-  const previousRoute = useRef(view.library ? 'collection' : track.id)
+  const previousRoute = useRef(view.welcome ? 'welcome' : view.library ? 'collection' : track.id)
+
+  useEffect(() => {
+    if (!noticeVisible) {
+      setNoticeAnnouncement('')
+      return
+    }
+    const timer = window.setTimeout(() => setNoticeAnnouncement(voiceNotice), 600)
+    return () => window.clearTimeout(timer)
+  }, [noticeVisible])
 
   useEffect(() => {
     const update = () => {
       const next = readLocation()
-      if (!next.library) select(next.index)
+      if (!next.welcome && !next.library) {
+        select(next.index)
+        setHasSelected(true)
+      }
       setView(next)
       setInfo('track')
     }
@@ -72,13 +93,13 @@ export default function App() {
   }, [])
   useEffect(() => {
     document.title =
-      (view.library ? 'Colección' : track.title) + ' · Earth Jukebox'
+      (view.welcome ? 'Bienvenida' : view.library ? 'Colección' : track.title) + ' · Earth Jukebox'
     main.current?.scrollTo(0, 0)
-    const route = view.library ? 'collection' : track.id
+    const route = view.welcome ? 'welcome' : view.library ? 'collection' : track.id
     if (previousRoute.current !== route && !document.activeElement?.closest('#reproductor'))
       heading.current?.focus({ preventScroll: true })
     previousRoute.current = route
-  }, [view.library, track.id, track.title])
+  }, [view.welcome, view.library, track.id, track.title])
   useEffect(() => {
     if (modal && !dialog.current?.open) dialog.current?.showModal()
     if (!modal && dialog.current?.open) dialog.current.close()
@@ -105,6 +126,17 @@ export default function App() {
       </a>
       <a
         className="skip"
+        href="#ajustes"
+        aria-haspopup="dialog"
+        onClick={(event) => {
+          event.preventDefault()
+          setModal('settings')
+        }}
+      >
+        Ir a opciones de accesibilidad
+      </a>
+      {!view.welcome && hasSelected && <a
+        className="skip"
         href="#reproductor"
         onClick={(e) => {
           e.preventDefault()
@@ -112,12 +144,12 @@ export default function App() {
         }}
       >
         Saltar al reproductor
-      </a>
+      </a>}
       <header className="masthead">
         <a
           className="brand"
-          href={trackHref(selected)}
-          aria-label="Earth Jukebox, reproductor"
+          href="#inicio"
+          aria-label="Earth Jukebox, ir al inicio"
         >
           <Sprite className="brand-planet" />
           <span>Earth Jukebox</span>
@@ -125,7 +157,7 @@ export default function App() {
         <nav className="primary-nav" aria-label="Principal">
           <a
             href={trackHref(selected)}
-            aria-current={!view.library ? 'page' : undefined}
+            aria-current={!view.library && !view.welcome ? 'page' : undefined}
           >
             <Icon name="signal" />
             <span>Reproductor</span>
@@ -153,8 +185,8 @@ export default function App() {
           </button>
         </div>
       </header>
-      <div className="workarea">
-        <aside className="library" aria-label="Biblioteca de pistas">
+      <div className={view.welcome ? 'workarea workarea--welcome' : 'workarea'}>
+        {!view.welcome && <aside className="library" aria-label="Biblioteca de pistas">
           <div className="library-title">
             <h2>Biblioteca</h2>
             <span>{number(tracks.length - 1)}</span>
@@ -166,10 +198,10 @@ export default function App() {
                   <a
                     href={trackHref(i)}
                     className={
-                      'track-link ' + (selected === i ? 'selected' : '')
+                      'track-link ' + (hasSelected && selected === i ? 'selected' : '')
                     }
                     aria-current={
-                      selected === i && !view.library ? 'true' : undefined
+                      hasSelected && selected === i && !view.library ? 'page' : undefined
                     }
                   >
                     <span aria-hidden="true" className="list-num">
@@ -182,7 +214,7 @@ export default function App() {
                       <strong>{item.shortTitle}</strong>
                       <small>{families[i]}</small>
                     </span>
-                    {selected === i && (
+                    {hasSelected && selected === i && (
                       <span
                         className="selected-light"
                         aria-label="Pista seleccionada"
@@ -197,14 +229,63 @@ export default function App() {
             <Icon name="headset" />
             Cómo escuchar
           </button>
-        </aside>
+        </aside>}
         <main
           id="workspace"
           ref={main}
           tabIndex={-1}
-          data-scene={view.library ? undefined : track.id}
+          data-scene={view.library || view.welcome ? undefined : track.id}
         >
-          {view.library ? (
+          {noticeVisible && (
+            <div className="access-notice">
+              <Icon name="headset" />
+              <p>
+                <span aria-hidden="true"><strong>Aviso de accesibilidad.</strong> {voiceNotice}</span>
+                <span className="screen-reader-only" role="status" aria-live="polite" aria-atomic="true">
+                  {noticeAnnouncement ? 'Aviso de accesibilidad. ' + noticeAnnouncement : ''}
+                </span>
+              </p>
+              <button type="button" aria-label="Cerrar aviso de accesibilidad" onClick={() => {
+                setNoticeVisible(false)
+                heading.current?.focus({ preventScroll: true })
+              }}>
+                <Icon name="close" />
+              </button>
+            </div>
+          )}
+          {view.welcome ? (
+            <div className="welcome">
+              <div className="welcome__hero">
+                <div className="welcome__copy">
+                  <h1 ref={heading} tabIndex={-1}>La Tierra también se puede escuchar.</h1>
+                  <p className="welcome__lead">
+                    Explora imágenes de la Tierra de la NASA con descripciones claras y sonido.
+                    Descubre el océano, los bosques, los aerosoles y las luces nocturnas.
+                  </p>
+                  <a className="welcome__action" href="#coleccion">
+                    Explorar la colección <Icon name="right" />
+                  </a>
+                  <button className="welcome__accessibility" type="button" aria-haspopup="dialog" onClick={() => setModal('settings')}>
+                    <Icon name="sliders" /> Opciones de accesibilidad
+                  </button>
+                  <p className="welcome__note">Puedes navegar con teclado y usar un lector de pantalla.</p>
+                </div>
+                <figure className="welcome__visual">
+                  <img src={tracks.find(item => item.id === 'luces-nocturnas')?.image} alt="" />
+                  <figcaption>Luces nocturnas · NASA Black Marble, 2016</figcaption>
+                </figure>
+              </div>
+              <section className="welcome__guide" aria-labelledby="welcome-guide-title">
+                <h2 id="welcome-guide-title">¿Cómo funciona?</h2>
+                <ol className="welcome__steps">
+                  <li><Icon name="grid"/><div><h3>Elige un tema</h3><p>Abre la colección y selecciona una de las cuatro visualizaciones.</p></div></li>
+                  <li><Icon name="book"/><div><h3>Lee la descripción</h3><p>Conoce qué muestra la imagen, su fuente y sus límites.</p></div></li>
+                  <li><Icon name="headset"/><div><h3>Escucha la imagen</h3><p>Usa los controles para reproducir y recorrer una muestra sonora.</p></div></li>
+                </ol>
+                <p className="welcome__disclaimer">Los audios actuales son muestras basadas en el brillo de cada imagen.</p>
+              </section>
+            </div>
+          ) : view.library ? (
             <div className="page-content">
               <h1 ref={heading} tabIndex={-1}>
                 Colección
@@ -218,10 +299,13 @@ export default function App() {
                   <a className="album" key={item.id} href={trackHref(i)}>
                     <img src={item.image} alt="" loading="lazy" />
                     <div className="album-copy">
-                      <span>
+                      <span className="album-category">
                         {number(i)} / {families[i]}
                       </span>
                       <h2>{item.title}</h2>
+                      <p className="album-description">{introductions[i]}</p>
+                      <span className="album-period">{item.period}</span>
+                      <span className="album-action">Explorar <Icon name="right" /></span>
                     </div>
                   </a>
                 ))}
@@ -235,17 +319,12 @@ export default function App() {
                 <span>{families[selected]}</span>
               </div>
               <div className="track-heading">
-                <div className="track-index" aria-hidden="true">
-                  {number(selected)}
-                </div>
-                <div>
-                  <h1 ref={heading} tabIndex={-1}>
-                    {track.title}
-                  </h1>
-                  <p className="intro">{introductions[selected]}</p>
-                </div>
+                <h1 ref={heading} tabIndex={-1}>
+                  {track.title}
+                </h1>
+                <p className="intro">{introductions[selected]}</p>
               </div>
-                <MapStage key={track.id} track={track} />
+              <MapStage key={track.id} track={track} />
               <section
                 className="track-info"
                 aria-label="Información de la pista"
@@ -309,13 +388,13 @@ export default function App() {
           )}
         </main>
       </div>
-      <Player
+      {!view.welcome && hasSelected && <Player
         track={track}
         index={selected}
         total={tracks.length}
         onPrevious={() => navigate(selected - 1)}
         onNext={() => navigate(selected + 1)}
-      />
+      />}
       <dialog
         ref={dialog}
         aria-labelledby="dialog-title"
@@ -335,6 +414,10 @@ export default function App() {
         </div>
         {modal === 'settings' ? (
           <div className="settings">
+            <p className="settings__help">
+              Usa el lector de pantalla de tu dispositivo, como TalkBack en Android, para escuchar la interfaz.
+              La voz integrada de Earth Jukebox está en desarrollo.
+            </p>
             <label>
               <input
                 type="checkbox"
